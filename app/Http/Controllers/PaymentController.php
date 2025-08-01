@@ -27,10 +27,12 @@ class PaymentController extends Controller
                 ->with('error', 'Please complete your student profile first.');
         }
 
+        // Get all bills for the student (both paid and unpaid)
+        $bills = $student->sppBills()->orderBy('year', 'desc')->orderBy('month', 'desc')->get();
         $unpaidBills = $student->unpaidBills()->orderBy('due_date')->get();
-        $recentPayments = $user->payments()->latest()->take(5)->get();
+        $recentPayments = Payment::where('user_id', $user->id)->latest()->take(5)->get();
 
-        return view('user.dashboard', compact('student', 'unpaidBills', 'recentPayments'));
+        return view('user.dashboard', compact('student', 'bills', 'unpaidBills', 'recentPayments'));
     }
 
     public function userBills()

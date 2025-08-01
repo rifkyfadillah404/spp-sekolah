@@ -1,203 +1,339 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard Siswa') }}
-        </h2>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="h3 mb-1 fw-bold text-dark">Dashboard Siswa</h2>
+                <p class="text-muted mb-0">Selamat datang, {{ $student->name }}!</p>
+            </div>
+            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                style="width: 60px; height: 60px; font-size: 24px;">
+                {{ strtoupper(substr($student->name, 0, 2)) }}
+            </div>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Demo Mode Banner -->
-            @if (config('services.midtrans.server_key') === 'SB-Mid-server-CtVCUiLZBY6ivDfRtGAyBHNt')
-                <div class="alert alert-warning mb-4">
-                    <h5><i class="fas fa-exclamation-triangle"></i> DEMO MODE</h5>
-                    <p class="mb-0">Aplikasi berjalan dalam mode demo. Pembayaran akan disimulasikan tanpa transaksi
-                        nyata.</p>
-                </div>
-            @endif
-
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <h3>Selamat datang, {{ $student->name }}!</h3>
-                            <p class="text-muted">NIS: {{ $student->nis }} | Kelas: {{ $student->class }}</p>
-
-                            @if ($unpaidBills->count() > 0)
-                                <div class="card mt-4">
-                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                        <h5 class="mb-0">Tagihan SPP Belum Dibayar</h5>
-                                        <button class="btn btn-primary" onclick="paySelectedBills()">
-                                            Bayar Sekarang
-                                        </button>
-                                    </div>
-                                    <div class="card-body">
-                                        <form id="paymentForm">
-                                            @csrf
-                                            <div class="table-responsive">
-                                                <table class="table table-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>
-                                                                <input type="checkbox" id="selectAll"
-                                                                    onchange="toggleAll()">
-                                                            </th>
-                                                            <th>Bulan</th>
-                                                            <th>Tahun</th>
-                                                            <th>Jumlah</th>
-                                                            <th>Jatuh Tempo</th>
-                                                            <th>Status</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach ($unpaidBills as $bill)
-                                                            <tr class="{{ $bill->is_overdue ? 'table-danger' : '' }}">
-                                                                <td>
-                                                                    <input type="checkbox" name="spp_bill_ids[]"
-                                                                        value="{{ $bill->id }}"
-                                                                        class="bill-checkbox">
-                                                                </td>
-                                                                <td>{{ $bill->month }}</td>
-                                                                <td>{{ $bill->year }}</td>
-                                                                <td>{{ $bill->formatted_amount }}</td>
-                                                                <td>{{ $bill->due_date->format('d/m/Y') }}</td>
-                                                                <td>
-                                                                    @if ($bill->is_overdue)
-                                                                        <span class="badge bg-danger">Terlambat</span>
-                                                                    @else
-                                                                        <span class="badge bg-warning">Belum
-                                                                            Bayar</span>
-                                                                    @endif
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            @else
-                                <div class="alert alert-success mt-4">
-                                    <h5>Selamat!</h5>
-                                    <p>Semua tagihan SPP Anda sudah lunas.</p>
-                                </div>
-                            @endif
+    <div class="row">
+        <!-- Demo Mode Banner -->
+        @if (config('services.midtrans.server_key') === 'SB-Mid-server-CtVCUiLZBY6ivDfRtGAyBHNt')
+            <div class="col-12 mb-4">
+                <div class="alert alert-warning border-0" role="alert">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-warning bg-opacity-20 rounded-circle p-2 me-3">
+                            <i class="fas fa-exclamation-triangle text-warning"></i>
                         </div>
+                        <div>
+                            <h6 class="mb-1 fw-bold">Mode Demo Aktif</h6>
+                            <p class="mb-0 small">
+                                Aplikasi berjalan dalam mode demo. Pembayaran akan disimulasikan tanpa transaksi nyata.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
 
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="mb-0">Riwayat Pembayaran Terakhir</h5>
-                                </div>
-                                <div class="card-body">
-                                    @if ($recentPayments->count() > 0)
-                                        @foreach ($recentPayments as $payment)
-                                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <div>
-                                                    <small
-                                                        class="text-muted">{{ $payment->created_at->format('d/m/Y') }}</small>
-                                                    <br>
-                                                    <span class="fw-bold">{{ $payment->formatted_amount }}</span>
-                                                </div>
-                                                <span class="badge bg-{{ $payment->status_badge }}">
-                                                    {{ ucfirst($payment->transaction_status) }}
-                                                </span>
-                                            </div>
-                                            <hr>
-                                        @endforeach
-                                        <a href="{{ route('user.bills') }}"
-                                            class="btn btn-sm btn-outline-primary w-100">
-                                            Lihat Semua
-                                        </a>
-                                    @else
-                                        <p class="text-muted">Belum ada riwayat pembayaran.</p>
-                                    @endif
-                                </div>
+        <!-- Student Info Card -->
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-user me-2"></i>
+                        Informasi Siswa
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
+                            style="width: 80px; height: 80px; font-size: 32px;">
+                            {{ strtoupper(substr($student->name, 0, 2)) }}
+                        </div>
+                        <h5 class="fw-bold">{{ $student->name }}</h5>
+                        <p class="text-muted mb-0">{{ $student->class }}</p>
+                    </div>
+
+                    <hr>
+
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="bg-primary bg-opacity-10 rounded p-3 mb-2">
+                                <h4 class="mb-1 fw-bold text-primary">{{ $student->nis }}</h4>
+                                <small class="text-muted">NIS</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-success bg-opacity-10 rounded p-3 mb-2">
+                                <h4 class="mb-1 fw-bold text-success">{{ $student->class }}</h4>
+                                <small class="text-muted">Kelas</small>
                             </div>
                         </div>
                     </div>
+
+                    <div class="mt-3">
+                        <p class="mb-1"><i class="fas fa-envelope me-2 text-muted"></i> {{ $student->user->email }}
+                        </p>
+                        <p class="mb-0"><i class="fas fa-phone me-2 text-muted"></i>
+                            {{ $student->phone ?? 'Belum diisi' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Summary -->
+        <div class="col-lg-8 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-chart-pie me-2"></i>
+                        Ringkasan Pembayaran
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center mb-4">
+                        <div class="col-md-4 mb-3">
+                            <div class="bg-info bg-opacity-10 rounded p-3">
+                                <h3 class="mb-1 fw-bold text-info">{{ $bills->count() }}</h3>
+                                <small class="text-muted">Total Tagihan</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="bg-success bg-opacity-10 rounded p-3">
+                                <h3 class="mb-1 fw-bold text-success">{{ $bills->where('status', 'paid')->count() }}
+                                </h3>
+                                <small class="text-muted">Sudah Lunas</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="bg-warning bg-opacity-10 rounded p-3">
+                                <h3 class="mb-1 fw-bold text-warning">{{ $bills->where('status', 'unpaid')->count() }}
+                                </h3>
+                                <small class="text-muted">Belum Bayar</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if ($bills->where('status', 'unpaid')->count() > 0)
+                        <div class="alert alert-warning border-0 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <span>Anda memiliki <strong>{{ $bills->where('status', 'unpaid')->count() }}</strong>
+                                    tagihan yang belum dibayar.</span>
+                            </div>
+                        </div>
+                    @else
+                        <div class="alert alert-success border-0 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <span>Selamat! Semua tagihan Anda sudah lunas.</span>
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">Total yang harus dibayar:</h6>
+                            <h4 class="mb-0 fw-bold text-danger">
+                                Rp {{ number_format($bills->where('status', 'unpaid')->sum('amount'), 0, ',', '.') }}
+                            </h4>
+                        </div>
+                        @if ($bills->where('status', 'unpaid')->count() > 0)
+                            <button class="btn btn-primary" onclick="scrollToPayment()">
+                                <i class="fas fa-credit-card me-1"></i>
+                                Bayar Sekarang
+                            </button>
+                        @else
+                            <span class="text-success">
+                                <i class="fas fa-check-circle me-1"></i>
+                                Semua tagihan lunas
+                            </span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bills Table -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-file-invoice me-2"></i>
+                        Daftar Tagihan SPP
+                    </h5>
+                    <div class="d-flex align-items-center">
+                        @if ($bills->where('status', 'unpaid')->count() > 0)
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="selectAll">
+                                <label class="form-check-label" for="selectAll">
+                                    Pilih Semua
+                                </label>
+                            </div>
+                            <button class="btn btn-success" id="paySelectedBtn" onclick="paySelected()" disabled>
+                                <i class="fas fa-credit-card me-1"></i>
+                                Bayar Terpilih
+                            </button>
+                        @else
+                            <span class="badge bg-success">
+                                <i class="fas fa-check-circle me-1"></i>
+                                Semua tagihan sudah lunas
+                            </span>
+                        @endif
+                    </div>
+                </div>
+                <div class="card-body" id="payment-section">
+                    @if ($bills->count() > 0)
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        @if ($bills->where('status', 'unpaid')->count() > 0)
+                                            <th width="50">
+                                                <input type="checkbox" id="selectAllTable" class="form-check-input">
+                                            </th>
+                                        @endif
+                                        <th>Bulan</th>
+                                        <th>Tahun</th>
+                                        <th>Jumlah</th>
+                                        <th>Jatuh Tempo</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($bills as $bill)
+                                        <tr>
+                                            @if ($bills->where('status', 'unpaid')->count() > 0)
+                                                <td>
+                                                    @if ($bill->status === 'unpaid')
+                                                        <input type="checkbox" class="form-check-input bill-checkbox"
+                                                            value="{{ $bill->id }}" onchange="updatePayButton()">
+                                                    @endif
+                                                </td>
+                                            @endif
+                                            <td class="fw-bold">{{ $bill->month }}</td>
+                                            <td>{{ $bill->year }}</td>
+                                            <td class="fw-bold text-primary">Rp
+                                                {{ number_format($bill->amount, 0, ',', '.') }}</td>
+                                            <td>
+                                                <small
+                                                    class="text-muted">{{ $bill->due_date->format('d M Y') }}</small>
+                                                @if ($bill->status === 'unpaid' && $bill->due_date->isPast())
+                                                    <br><span class="badge bg-danger">Terlambat</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($bill->status === 'paid')
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-check me-1"></i>Lunas
+                                                    </span>
+                                                @else
+                                                    <span class="badge bg-warning">
+                                                        <i class="fas fa-clock me-1"></i>Belum Bayar
+                                                    </span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($bill->status === 'unpaid')
+                                                    <button class="btn btn-sm btn-primary"
+                                                        onclick="payBill({{ $bill->id }})">
+                                                        <i class="fas fa-credit-card me-1"></i>
+                                                        Bayar
+                                                    </button>
+                                                @else
+                                                    <span class="text-success">
+                                                        <i class="fas fa-check-circle me-1"></i>
+                                                        Sudah Dibayar
+                                                    </span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div class="text-center py-5">
+                            <i class="fas fa-file-invoice fa-4x text-muted mb-3"></i>
+                            <h5 class="text-muted">Belum Ada Tagihan</h5>
+                            <p class="text-muted">Belum ada tagihan SPP yang tersedia.</p>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Demo Payment Modal -->
-    <div class="modal fade" id="demoPaymentModal" tabindex="-1" aria-labelledby="demoPaymentModalLabel"
-        aria-hidden="true">
+    <!-- Payment Method Modal -->
+    <div class="modal fade" id="demoPaymentModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header bg-warning text-dark">
-                    <h5 class="modal-title" id="demoPaymentModalLabel">
-                        <i class="fas fa-credit-card"></i> Pilih Metode Pembayaran (DEMO MODE)
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-credit-card me-2"></i>
+                        Pilih Metode Pembayaran
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-info">
-                        <strong>Mode Demo:</strong> Pilih metode pembayaran untuk simulasi. Tidak ada transaksi nyata
-                        yang akan terjadi.
-                    </div>
+                    <p class="text-muted mb-4">Pilih metode pembayaran yang Anda inginkan:</p>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <div class="card payment-method" data-method="credit_card" style="cursor: pointer;">
+                            <div class="card payment-method h-100" data-method="credit_card"
+                                style="cursor: pointer;">
                                 <div class="card-body text-center">
-                                    <i class="fas fa-credit-card fa-3x text-primary mb-2"></i>
-                                    <h6>Kartu Kredit/Debit</h6>
+                                    <i class="fas fa-credit-card fa-3x text-primary mb-3"></i>
+                                    <h6 class="fw-bold">Kartu Kredit/Debit</h6>
                                     <small class="text-muted">Visa, Mastercard, JCB</small>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <div class="card payment-method" data-method="bank_transfer" style="cursor: pointer;">
+                            <div class="card payment-method h-100" data-method="bank_transfer"
+                                style="cursor: pointer;">
                                 <div class="card-body text-center">
-                                    <i class="fas fa-university fa-3x text-success mb-2"></i>
-                                    <h6>Transfer Bank</h6>
+                                    <i class="fas fa-university fa-3x text-success mb-3"></i>
+                                    <h6 class="fw-bold">Transfer Bank</h6>
                                     <small class="text-muted">BCA, BNI, BRI, Mandiri</small>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <div class="card payment-method" data-method="gopay" style="cursor: pointer;">
+                            <div class="card payment-method h-100" data-method="gopay" style="cursor: pointer;">
                                 <div class="card-body text-center">
-                                    <i class="fas fa-mobile-alt fa-3x text-info mb-2"></i>
-                                    <h6>GoPay</h6>
+                                    <i class="fas fa-mobile-alt fa-3x text-info mb-3"></i>
+                                    <h6 class="fw-bold">GoPay</h6>
                                     <small class="text-muted">Pembayaran digital</small>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <div class="card payment-method" data-method="ovo" style="cursor: pointer;">
+                            <div class="card payment-method h-100" data-method="ovo" style="cursor: pointer;">
                                 <div class="card-body text-center">
-                                    <i class="fas fa-wallet fa-3x text-warning mb-2"></i>
-                                    <h6>OVO</h6>
+                                    <i class="fas fa-wallet fa-3x text-warning mb-3"></i>
+                                    <h6 class="fw-bold">OVO</h6>
                                     <small class="text-muted">E-wallet</small>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <div class="card payment-method" data-method="dana" style="cursor: pointer;">
+                            <div class="card payment-method h-100" data-method="dana" style="cursor: pointer;">
                                 <div class="card-body text-center">
-                                    <i class="fas fa-coins fa-3x text-primary mb-2"></i>
-                                    <h6>DANA</h6>
+                                    <i class="fas fa-coins fa-3x text-primary mb-3"></i>
+                                    <h6 class="fw-bold">DANA</h6>
                                     <small class="text-muted">Digital wallet</small>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <div class="card payment-method" data-method="indomaret" style="cursor: pointer;">
+                            <div class="card payment-method h-100" data-method="indomaret" style="cursor: pointer;">
                                 <div class="card-body text-center">
-                                    <i class="fas fa-store fa-3x text-danger mb-2"></i>
-                                    <h6>Indomaret</h6>
+                                    <i class="fas fa-store fa-3x text-danger mb-3"></i>
+                                    <h6 class="fw-bold">Indomaret</h6>
                                     <small class="text-muted">Bayar di toko</small>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                 </div>
             </div>
         </div>
@@ -211,9 +347,9 @@
             }
 
             .payment-method:hover {
-                border-color: #007bff;
-                box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
-                transform: translateY(-2px);
+                border-color: var(--primary-color);
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-md);
             }
 
             .payment-method:active {
@@ -221,80 +357,77 @@
             }
         </style>
         <script>
-            function toggleAll() {
-                const selectAll = document.getElementById('selectAll');
-                const checkboxes = document.querySelectorAll('.bill-checkbox');
-
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = selectAll.checked;
+            function scrollToPayment() {
+                document.getElementById('payment-section').scrollIntoView({
+                    behavior: 'smooth'
                 });
             }
 
-            function paySelectedBills() {
-                const selectedBills = document.querySelectorAll('.bill-checkbox:checked');
+            function toggleAll() {
+                const selectAll = document.getElementById('selectAll');
+                const selectAllTable = document.getElementById('selectAllTable');
+                const checkboxes = document.querySelectorAll('.bill-checkbox');
 
-                if (selectedBills.length === 0) {
-                    alert('Pilih tagihan yang akan dibayar terlebih dahulu.');
+                if (selectAll) {
+                    selectAll.addEventListener('change', function() {
+                        checkboxes.forEach(checkbox => {
+                            checkbox.checked = this.checked;
+                        });
+                        if (selectAllTable) selectAllTable.checked = this.checked;
+                        updatePayButton();
+                    });
+                }
+
+                if (selectAllTable) {
+                    selectAllTable.addEventListener('change', function() {
+                        checkboxes.forEach(checkbox => {
+                            checkbox.checked = this.checked;
+                        });
+                        if (selectAll) selectAll.checked = this.checked;
+                        updatePayButton();
+                    });
+                }
+            }
+
+            function updatePayButton() {
+                const checkboxes = document.querySelectorAll('.bill-checkbox:checked');
+                const payButton = document.getElementById('paySelectedBtn');
+
+                if (payButton) {
+                    payButton.disabled = checkboxes.length === 0;
+                }
+            }
+
+            function paySelected() {
+                const checkboxes = document.querySelectorAll('.bill-checkbox:checked');
+                const billIds = Array.from(checkboxes).map(cb => cb.value);
+
+                if (billIds.length === 0) {
+                    alert('Pilih tagihan yang ingin dibayar terlebih dahulu.');
                     return;
                 }
 
-                const billIds = Array.from(selectedBills).map(cb => cb.value);
+                const orderId = 'ORDER-' + Date.now();
+                showDemoPaymentModal(orderId, billIds);
+            }
 
-                fetch('{{ route('payment.create') }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({
-                            spp_bill_ids: billIds
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.snap_token) {
-                            // Check if it's demo mode
-                            if (data.snap_token.startsWith('demo-snap-token-')) {
-                                // Demo mode - show payment method selection
-                                showDemoPaymentModal(data.order_id, billIds);
-                            } else {
-                                // Real Midtrans
-                                snap.pay(data.snap_token, {
-                                    onSuccess: function(result) {
-                                        alert("Pembayaran berhasil!");
-                                        window.location.reload();
-                                    },
-                                    onPending: function(result) {
-                                        alert("Menunggu pembayaran!");
-                                        window.location.reload();
-                                    },
-                                    onError: function(result) {
-                                        alert("Pembayaran gagal!");
-                                    }
-                                });
-                            }
-                        } else {
-                            alert('Error: ' + (data.error || 'Unknown error'));
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Terjadi kesalahan saat memproses pembayaran.');
-                    });
+            function payBill(billId) {
+                const orderId = 'ORDER-' + Date.now();
+                showDemoPaymentModal(orderId, [billId]);
             }
 
             function showDemoPaymentModal(orderId, billIds) {
-                // Store data for later use
                 window.currentOrderId = orderId;
                 window.currentBillIds = billIds;
 
-                // Show modal
                 const modal = new bootstrap.Modal(document.getElementById('demoPaymentModal'));
                 modal.show();
             }
 
             // Handle payment method selection
             document.addEventListener('DOMContentLoaded', function() {
+                toggleAll();
+
                 const paymentMethods = document.querySelectorAll('.payment-method');
 
                 paymentMethods.forEach(method => {
@@ -302,16 +435,13 @@
                         const selectedMethod = this.getAttribute('data-method');
                         const methodName = this.querySelector('h6').textContent;
 
-                        // Close modal
                         const modal = bootstrap.Modal.getInstance(document.getElementById(
                             'demoPaymentModal'));
                         modal.hide();
 
-                        // Show confirmation
                         if (confirm(
                                 `Konfirmasi pembayaran dengan ${methodName}?\n\nMode Demo: Pembayaran akan berhasil secara otomatis.`
                             )) {
-                            // Simulate successful payment
                             fetch('{{ route('payment.notification') }}', {
                                 method: 'POST',
                                 headers: {
@@ -331,16 +461,6 @@
                                 window.location.reload();
                             });
                         }
-                    });
-
-                    // Add hover effect
-                    method.addEventListener('mouseenter', function() {
-                        this.style.transform = 'scale(1.05)';
-                        this.style.transition = 'transform 0.2s';
-                    });
-
-                    method.addEventListener('mouseleave', function() {
-                        this.style.transform = 'scale(1)';
                     });
                 });
             });

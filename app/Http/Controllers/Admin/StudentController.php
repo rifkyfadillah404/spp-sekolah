@@ -23,7 +23,7 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-         $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'nis' => 'required|string|unique:students,nis',
             'class' => 'required|string|max:255',
@@ -102,5 +102,31 @@ class StudentController extends Controller
         $student->user->delete(); // This will cascade delete the student
         return redirect()->route('admin.students.index')
             ->with('success', 'Student deleted successfully.');
+    }
+
+    public function byClass()
+    {
+        $studentsByClass = Student::with('user')
+            ->get()
+            ->groupBy('class')
+            ->sortKeys();
+
+        $classStats = [];
+        foreach ($studentsByClass as $class => $students) {
+            $classStats[$class] = [
+                'total_students' => $students->count(),
+                'total_bills' => $students->sum(function ($student) {
+                    return $student->sppBills->count();
+                }),
+                'paid_bills' => $students->sum(function ($student) {
+                    return $student->sppBills->where('status', 'paid')->count();
+                }),
+                'unpaid_bills' => $students->sum(function ($student) {
+                    return $student->sppBills->where('status', 'unpaid')->count();
+                }),
+            ];
+        }
+
+        return view('admin.students.by-class', compact('studentsByClass', 'classStats'));
     }
 }

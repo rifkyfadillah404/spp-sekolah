@@ -4,9 +4,6 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Kelola Tagihan SPP') }}
             </h2>
-            <a href="{{ route('admin.spp-bills.create') }}" class="btn btn-primary">
-                Buat Tagihan Baru
-            </a>
         </div>
     </x-slot>
 
@@ -52,12 +49,12 @@
                                         </td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route('admin.spp-bills.show', $bill) }}" 
+                                                <a href="{{ route('admin.spp-bills.show', $bill) }}"
                                                    class="btn btn-sm btn-info">Lihat</a>
                                                 @if($bill->status !== 'paid')
-                                                    <a href="{{ route('admin.spp-bills.edit', $bill) }}" 
+                                                    <a href="{{ route('admin.spp-bills.edit', $bill) }}"
                                                        class="btn btn-sm btn-warning">Edit</a>
-                                                    <form action="{{ route('admin.spp-bills.destroy', $bill) }}" 
+                                                    <form action="{{ route('admin.spp-bills.destroy', $bill) }}"
                                                           method="POST" class="d-inline"
                                                           onsubmit="return confirm('Yakin ingin menghapus tagihan ini?')">
                                                         @csrf

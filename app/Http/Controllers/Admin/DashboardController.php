@@ -16,14 +16,26 @@ class DashboardController extends Controller
             'total_students' => Student::count(),
             'total_unpaid_bills' => SppBill::where('status', 'unpaid')->count(),
             'total_paid_bills' => SppBill::where('status', 'paid')->count(),
-            'total_revenue' => Payment::where('transaction_status', 'settlement')->sum('amount'),
+            'total_revenue' => SppBill::where('status', 'paid')->sum('amount'),
             'pending_payments' => Payment::where('transaction_status', 'pending')->count(),
         ];
 
-        $recent_payments = Payment::with(['user', 'sppBills.student'])
-            ->latest()
+        // Get recent paid bills as "payments"
+        $recent_payments = SppBill::with(['student.user'])
+            ->where('status', 'paid')
+            ->latest('updated_at')
             ->take(5)
-            ->get();
+            ->get()
+            ->map(function ($bill) {
+                return (object) [
+                    'order_id' => 'SPP-' . $bill->id,
+                    'user' => $bill->student->user,
+                    'formatted_amount' => 'Rp ' . number_format($bill->amount, 0, ',', '.'),
+                    'status_badge' => 'success',
+                    'transaction_status' => 'paid',
+                    'created_at' => $bill->updated_at,
+                ];
+            });
 
         $overdue_bills = SppBill::with('student')
             ->where('status', 'unpaid')

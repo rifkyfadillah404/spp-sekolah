@@ -4,9 +4,6 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Kelola Siswa') }}
             </h2>
-            <a href="{{ route('admin.students.create') }}" class="btn btn-primary">
-                Tambah Siswa Baru
-            </a>
         </div>
     </x-slot>
 

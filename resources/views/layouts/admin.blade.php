@@ -13,7 +13,7 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -50,11 +50,11 @@
             z-index: 1000;
             overflow-y: auto;
         }
-        
+
         .sidebar.collapsed {
             width: var(--sidebar-collapsed-width);
         }
-        
+
         .sidebar .nav-link {
             color: #64748b;
             padding: 12px 16px;
@@ -67,69 +67,69 @@
             align-items: center;
             text-decoration: none;
         }
-        
+
         .sidebar .nav-link:hover {
             color: var(--primary-color);
             background-color: #f1f5f9;
         }
-        
+
         .sidebar .nav-link.active {
             color: var(--primary-color);
             background-color: #eff6ff;
             border-left: 3px solid var(--primary-color);
         }
-        
+
         .sidebar .nav-link i {
             width: 20px;
             text-align: center;
             margin-right: 12px;
             font-size: 16px;
         }
-        
+
         .sidebar.collapsed .nav-link span {
             display: none;
         }
-        
+
         .sidebar.collapsed .nav-link {
             justify-content: center;
             margin: 2px 4px;
         }
-        
+
         .main-content {
             margin-left: var(--sidebar-width);
             transition: all 0.3s ease;
             min-height: 100vh;
         }
-        
+
         .main-content.expanded {
             margin-left: var(--sidebar-collapsed-width);
         }
-        
+
         .top-navbar {
             background: #ffffff;
             border-bottom: 1px solid #e2e8f0;
             padding: 16px 24px;
             margin-bottom: 24px;
         }
-        
+
         .sidebar-brand {
             padding: 24px 16px;
             border-bottom: 1px solid #e2e8f0;
             margin-bottom: 16px;
             text-align: center;
         }
-        
+
         .sidebar-brand h4 {
             color: var(--primary-color);
             margin: 0;
             font-weight: 700;
             font-size: 1.25rem;
         }
-        
+
         .sidebar.collapsed .sidebar-brand h4 {
             display: none;
         }
-        
+
         .card {
             border: 1px solid #e2e8f0;
             border-radius: var(--border-radius);
@@ -137,11 +137,11 @@
             background: #ffffff;
             transition: all 0.2s ease;
         }
-        
+
         .card:hover {
             box-shadow: var(--shadow-md);
         }
-        
+
         .card-header {
             background: #f8fafc;
             border-bottom: 1px solid #e2e8f0;
@@ -149,7 +149,7 @@
             font-weight: 600;
             color: #374151;
         }
-        
+
         .btn {
             border-radius: var(--border-radius);
             padding: 8px 16px;
@@ -158,27 +158,27 @@
             transition: all 0.2s ease;
             border: 1px solid transparent;
         }
-        
+
         .btn:hover {
             transform: translateY(-1px);
             box-shadow: var(--shadow-sm);
         }
-        
+
         .btn-primary {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
         }
-        
+
         .btn-primary:hover {
             background-color: var(--primary-dark);
             border-color: var(--primary-dark);
         }
-        
+
         .table {
             border-radius: var(--border-radius);
             overflow: hidden;
         }
-        
+
         .table thead th {
             background-color: #f8fafc;
             border-bottom: 1px solid #e2e8f0;
@@ -188,31 +188,31 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
-        
+
         .table tbody tr:hover {
             background-color: #f8fafc;
         }
-        
+
         .badge {
             padding: 4px 8px;
             border-radius: 4px;
             font-weight: 500;
             font-size: 12px;
         }
-        
+
         .submenu {
             background: #f8fafc;
             border-radius: var(--border-radius);
             margin: 4px 8px;
             padding: 4px 0;
         }
-        
+
         .submenu .nav-link {
             margin: 1px 8px;
             padding: 8px 12px;
             font-size: 13px;
         }
-        
+
         .stat-card {
             background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: white;
@@ -220,46 +220,46 @@
             padding: 24px;
             margin-bottom: 24px;
         }
-        
+
         .stat-card h3 {
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 8px;
         }
-        
+
         .stat-card p {
             margin: 0;
             opacity: 0.9;
         }
-        
+
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
             }
-            
+
             .sidebar.show {
                 transform: translateX(0);
             }
-            
+
             .main-content {
                 margin-left: 0;
             }
         }
-        
+
         /* Clean scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
         }
-        
+
         ::-webkit-scrollbar-track {
             background: #f1f5f9;
         }
-        
+
         ::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border-radius: 3px;
         }
-        
+
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
@@ -271,18 +271,18 @@
         <div class="sidebar-brand">
             <h4>SPP Admin</h4>
         </div>
-        
+
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" 
+                <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
                    href="{{ route('admin.dashboard') }}">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
-            
+
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.students.*') ? 'active' : '' }}" 
+                <a class="nav-link {{ request()->routeIs('admin.students.*') ? 'active' : '' }}"
                    href="#" data-bs-toggle="collapse" data-bs-target="#studentsMenu">
                     <i class="fas fa-users"></i>
                     <span>Kelola Siswa</span>
@@ -291,21 +291,21 @@
                 <div class="collapse {{ request()->routeIs('admin.students.*') ? 'show' : '' }} submenu" id="studentsMenu">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.students.index') ? 'active' : '' }}" 
+                            <a class="nav-link {{ request()->routeIs('admin.students.index') ? 'active' : '' }}"
                                href="{{ route('admin.students.index') }}">
                                 <i class="fas fa-list"></i>
                                 <span>Semua Siswa</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.students.by-class') ? 'active' : '' }}" 
+                            <a class="nav-link {{ request()->routeIs('admin.students.by-class') ? 'active' : '' }}"
                                href="{{ route('admin.students.by-class') }}">
                                 <i class="fas fa-graduation-cap"></i>
                                 <span>Per Kelas</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.students.create') ? 'active' : '' }}" 
+                            <a class="nav-link {{ request()->routeIs('admin.students.create') ? 'active' : '' }}"
                                href="{{ route('admin.students.create') }}">
                                 <i class="fas fa-plus"></i>
                                 <span>Tambah Siswa</span>
@@ -314,9 +314,9 @@
                     </ul>
                 </div>
             </li>
-            
+
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.spp-bills.*') ? 'active' : '' }}" 
+                <a class="nav-link {{ request()->routeIs('admin.spp-bills.*') ? 'active' : '' }}"
                    href="#" data-bs-toggle="collapse" data-bs-target="#billsMenu">
                     <i class="fas fa-file-invoice"></i>
                     <span>Kelola Tagihan</span>
@@ -325,14 +325,14 @@
                 <div class="collapse {{ request()->routeIs('admin.spp-bills.*') ? 'show' : '' }} submenu" id="billsMenu">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.spp-bills.index') ? 'active' : '' }}" 
+                            <a class="nav-link {{ request()->routeIs('admin.spp-bills.index') ? 'active' : '' }}"
                                href="{{ route('admin.spp-bills.index') }}">
                                 <i class="fas fa-list"></i>
                                 <span>Semua Tagihan</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.spp-bills.create') ? 'active' : '' }}" 
+                            <a class="nav-link {{ request()->routeIs('admin.spp-bills.create') ? 'active' : '' }}"
                                href="{{ route('admin.spp-bills.create') }}">
                                 <i class="fas fa-plus"></i>
                                 <span>Buat Tagihan</span>
@@ -341,18 +341,11 @@
                     </ul>
                 </div>
             </li>
-            
+
             <li class="nav-item mt-3">
                 <hr style="border-color: #e2e8f0;">
             </li>
-            
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('profile.edit') }}">
-                    <i class="fas fa-user-cog"></i>
-                    <span>Profile</span>
-                </a>
-            </li>
-            
+
             <li class="nav-item">
                 <form method="POST" action="{{ route('logout') }}" class="d-inline">
                     @csrf
@@ -377,10 +370,10 @@
                     {{ $header }}
                 @endif
             </div>
-            
+
             <div class="d-flex align-items-center">
                 <span class="me-3">Selamat datang, <strong>{{ auth()->user()->name }}</strong></span>
-                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
                      style="width: 40px; height: 40px;">
                     {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                 </div>
@@ -411,13 +404,13 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
         // Sidebar toggle functionality
         document.getElementById('sidebarToggle').addEventListener('click', function() {
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('mainContent');
-            
+
             sidebar.classList.toggle('collapsed');
             mainContent.classList.toggle('expanded');
         });
@@ -430,7 +423,7 @@
             });
         }
     </script>
-    
+
     @stack('scripts')
 </body>
 </html>

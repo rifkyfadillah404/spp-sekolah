@@ -44,16 +44,20 @@
                                         <tr>
                                             <td><strong>Jatuh Tempo:</strong></td>
                                             <td>
-                                                {{ $sppBill->due_date->format('d F Y') }}
-                                                @if($sppBill->is_overdue)
-                                                    <span class="badge bg-danger ms-2">Terlambat</span>
+                                                @if ($sppBill->due_date)
+                                                    {{ $sppBill->due_date->format('d F Y') }}
+                                                    @if ($sppBill->is_overdue)
+                                                        <span class="badge bg-danger ms-2">Terlambat</span>
+                                                    @endif
+                                                @else
+                                                    <span class="text-muted">Belum diset</span>
                                                 @endif
                                             </td>
                                         </tr>
                                         <tr>
                                             <td><strong>Status:</strong></td>
                                             <td>
-                                                @if($sppBill->status === 'paid')
+                                                @if ($sppBill->status === 'paid')
                                                     <span class="badge bg-success fs-6">Lunas</span>
                                                 @elseif($sppBill->status === 'pending')
                                                     <span class="badge bg-warning fs-6">Pending</span>
@@ -74,9 +78,9 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-4">
-                            @if($sppBill->payment)
+                            @if ($sppBill->payment)
                                 <div class="card">
                                     <div class="card-header">
                                         <h5 class="mb-0">Informasi Pembayaran</h5>
@@ -127,9 +131,9 @@
                         <a href="{{ route('admin.spp-bills.index') }}" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i> Kembali
                         </a>
-                        
+
                         <div>
-                            @if($sppBill->status !== 'paid')
+                            @if ($sppBill->status !== 'paid')
                                 <a href="{{ route('admin.spp-bills.edit', $sppBill) }}" class="btn btn-warning">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>

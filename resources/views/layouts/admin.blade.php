@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -232,9 +233,29 @@
             opacity: 0.9;
         }
 
+        /* Mobile overlay */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
+                z-index: 1001;
             }
 
             .sidebar.show {
@@ -265,7 +286,11 @@
         }
     </style>
 </head>
+
 <body>
+    <!-- Mobile Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- Sidebar -->
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-brand">
@@ -275,38 +300,39 @@
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
-                   href="{{ route('admin.dashboard') }}">
+                    href="{{ route('admin.dashboard') }}">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.students.*') ? 'active' : '' }}"
-                   href="#" data-bs-toggle="collapse" data-bs-target="#studentsMenu">
+                <a class="nav-link {{ request()->routeIs('admin.students.*') ? 'active' : '' }}" href="#"
+                    data-bs-toggle="collapse" data-bs-target="#studentsMenu">
                     <i class="fas fa-users"></i>
                     <span>Kelola Siswa</span>
                     <i class="fas fa-chevron-down ms-auto"></i>
                 </a>
-                <div class="collapse {{ request()->routeIs('admin.students.*') ? 'show' : '' }} submenu" id="studentsMenu">
+                <div class="collapse {{ request()->routeIs('admin.students.*') ? 'show' : '' }} submenu"
+                    id="studentsMenu">
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('admin.students.index') ? 'active' : '' }}"
-                               href="{{ route('admin.students.index') }}">
+                                href="{{ route('admin.students.index') }}">
                                 <i class="fas fa-list"></i>
                                 <span>Semua Siswa</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('admin.students.by-class') ? 'active' : '' }}"
-                               href="{{ route('admin.students.by-class') }}">
+                                href="{{ route('admin.students.by-class') }}">
                                 <i class="fas fa-graduation-cap"></i>
                                 <span>Per Kelas</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('admin.students.create') ? 'active' : '' }}"
-                               href="{{ route('admin.students.create') }}">
+                                href="{{ route('admin.students.create') }}">
                                 <i class="fas fa-plus"></i>
                                 <span>Tambah Siswa</span>
                             </a>
@@ -316,24 +342,25 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.spp-bills.*') ? 'active' : '' }}"
-                   href="#" data-bs-toggle="collapse" data-bs-target="#billsMenu">
+                <a class="nav-link {{ request()->routeIs('admin.spp-bills.*') ? 'active' : '' }}" href="#"
+                    data-bs-toggle="collapse" data-bs-target="#billsMenu">
                     <i class="fas fa-file-invoice"></i>
                     <span>Kelola Tagihan</span>
                     <i class="fas fa-chevron-down ms-auto"></i>
                 </a>
-                <div class="collapse {{ request()->routeIs('admin.spp-bills.*') ? 'show' : '' }} submenu" id="billsMenu">
+                <div class="collapse {{ request()->routeIs('admin.spp-bills.*') ? 'show' : '' }} submenu"
+                    id="billsMenu">
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('admin.spp-bills.index') ? 'active' : '' }}"
-                               href="{{ route('admin.spp-bills.index') }}">
+                                href="{{ route('admin.spp-bills.index') }}">
                                 <i class="fas fa-list"></i>
                                 <span>Semua Tagihan</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('admin.spp-bills.create') ? 'active' : '' }}"
-                               href="{{ route('admin.spp-bills.create') }}">
+                                href="{{ route('admin.spp-bills.create') }}">
                                 <i class="fas fa-plus"></i>
                                 <span>Buat Tagihan</span>
                             </a>
@@ -374,7 +401,7 @@
             <div class="d-flex align-items-center">
                 <span class="me-3">Selamat datang, <strong>{{ auth()->user()->name }}</strong></span>
                 <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
-                     style="width: 40px; height: 40px;">
+                    style="width: 40px; height: 40px;">
                     {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                 </div>
             </div>
@@ -410,20 +437,78 @@
         document.getElementById('sidebarToggle').addEventListener('click', function() {
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('mainContent');
+            const overlay = document.getElementById('sidebarOverlay');
 
-            sidebar.classList.toggle('collapsed');
-            mainContent.classList.toggle('expanded');
+            // Check if mobile view
+            if (window.innerWidth <= 768) {
+                // Mobile: toggle show/hide with overlay
+                sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
+            } else {
+                // Desktop: toggle collapsed/expanded
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded');
+            }
         });
 
-        // Mobile sidebar toggle
-        if (window.innerWidth <= 768) {
-            document.getElementById('sidebarToggle').addEventListener('click', function() {
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            if (window.innerWidth <= 768) {
+                // Mobile: remove desktop classes
+                sidebar.classList.remove('collapsed');
+                mainContent.classList.remove('expanded');
+            } else {
+                // Desktop: remove mobile classes
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+            }
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
                 const sidebar = document.getElementById('sidebar');
-                sidebar.classList.toggle('show');
-            });
+                const sidebarToggle = document.getElementById('sidebarToggle');
+                const overlay = document.getElementById('sidebarOverlay');
+
+                if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+                    sidebar.classList.remove('show');
+                    overlay.classList.remove('show');
+                }
+            }
+        });
+
+        // Close sidebar when clicking overlay
+        document.getElementById('sidebarOverlay').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+        });
+
+        // Initialize sidebar state based on screen size
+        function initializeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('collapsed', 'show');
+                mainContent.classList.remove('expanded');
+                overlay.classList.remove('show');
+            }
         }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializeSidebar);
     </script>
 
     @stack('scripts')
 </body>
+
 </html>

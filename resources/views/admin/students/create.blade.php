@@ -5,7 +5,7 @@
                 <h2 class="h4 mb-1 fw-bold text-dark">Tambah Siswa Baru</h2>
                 <p class="text-muted mb-0">Lengkapi form di bawah untuk menambahkan siswa baru</p>
             </div>
-            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
+            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
                  style="width: 50px; height: 50px;">
                 <i class="fas fa-user-plus fa-lg"></i>
             </div>
@@ -25,7 +25,7 @@
                     <div class="card-body p-4">
                         <form action="{{ route('admin.students.store') }}" method="POST" id="studentForm">
                             @csrf
-                            
+
                             <!-- Personal Information Section -->
                             <div class="mb-4">
                                 <div class="d-flex align-items-center mb-3">
@@ -34,7 +34,7 @@
                                     </div>
                                     <h6 class="mb-0 fw-bold text-primary">Informasi Pribadi</h6>
                                 </div>
-                                
+
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
@@ -42,23 +42,23 @@
                                                 <i class="fas fa-user me-1 text-muted"></i>
                                                 Nama Lengkap <span class="text-danger">*</span>
                                             </label>
-                                            <input type="text" class="form-control @error('name') is-invalid @enderror" 
-                                                   id="name" name="name" value="{{ old('name') }}" 
+                                            <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                                   id="name" name="name" value="{{ old('name') }}"
                                                    placeholder="Masukkan nama lengkap siswa" required>
                                             @error('name')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="nis" class="form-label fw-semibold">
                                                 <i class="fas fa-id-card me-1 text-muted"></i>
                                                 NIS <span class="text-danger">*</span>
                                             </label>
-                                            <input type="text" class="form-control @error('nis') is-invalid @enderror" 
-                                                   id="nis" name="nis" value="{{ old('nis') }}" 
+                                            <input type="text" class="form-control @error('nis') is-invalid @enderror"
+                                                   id="nis" name="nis" value="{{ old('nis') }}"
                                                    placeholder="Contoh: 2024001" required>
                                             @error('nis')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -74,35 +74,22 @@
                                                 <i class="fas fa-graduation-cap me-1 text-muted"></i>
                                                 Kelas <span class="text-danger">*</span>
                                             </label>
-                                            <select class="form-select @error('class') is-invalid @enderror" 
-                                                    id="class" name="class" required>
-                                                <option value="">Pilih Kelas</option>
-                                                <option value="X IPA 1" {{ old('class') == 'X IPA 1' ? 'selected' : '' }}>X IPA 1</option>
-                                                <option value="X IPA 2" {{ old('class') == 'X IPA 2' ? 'selected' : '' }}>X IPA 2</option>
-                                                <option value="X IPS 1" {{ old('class') == 'X IPS 1' ? 'selected' : '' }}>X IPS 1</option>
-                                                <option value="X IPS 2" {{ old('class') == 'X IPS 2' ? 'selected' : '' }}>X IPS 2</option>
-                                                <option value="XI IPA 1" {{ old('class') == 'XI IPA 1' ? 'selected' : '' }}>XI IPA 1</option>
-                                                <option value="XI IPA 2" {{ old('class') == 'XI IPA 2' ? 'selected' : '' }}>XI IPA 2</option>
-                                                <option value="XI IPS 1" {{ old('class') == 'XI IPS 1' ? 'selected' : '' }}>XI IPS 1</option>
-                                                <option value="XI IPS 2" {{ old('class') == 'XI IPS 2' ? 'selected' : '' }}>XI IPS 2</option>
-                                                <option value="XII IPA 1" {{ old('class') == 'XII IPA 1' ? 'selected' : '' }}>XII IPA 1</option>
-                                                <option value="XII IPA 2" {{ old('class') == 'XII IPA 2' ? 'selected' : '' }}>XII IPA 2</option>
-                                                <option value="XII IPS 1" {{ old('class') == 'XII IPS 1' ? 'selected' : '' }}>XII IPS 1</option>
-                                                <option value="XII IPS 2" {{ old('class') == 'XII IPS 2' ? 'selected' : '' }}>XII IPS 2</option>
-                                            </select>
+                                            <input type="text" class="form-control @error('class') is-invalid @enderror"
+                                                   id="class" name="class" value="{{ old('class') }}"
+                                                   placeholder="Contoh: X IPA 1" required>
                                             @error('class')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="phone" class="form-label fw-semibold">
                                                 <i class="fas fa-phone me-1 text-muted"></i>
                                                 Telepon
                                             </label>
-                                            <input type="text" class="form-control @error('phone') is-invalid @enderror" 
+                                            <input type="text" class="form-control @error('phone') is-invalid @enderror"
                                                    id="phone" name="phone" value="{{ old('phone') }}"
                                                    placeholder="Contoh: 081234567890">
                                             @error('phone')
@@ -117,8 +104,8 @@
                                         <i class="fas fa-map-marker-alt me-1 text-muted"></i>
                                         Alamat
                                     </label>
-                                    <textarea class="form-control @error('address') is-invalid @enderror" 
-                                              id="address" name="address" rows="3" 
+                                    <textarea class="form-control @error('address') is-invalid @enderror"
+                                              id="address" name="address" rows="3"
                                               placeholder="Masukkan alamat lengkap siswa">{{ old('address') }}</textarea>
                                     @error('address')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -142,15 +129,15 @@
                                                 <i class="fas fa-envelope me-1 text-muted"></i>
                                                 Email <span class="text-danger">*</span>
                                             </label>
-                                            <input type="email" class="form-control @error('email') is-invalid @enderror" 
-                                                   id="email" name="email" value="{{ old('email') }}" 
+                                            <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                                   id="email" name="email" value="{{ old('email') }}"
                                                    placeholder="contoh@email.com" required>
                                             @error('email')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="password" class="form-label fw-semibold">
@@ -158,8 +145,8 @@
                                                 Password <span class="text-danger">*</span>
                                             </label>
                                             <div class="input-group">
-                                                <input type="password" class="form-control @error('password') is-invalid @enderror" 
-                                                       id="password" name="password" 
+                                                <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                                       id="password" name="password"
                                                        placeholder="Minimal 8 karakter" required>
                                                 <button class="btn btn-outline-secondary" type="button" id="togglePassword">
                                                     <i class="fas fa-eye"></i>
@@ -207,7 +194,7 @@
         document.getElementById('togglePassword').addEventListener('click', function() {
             const password = document.getElementById('password');
             const icon = this.querySelector('i');
-            
+
             if (password.type === 'password') {
                 password.type = 'text';
                 icon.classList.remove('fa-eye');
@@ -223,7 +210,7 @@
         document.getElementById('name').addEventListener('input', function() {
             const name = this.value.toLowerCase().replace(/\s+/g, '');
             const email = document.getElementById('email');
-            
+
             if (name && !email.value) {
                 email.value = name + '@student.spp.com';
             }
@@ -233,7 +220,7 @@
         document.getElementById('studentForm').addEventListener('submit', function(e) {
             const requiredFields = ['name', 'nis', 'class', 'email', 'password'];
             let isValid = true;
-            
+
             requiredFields.forEach(field => {
                 const input = document.getElementById(field);
                 if (!input.value.trim()) {
@@ -243,7 +230,7 @@
                     input.classList.remove('is-invalid');
                 }
             });
-            
+
             if (!isValid) {
                 e.preventDefault();
                 alert('Mohon lengkapi semua field yang wajib diisi!');

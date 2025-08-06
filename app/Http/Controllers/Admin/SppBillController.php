@@ -17,8 +17,8 @@ class SppBillController extends Controller
 
     public function create()
     {
-        $students = Student::all();
-        return view('admin.spp-bills.create', compact('students'));
+        $classes = Student::select('class')->distinct()->orderBy('class')->get()->pluck('class');
+        return view('admin.spp-bills.create', compact('classes'));
     }
 
     public function store(Request $request)
@@ -97,5 +97,11 @@ class SppBillController extends Controller
 
         return redirect()->route('admin.spp-bills.index')
             ->with('success', 'Tagihan SPP berhasil dihapus.');
+    }
+    public function getStudentsByClass(Request $request)
+    {
+        $request->validate(['class' => 'required|string']);
+        $students = Student::where('class', $request->class)->get(['id', 'name', 'nis']);
+        return response()->json($students);
     }
 }

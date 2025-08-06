@@ -10,10 +10,18 @@ use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::with('user')->paginate(10);
-        return view('admin.students.index', compact('students'));
+        $query = Student::with('user');
+
+        if ($request->has('class') && $request->class != '') {
+            $query->where('class', $request->class);
+        }
+
+        $students = $query->paginate(10);
+        $classes = Student::select('class')->distinct()->orderBy('class')->get()->pluck('class');
+
+        return view('admin.students.index', compact('students', 'classes'));
     }
 
     public function create()
@@ -102,5 +110,31 @@ class StudentController extends Controller
         $student->user->delete(); // This will cascade delete the student
         return redirect()->route('admin.students.index')
             ->with('success', 'Student deleted successfully.');
+    }
+
+    public function byClass()
+    {
+        $studentsByClass = Student::with('user')
+            ->get()
+            ->groupBy('class')
+            ->sortKeys();
+
+        $classStats = [];
+        foreach ($studentsByClass as $class => $students) {
+            $classStats[$class] = [
+                'total_students' => $students->count(),
+                'total_bills' => $students->sum(function ($student) {
+                    return $student->sppBills->count();
+                }),
+                'paid_bills' => $students->sum(function ($student) {
+                    return $student->sppBills->where('status', 'paid')->count();
+                }),
+                'unpaid_bills' => $students->sum(function ($student) {
+                    return $student->sppBills->where('status', 'unpaid')->count();
+                }),
+            ];
+        }
+
+        return view('admin.students.by-class', compact('studentsByClass', 'classStats'));
     }
 }

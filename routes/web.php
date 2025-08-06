@@ -44,7 +44,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Admin routes
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/students/by-class', [StudentController::class, 'byClass'])->name('students.by-class');
         Route::resource('students', StudentController::class);
+        Route::get('spp-bills/get-students-by-class', [SppBillController::class, 'getStudentsByClass'])->name('spp-bills.getStudentsByClass');
         Route::resource('spp-bills', SppBillController::class);
     });
 });

@@ -41,6 +41,6 @@ class SppBill extends Model
 
     public function getIsOverdueAttribute()
     {
-        return $this->due_date < now() && $this->status === 'unpaid';
+        return $this->due_date && $this->due_date < now() && $this->status === 'unpaid';
     }
 }

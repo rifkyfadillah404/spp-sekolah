@@ -28,26 +28,19 @@
                             <span class="input-group-text bg-light border-end-0">
                                 <i class="fas fa-search text-muted"></i>
                             </span>
-                            <input type="text" class="form-control border-start-0" 
-                                   placeholder="Cari berdasarkan nama, NIS, atau email..." 
+                            <input type="text" class="form-control border-start-0"
+                                   placeholder="Cari berdasarkan nama, NIS, atau email..."
                                    id="searchInput">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <select class="form-select" id="classFilter">
                             <option value="">Semua Kelas</option>
-                            <option value="X IPA 1">X IPA 1</option>
-                            <option value="X IPA 2">X IPA 2</option>
-                            <option value="X IPS 1">X IPS 1</option>
-                            <option value="X IPS 2">X IPS 2</option>
-                            <option value="XI IPA 1">XI IPA 1</option>
-                            <option value="XI IPA 2">XI IPA 2</option>
-                            <option value="XI IPS 1">XI IPS 1</option>
-                            <option value="XI IPS 2">XI IPS 2</option>
-                            <option value="XII IPA 1">XII IPA 1</option>
-                            <option value="XII IPA 2">XII IPA 2</option>
-                            <option value="XII IPS 1">XII IPS 1</option>
-                            <option value="XII IPS 2">XII IPS 2</option>
+                            @foreach($classes as $class)
+                                <option value="{{ $class }}" {{ request('class') == $class ? 'selected' : '' }}>
+                                    {{ $class }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -55,10 +48,6 @@
                             <button class="btn btn-outline-secondary me-2" onclick="resetFilters()">
                                 <i class="fas fa-undo me-1"></i>
                                 Reset
-                            </button>
-                            <button class="btn btn-success" onclick="exportData()">
-                                <i class="fas fa-download me-1"></i>
-                                Export
                             </button>
                         </div>
                     </div>
@@ -76,7 +65,7 @@
                     </h5>
                     <div class="d-flex align-items-center">
                         <small class="text-muted me-3">
-                            Menampilkan {{ $students->firstItem() ?? 0 }} - {{ $students->lastItem() ?? 0 }} 
+                            Menampilkan {{ $students->firstItem() ?? 0 }} - {{ $students->lastItem() ?? 0 }}
                             dari {{ $students->total() }} siswa
                         </small>
                         <div class="btn-group btn-group-sm" role="group">
@@ -140,7 +129,7 @@
                                     </td>
                                     <td class="align-middle">
                                         <div class="d-flex align-items-center">
-                                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
                                                  style="width: 40px; height: 40px; font-size: 14px;">
                                                 {{ strtoupper(substr($student->name, 0, 2)) }}
                                             </div>
@@ -179,7 +168,7 @@
                                     </td>
                                     <td class="align-middle text-center">
                                         <div class="dropdown">
-                                            <button class="btn btn-sm btn-outline-primary dropdown-toggle" 
+                                            <button class="btn btn-sm btn-outline-primary dropdown-toggle"
                                                     type="button" data-bs-toggle="dropdown">
                                                 <i class="fas fa-ellipsis-v"></i>
                                             </button>
@@ -204,7 +193,7 @@
                                                 </li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li>
-                                                    <form action="{{ route('admin.students.destroy', $student) }}" 
+                                                    <form action="{{ route('admin.students.destroy', $student) }}"
                                                           method="POST" class="d-inline"
                                                           onsubmit="return confirm('Yakin ingin menghapus siswa {{ $student->name }}?')">
                                                         @csrf
@@ -245,7 +234,7 @@
                             <div class="col-lg-4 col-md-6 mb-4 student-card">
                                 <div class="card h-100 border-0 shadow-sm">
                                     <div class="card-body text-center">
-                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" 
+                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
                                              style="width: 60px; height: 60px; font-size: 24px;">
                                             {{ strtoupper(substr($student->name, 0, 2)) }}
                                         </div>
@@ -259,15 +248,15 @@
                                     </div>
                                     <div class="card-footer bg-transparent border-top-0">
                                         <div class="d-flex justify-content-center">
-                                            <a href="{{ route('admin.students.show', $student) }}" 
+                                            <a href="{{ route('admin.students.show', $student) }}"
                                                class="btn btn-sm btn-outline-info me-1">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ route('admin.students.edit', $student) }}" 
+                                            <a href="{{ route('admin.students.edit', $student) }}"
                                                class="btn btn-sm btn-outline-warning me-1">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <form action="{{ route('admin.students.destroy', $student) }}" 
+                                            <form action="{{ route('admin.students.destroy', $student) }}"
                                                   method="POST" class="d-inline"
                                                   onsubmit="return confirm('Yakin ingin menghapus siswa {{ $student->name }}?')">
                                                 @csrf
@@ -284,16 +273,16 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Pagination -->
             @if($students->hasPages())
                 <div class="card-footer bg-white border-top">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="text-muted">
-                            Menampilkan {{ $students->firstItem() }} - {{ $students->lastItem() }} 
+                            Menampilkan {{ $students->firstItem() }} - {{ $students->lastItem() }}
                             dari {{ $students->total() }} siswa
                         </div>
-                        {{ $students->links() }}
+                        {{ $students->appends(request()->query())->links() }}
                     </div>
                 </div>
             @endif
@@ -307,48 +296,34 @@
             const searchTerm = this.value.toLowerCase();
             const rows = document.querySelectorAll('.student-row');
             const cards = document.querySelectorAll('.student-card');
-            
+
             rows.forEach(row => {
                 const text = row.textContent.toLowerCase();
                 row.style.display = text.includes(searchTerm) ? '' : 'none';
             });
-            
+
             cards.forEach(card => {
                 const text = card.textContent.toLowerCase();
                 card.style.display = text.includes(searchTerm) ? '' : 'none';
             });
         });
 
-        // Class filter
         document.getElementById('classFilter').addEventListener('change', function() {
             const selectedClass = this.value;
-            const rows = document.querySelectorAll('.student-row');
-            const cards = document.querySelectorAll('.student-card');
-            
-            rows.forEach(row => {
-                if (!selectedClass) {
-                    row.style.display = '';
-                } else {
-                    const classText = row.querySelector('.badge').textContent;
-                    row.style.display = classText === selectedClass ? '' : 'none';
-                }
-            });
-            
-            cards.forEach(card => {
-                if (!selectedClass) {
-                    card.style.display = '';
-                } else {
-                    const classText = card.querySelector('.badge').textContent;
-                    card.style.display = classText === selectedClass ? '' : 'none';
-                }
-            });
+            const currentUrl = new URL(window.location.href);
+            if (selectedClass) {
+                currentUrl.searchParams.set('class', selectedClass);
+            } else {
+                currentUrl.searchParams.delete('class');
+            }
+            window.location.href = currentUrl.toString();
         });
 
         // Reset filters
         function resetFilters() {
             document.getElementById('searchInput').value = '';
             document.getElementById('classFilter').value = '';
-            
+
             document.querySelectorAll('.student-row, .student-card').forEach(element => {
                 element.style.display = '';
             });
@@ -359,10 +334,10 @@
             const tableView = document.getElementById('tableView');
             const gridView = document.getElementById('gridView');
             const buttons = document.querySelectorAll('[onclick^="toggleView"]');
-            
+
             buttons.forEach(btn => btn.classList.remove('active'));
             event.target.closest('button').classList.add('active');
-            
+
             if (view === 'table') {
                 tableView.classList.remove('d-none');
                 gridView.classList.add('d-none');
@@ -370,11 +345,6 @@
                 tableView.classList.add('d-none');
                 gridView.classList.remove('d-none');
             }
-        }
-
-        // Export functionality
-        function exportData() {
-            alert('Fitur export akan segera tersedia!');
         }
     </script>
     @endpush

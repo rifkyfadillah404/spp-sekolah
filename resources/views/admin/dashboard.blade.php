@@ -5,16 +5,6 @@
                 <h2 class="h3 mb-1 fw-bold text-dark">Dashboard Admin</h2>
                 <p class="text-muted mb-0">Selamat datang kembali! Berikut ringkasan sistem SPP hari ini.</p>
             </div>
-            <div class="d-flex align-items-center">
-                <div class="me-3">
-                    <small class="text-muted">Last updated:</small>
-                    <div class="fw-bold text-primary" id="lastUpdated">{{ now()->format('H:i:s') }}</div>
-                </div>
-                <button class="btn btn-outline-primary" onclick="refreshDashboard()">
-                    <i class="fas fa-sync-alt me-1"></i>
-                    Refresh
-                </button>
-            </div>
         </div>
     </x-slot>
 
@@ -22,109 +12,45 @@
         <!-- Enhanced Statistics Cards with Animations -->
         <div class="row mb-4">
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-0 shadow-sm h-100 stat-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="card-body position-relative overflow-hidden">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-muted mb-1 fw-semibold">Total Siswa</h6>
-                                <h2 class="mb-0 fw-bold text-primary counter"
-                                    data-target="{{ $stats['total_students'] }}">0</h2>
-                                <small class="text-success">
-                                    <i class="fas fa-arrow-up me-1"></i>
-                                    +5% dari bulan lalu
-                                </small>
-                            </div>
-                            <div class="stat-icon bg-primary bg-opacity-10 rounded-3 p-3">
-                                <i class="fas fa-users fa-2x text-primary"></i>
-                            </div>
-                        </div>
-                        <div class="progress mt-3" style="height: 4px;">
-                            <div class="progress-bar bg-primary" style="width: 85%"></div>
-                        </div>
-                        <div class="stat-bg-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
+                <div class="card modern-card h-100" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card-body">
+                        <h6 class="text-muted mb-2 fw-semibold">Total Siswa</h6>
+                        <h2 class="mb-0 fw-bolder text-dark counter" data-target="{{ $stats['total_students'] }}">0</h2>
+                        <p class="mb-0 text-success small">+5% dari bulan lalu</p>
+                        <i class="fas fa-users modern-card-icon text-primary"></i>
                     </div>
                 </div>
             </div>
 
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-0 shadow-sm h-100 stat-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="card-body position-relative overflow-hidden">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-muted mb-1 fw-semibold">Belum Bayar</h6>
-                                <h2 class="mb-0 fw-bold text-warning counter"
-                                    data-target="{{ $stats['total_unpaid_bills'] }}">0</h2>
-                                <small class="text-danger">
-                                    <i class="fas fa-arrow-down me-1"></i>
-                                    -12% dari minggu lalu
-                                </small>
-                            </div>
-                            <div class="stat-icon bg-warning bg-opacity-10 rounded-3 p-3">
-                                <i class="fas fa-clock fa-2x text-warning"></i>
-                            </div>
-                        </div>
-                        <div class="progress mt-3" style="height: 4px;">
-                            <div class="progress-bar bg-warning" style="width: 65%"></div>
-                        </div>
-                        <div class="stat-bg-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
+                <div class="card modern-card h-100" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-body">
+                        <h6 class="text-muted mb-2 fw-semibold">Belum Bayar</h6>
+                        <h2 class="mb-0 fw-bolder text-dark counter" data-target="{{ $stats['total_unpaid_bills'] }}">0</h2>
+                        <p class="mb-0 text-danger small">-12% dari minggu lalu</p>
+                        <i class="fas fa-clock modern-card-icon text-warning"></i>
                     </div>
                 </div>
             </div>
 
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-0 shadow-sm h-100 stat-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="card-body position-relative overflow-hidden">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-muted mb-1 fw-semibold">Sudah Lunas</h6>
-                                <h2 class="mb-0 fw-bold text-success counter"
-                                    data-target="{{ $stats['total_paid_bills'] }}">0</h2>
-                                <small class="text-success">
-                                    <i class="fas fa-arrow-up me-1"></i>
-                                    +18% dari minggu lalu
-                                </small>
-                            </div>
-                            <div class="stat-icon bg-success bg-opacity-10 rounded-3 p-3">
-                                <i class="fas fa-check-circle fa-2x text-success"></i>
-                            </div>
-                        </div>
-                        <div class="progress mt-3" style="height: 4px;">
-                            <div class="progress-bar bg-success" style="width: 92%"></div>
-                        </div>
-                        <div class="stat-bg-icon">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
+                <div class="card modern-card h-100" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card-body">
+                        <h6 class="text-muted mb-2 fw-semibold">Sudah Lunas</h6>
+                        <h2 class="mb-0 fw-bolder text-dark counter" data-target="{{ $stats['total_paid_bills'] }}">0</h2>
+                        <p class="mb-0 text-success small">+18% dari minggu lalu</p>
+                        <i class="fas fa-check-circle modern-card-icon text-success"></i>
                     </div>
                 </div>
             </div>
 
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-0 shadow-sm h-100 stat-card" data-aos="fade-up" data-aos-delay="400">
-                    <div class="card-body position-relative overflow-hidden">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-muted mb-1 fw-semibold">Total Pendapatan</h6>
-                                <h2 class="mb-0 fw-bold text-info">Rp
-                                    {{ number_format($stats['total_revenue'], 0, ',', '.') }}</h2>
-                                <small class="text-success">
-                                    <i class="fas fa-arrow-up me-1"></i>
-                                    +25% dari bulan lalu
-                                </small>
-                            </div>
-                            <div class="stat-icon bg-info bg-opacity-10 rounded-3 p-3">
-                                <i class="fas fa-money-bill-wave fa-2x text-info"></i>
-                            </div>
-                        </div>
-                        <div class="progress mt-3" style="height: 4px;">
-                            <div class="progress-bar bg-info" style="width: 78%"></div>
-                        </div>
-                        <div class="stat-bg-icon">
-                            <i class="fas fa-money-bill-wave"></i>
-                        </div>
+                <div class="card modern-card h-100" data-aos="fade-up" data-aos-delay="400">
+                    <div class="card-body">
+                        <h6 class="text-muted mb-2 fw-semibold">Total Pendapatan</h6>
+                        <h2 class="mb-0 fw-bolder text-dark">Rp {{ number_format($stats['total_revenue'], 0, ',', '.') }}</h2>
+                        <p class="mb-0 text-success small">+25% dari bulan lalu</p>
+                        <i class="fas fa-money-bill-wave modern-card-icon text-info"></i>
                     </div>
                 </div>
             </div>
@@ -317,6 +243,39 @@
     @push('styles')
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
         <style>
+.modern-card {
+                background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+                border: none;
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+                transition: all 0.4s ease-out;
+                overflow: hidden;
+            }
+
+            .modern-card:hover {
+                transform: translateY(-8px) scale(1.02);
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            }
+
+            .modern-card .card-body {
+                position: relative;
+                z-index: 1;
+            }
+
+            .modern-card-icon {
+                font-size: 3rem;
+                opacity: 0.1;
+                position: absolute;
+                right: -20px;
+                bottom: -20px;
+                transform: rotate(-20deg);
+                transition: all 0.4s ease-out;
+            }
+
+            .modern-card:hover .modern-card-icon {
+                opacity: 0.15;
+                transform: rotate(-10deg) scale(1.1);
+            }
             .stat-card {
                 transition: all 0.3s ease;
                 cursor: pointer;

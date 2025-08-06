@@ -10,10 +10,18 @@ use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::with('user')->paginate(10);
-        return view('admin.students.index', compact('students'));
+        $query = Student::with('user');
+
+        if ($request->has('class') && $request->class != '') {
+            $query->where('class', $request->class);
+        }
+
+        $students = $query->paginate(10);
+        $classes = Student::select('class')->distinct()->orderBy('class')->get()->pluck('class');
+
+        return view('admin.students.index', compact('students', 'classes'));
     }
 
     public function create()

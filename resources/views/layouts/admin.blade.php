@@ -23,20 +23,27 @@
 
     <style>
         :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1d4ed8;
-            --sidebar-width: 260px;
-            --sidebar-collapsed-width: 70px;
-            --border-radius: 8px;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #a5b4fc;
+            --secondary-color: #f1f5f9;
+            --accent-color: #06b6d4;
+            --sidebar-width: 280px;
+            --sidebar-collapsed-width: 75px;
+            --border-radius: 12px;
+            --border-radius-sm: 8px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px rgba(0, 0, 0, 0.1);
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
 
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: #f8fafc;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: #1e293b;
+            min-height: 100vh;
         }
 
         .sidebar {
@@ -45,11 +52,26 @@
             left: 0;
             height: 100vh;
             width: var(--sidebar-width);
-            background: #ffffff;
-            border-right: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
+            background: linear-gradient(180deg, #ffffff 0%, #fafbff 100%);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(99, 102, 241, 0.1);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
             overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: var(--gradient-primary);
+            opacity: 0.05;
+            border-radius: 0 0 50px 0;
         }
 
         .sidebar.collapsed {
@@ -58,42 +80,92 @@
 
         .sidebar .nav-link {
             color: #64748b;
-            padding: 12px 16px;
-            margin: 2px 8px;
+            padding: 14px 20px;
+            margin: 4px 12px;
             border-radius: var(--border-radius);
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 500;
             font-size: 14px;
             display: flex;
             align-items: center;
             text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .sidebar .nav-link:hover::before {
+            left: 100%;
         }
 
         .sidebar .nav-link:hover {
             color: var(--primary-color);
-            background-color: #f1f5f9;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(165, 180, 252, 0.05) 100%);
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
         }
 
         .sidebar .nav-link.active {
-            color: var(--primary-color);
-            background-color: #eff6ff;
-            border-left: 3px solid var(--primary-color);
+            color: #ffffff;
+            background: var(--gradient-primary);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+            transform: translateX(4px);
+        }
+
+        .sidebar .nav-link.active::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: #ffffff;
+            border-radius: 2px 0 0 2px;
         }
 
         .sidebar .nav-link i {
-            width: 20px;
+            width: 22px;
             text-align: center;
-            margin-right: 12px;
+            margin-right: 14px;
             font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover i {
+            transform: scale(1.1);
         }
 
         .sidebar.collapsed .nav-link span {
-            display: none;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar:not(.collapsed) .nav-link span {
+            opacity: 1;
+            transform: translateX(0);
+            transition: all 0.3s ease 0.1s;
         }
 
         .sidebar.collapsed .nav-link {
             justify-content: center;
-            margin: 2px 4px;
+            margin: 4px 8px;
+            padding: 14px 8px;
+        }
+
+        .sidebar.collapsed .nav-link i {
+            margin-right: 0;
         }
 
         .main-content {
@@ -114,21 +186,95 @@
         }
 
         .sidebar-brand {
-            padding: 24px 16px;
-            border-bottom: 1px solid #e2e8f0;
-            margin-bottom: 16px;
+            padding: 32px 20px;
+            margin-bottom: 24px;
             text-align: center;
+            position: relative;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(165, 180, 252, 0.02) 100%);
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+        }
+
+        .sidebar-brand::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            right: 20px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            opacity: 0.3;
+        }
+
+        .sidebar-brand .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed .sidebar-brand .brand-icon {
+            margin-bottom: 0;
         }
 
         .sidebar-brand h4 {
             color: var(--primary-color);
             margin: 0;
-            font-weight: 700;
-            font-size: 1.25rem;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all 0.3s ease;
         }
 
         .sidebar.collapsed .sidebar-brand h4 {
-            display: none;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .nav-section {
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .nav-section-title {
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0 20px 8px;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .sidebar.collapsed .nav-section-title {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .nav-section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 30px;
+            height: 2px;
+            background: var(--gradient-primary);
+            border-radius: 1px;
+            opacity: 0.6;
         }
 
         .card {
@@ -267,22 +413,56 @@
             }
         }
 
-        /* Clean scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
+        /* Enhanced scrollbar */
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
         }
 
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
+        .sidebar::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary-color), var(--primary-dark));
+            border-radius: 2px;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--primary-dark), var(--primary-color));
+        }
+
+        /* Tooltip for collapsed sidebar */
+        .nav-tooltip {
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+            z-index: 1000;
+        }
+
+        .nav-tooltip::before {
+            content: '';
+            position: absolute;
+            right: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 5px solid transparent;
+            border-right-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .sidebar.collapsed .nav-link:hover .nav-tooltip {
+            opacity: 1;
+            visibility: visible;
         }
     </style>
 </head>
@@ -294,95 +474,99 @@
     <!-- Sidebar -->
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-brand">
+            <div class="brand-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
             <h4>SPP Admin</h4>
         </div>
 
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
-                    href="{{ route('admin.dashboard') }}">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.students.*') ? 'active' : '' }}" href="#"
-                    data-bs-toggle="collapse" data-bs-target="#studentsMenu">
-                    <i class="fas fa-users"></i>
-                    <span>Kelola Siswa</span>
-                    <i class="fas fa-chevron-down ms-auto"></i>
-                </a>
-                <div class="collapse {{ request()->routeIs('admin.students.*') ? 'show' : '' }} submenu"
-                    id="studentsMenu">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.students.index') ? 'active' : '' }}"
-                                href="{{ route('admin.students.index') }}">
-                                <i class="fas fa-list"></i>
-                                <span>Semua Siswa</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.students.by-class') ? 'active' : '' }}"
-                                href="{{ route('admin.students.by-class') }}">
-                                <i class="fas fa-graduation-cap"></i>
-                                <span>Per Kelas</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.students.create') ? 'active' : '' }}"
-                                href="{{ route('admin.students.create') }}">
-                                <i class="fas fa-plus"></i>
-                                <span>Tambah Siswa</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.spp-bills.*') ? 'active' : '' }}" href="#"
-                    data-bs-toggle="collapse" data-bs-target="#billsMenu">
-                    <i class="fas fa-file-invoice"></i>
-                    <span>Kelola Tagihan</span>
-                    <i class="fas fa-chevron-down ms-auto"></i>
-                </a>
-                <div class="collapse {{ request()->routeIs('admin.spp-bills.*') ? 'show' : '' }} submenu"
-                    id="billsMenu">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.spp-bills.index') ? 'active' : '' }}"
-                                href="{{ route('admin.spp-bills.index') }}">
-                                <i class="fas fa-list"></i>
-                                <span>Semua Tagihan</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('admin.spp-bills.create') ? 'active' : '' }}"
-                                href="{{ route('admin.spp-bills.create') }}">
-                                <i class="fas fa-plus"></i>
-                                <span>Buat Tagihan</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-
-            <li class="nav-item mt-3">
-                <hr style="border-color: #e2e8f0;">
-            </li>
-
-            <li class="nav-item">
-                <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                    @csrf
-                    <a class="nav-link" href="#" onclick="event.preventDefault(); this.closest('form').submit();">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
+        <!-- Main Navigation -->
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
+                        href="{{ route('admin.dashboard') }}">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Dashboard</span>
+                        <div class="nav-tooltip">Dashboard</div>
                     </a>
-                </form>
-            </li>
-        </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Student Management -->
+        <div class="nav-section">
+            <div class="nav-section-title">Manajemen Siswa</div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.students.index') ? 'active' : '' }}"
+                        href="{{ route('admin.students.index') }}">
+                        <i class="fas fa-users"></i>
+                        <span>Semua Siswa</span>
+                        <div class="nav-tooltip">Semua Siswa</div>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.students.by-class') ? 'active' : '' }}"
+                        href="{{ route('admin.students.by-class') }}">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Siswa Per Kelas</span>
+                        <div class="nav-tooltip">Siswa Per Kelas</div>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.students.create') ? 'active' : '' }}"
+                        href="{{ route('admin.students.create') }}">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Tambah Siswa</span>
+                        <div class="nav-tooltip">Tambah Siswa</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Payment Management -->
+        <div class="nav-section">
+            <div class="nav-section-title">Manajemen SPP</div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.spp-bills.index') ? 'active' : '' }}"
+                        href="{{ route('admin.spp-bills.index') }}">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Semua Tagihan</span>
+                        <div class="nav-tooltip">Semua Tagihan</div>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.spp-bills.create') ? 'active' : '' }}"
+                        href="{{ route('admin.spp-bills.create') }}">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Buat Tagihan</span>
+                        <div class="nav-tooltip">Buat Tagihan</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Account Section -->
+        <div class="nav-section" style="margin-top: auto; padding-top: 20px;">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                        @csrf
+                        <a class="nav-link" href="#" onclick="event.preventDefault(); this.closest('form').submit();">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                            <div class="nav-tooltip">Logout</div>
+                        </a>
+                    </form>
+                </li>
+            </ul>
+        </div>
     </nav>
 
     <!-- Main Content -->
@@ -475,9 +659,13 @@
                 const sidebarToggle = document.getElementById('sidebarToggle');
                 const overlay = document.getElementById('sidebarOverlay');
 
+                // Don't close if clicking inside sidebar or on toggle button
                 if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
-                    sidebar.classList.remove('show');
-                    overlay.classList.remove('show');
+                    // Add small delay to allow Bootstrap dropdowns to work
+                    setTimeout(() => {
+                        sidebar.classList.remove('show');
+                        overlay.classList.remove('show');
+                    }, 100);
                 }
             }
         });

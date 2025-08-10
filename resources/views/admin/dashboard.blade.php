@@ -66,11 +66,6 @@
                                 <i class="fas fa-chart-line me-2 text-primary"></i>
                                 Tren Pembayaran
                             </h5>
-                            <div class="btn-group btn-group-sm" role="group">
-                                <button type="button" class="btn btn-outline-primary active">7 Hari</button>
-                                <button type="button" class="btn btn-outline-primary">30 Hari</button>
-                                <button type="button" class="btn btn-outline-primary">90 Hari</button>
-                            </div>
                         </div>
                     </div>
                     <div class="card-body">

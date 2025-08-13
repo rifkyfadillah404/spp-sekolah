@@ -5,16 +5,6 @@
                 <div class="header-text">
                     <h1 class="header-title">Dashboard Siswa</h1>
                     <p class="header-subtitle">Selamat datang kembali, {{ $student->name }}! 👋</p>
-                    <div class="header-stats">
-                        <span class="stat-item">
-                            <i class="fas fa-calendar-alt"></i>
-                            {{ now()->format('d M Y') }}
-                        </span>
-                        <span class="stat-item">
-                            <i class="fas fa-clock"></i>
-                            {{ now()->format('H:i') }} WIB
-                        </span>
-                    </div>
                 </div>
                 <div class="header-avatar">
                     <div class="avatar-container">
@@ -298,11 +288,48 @@
         <!-- Student Info Card -->
         <div class="col-lg-4 mb-4">
             <div class="card h-100">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-bold">
                         <i class="fas fa-user me-2"></i>
                         Informasi Siswa
                     </h5>
+
+                    <div class="dropdown">
+                        <a class="text-decoration-none d-flex align-items-center" href="#" id="studentDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+                                 style="width: 32px; height: 32px; font-size: 12px;">
+                                {{ strtoupper(substr($student->name, 0, 2)) }}
+                            </div>
+                            <span class="d-none d-md-inline text-dark">{{ $student->name }}</span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="studentDropdown">
+                            <li>
+                                <h6 class="dropdown-header">
+                                    <div class="fw-bold">{{ $student->name }}</div>
+                                    <small class="text-muted">{{ $student->user->email }}</small>
+                                </h6>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                    <i class="fas fa-user me-2"></i>
+                                    Profile
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <a class="dropdown-item text-danger" href="#"
+                                       onclick="event.preventDefault(); this.closest('form').submit();">
+                                        <i class="fas fa-sign-out-alt me-2"></i>
+                                        Logout
+                                    </a>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="text-center mb-3">
@@ -337,6 +364,7 @@
                         <p class="mb-0"><i class="fas fa-phone me-2 text-muted"></i>
                             {{ $student->phone ?? 'Belum diisi' }}</p>
                     </div>
+
                 </div>
             </div>
         </div>

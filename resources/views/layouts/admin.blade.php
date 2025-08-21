@@ -552,16 +552,50 @@
             </ul>
         </div>
 
+          <!-- Reports -->
+    <div class="nav-section">
+        <div class="nav-section-title">Laporan</div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.reports.students.pdf') }}">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>Daftar Siswa (PDF)</span>
+                    <div class="nav-tooltip">Daftar Siswa PDF</div>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.reports.students.excel') }}">
+                    <i class="fas fa-file-excel"></i>
+                    <span>Daftar Siswa (Excel)</span>
+                    <div class="nav-tooltip">Daftar Siswa Excel</div>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.reports.spp.pdf') }}">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>Tagihan SPP (PDF)</span>
+                    <div class="nav-tooltip">Tagihan SPP PDF</div>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.reports.spp.excel') }}">
+                    <i class="fas fa-file-excel"></i>
+                    <span>Tagihan SPP (Excel)</span>
+                    <div class="nav-tooltip">Tagihan SPP Excel</div>
+                </a>
+            </li>
+        </ul>
+    </div>
+    
         <!-- Account Section -->
         <div class="nav-section" style="margin-top: auto; padding-top: 20px;">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                    <form method="POST" action="{{ route('logout') }}" class="d-inline" id="logout-form">
                         @csrf
-                        <a class="nav-link" href="#" onclick="event.preventDefault(); this.closest('form').submit();">
+                        <a class="nav-link" href="#" onclick="confirmLogout(event)">
                             <i class="fas fa-sign-out-alt"></i>
                             <span>Logout</span>
-                            <div class="nav-tooltip">Logout</div>
                         </a>
                     </form>
                 </li>
@@ -695,6 +729,15 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', initializeSidebar);
     </script>
+    
+        <script>
+            function confirmLogout(event) {
+                event.preventDefault();
+                if (confirm("Apakah Anda yakin ingin logout?")) {
+                    document.getElementById('logout-form').submit();
+                }
+            }
+        </script>
 
     @stack('scripts')
 </body>

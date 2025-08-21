@@ -43,4 +43,10 @@ class SppBill extends Model
     {
         return $this->due_date && $this->due_date < now() && $this->status === 'unpaid';
     }
+    
+    public function getStatusLabelAttribute()
+    {
+        return $this->status === 'paid' ? 'Lunas' : 'Tidak Lunas';
+    }
+
 }

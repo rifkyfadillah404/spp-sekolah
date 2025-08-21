@@ -5,7 +5,9 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\SppBillController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\Admin\ReportController;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +51,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('spp-bills/get-students-by-class', [SppBillController::class, 'getStudentsByClass'])->name('spp-bills.getStudentsByClass');
         Route::resource('spp-bills', SppBillController::class);
     });
+});
+
+
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::get('/reports/students/pdf', [ReportController::class, 'studentsPdf'])->name('admin.reports.students.pdf');
+    Route::get('/reports/students/excel', [ReportController::class, 'studentsExcel'])->name('admin.reports.students.excel');
+    Route::get('/reports/spp/pdf', [ReportController::class, 'sppPdf'])->name('admin.reports.spp.pdf');
+    Route::get('/reports/spp/excel', [ReportController::class, 'sppExcel'])->name('admin.reports.spp.excel');
 });
 
 // Midtrans notification (no auth required)

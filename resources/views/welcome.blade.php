@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SPP Sekolah - Sistem Pembayaran SPP Digital</title>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -37,40 +37,40 @@
             }
         }
     </script>
-    
+
     <style>
         .gradient-bg {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
         }
-        
+
         .glass-effect {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        
+
         .floating-animation {
             animation: floating 6s ease-in-out infinite;
         }
-        
+
         @keyframes floating {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
         }
-        
+
         .fade-in-up {
             animation: fadeInUp 0.8s ease-out forwards;
             opacity: 0;
             transform: translateY(30px);
         }
-        
+
         @keyframes fadeInUp {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         .stagger-1 { animation-delay: 0.1s; }
         .stagger-2 { animation-delay: 0.2s; }
         .stagger-3 { animation-delay: 0.3s; }
@@ -87,7 +87,7 @@
                         <h1 class="text-xl font-bold text-white">SPP Sekolah</h1>
                     </div>
                 </div>
-                
+
                 @if (Route::has('login'))
                     <div class="flex items-center space-x-4">
                         @auth
@@ -95,14 +95,9 @@
                                 Dashboard
                             </a>
                         @else
-                            <a href="{{ route('login') }}" class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                            <a href="{{ route('login') }}" class="bg-white text-navy-800 hover:bg-gray-100 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105">
                                 Masuk
                             </a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="bg-white text-navy-800 hover:bg-gray-100 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105">
-                                    Daftar
-                                </a>
-                            @endif
                         @endauth
                     </div>
                 @endif
@@ -117,7 +112,7 @@
             <div class="absolute top-20 left-10 w-72 h-72 bg-white opacity-10 rounded-full floating-animation"></div>
             <div class="absolute bottom-20 right-10 w-96 h-96 bg-white opacity-5 rounded-full floating-animation" style="animation-delay: -3s;"></div>
         </div>
-        
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
             <div class="fade-in-up stagger-1">
                 <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
@@ -127,20 +122,17 @@
                     </span>
                 </h1>
             </div>
-            
+
             <div class="fade-in-up stagger-2">
                 <p class="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto leading-relaxed">
                     Bayar SPP dengan mudah dan aman melalui sistem pembayaran digital sekolah.
                     Akses untuk siswa, orang tua, dan administrasi sekolah.
                 </p>
             </div>
-            
+
             <div class="fade-in-up stagger-3">
                 <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     @guest
-                        <a href="{{ route('register') }}" class="bg-white text-navy-800 hover:bg-gray-100 px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
-                            Mulai Sekarang
-                        </a>
                         <a href="{{ route('login') }}" class="border-2 border-white text-white hover:bg-white hover:text-navy-800 px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-105">
                             Masuk ke Akun
                         </a>
@@ -152,7 +144,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Scroll Indicator -->
         <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 fade-in-up stagger-4">
             <div class="w-6 h-10 border-2 border-white rounded-full flex justify-center">
@@ -172,7 +164,7 @@
                     Fitur-fitur yang memudahkan pembayaran dan pengelolaan SPP sekolah
                 </p>
             </div>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Feature 1 -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
@@ -186,7 +178,7 @@
                         Bayar SPP dengan mudah melalui berbagai metode pembayaran digital yang aman dan terpercaya.
                     </p>
                 </div>
-                
+
                 <!-- Feature 2 -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
                     <div class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mb-6">
@@ -199,7 +191,7 @@
                         Pantau status pembayaran secara real-time dengan notifikasi otomatis untuk setiap transaksi.
                     </p>
                 </div>
-                
+
                 <!-- Feature 3 -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
                     <div class="w-16 h-16 bg-gray-200 rounded-2xl flex items-center justify-center mb-6">
@@ -212,7 +204,7 @@
                         Dapatkan laporan pembayaran yang detail dan komprehensif untuk keperluan administrasi sekolah.
                     </p>
                 </div>
-                
+
                 <!-- Feature 4 -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
                     <div class="w-16 h-16 bg-navy-50 rounded-2xl flex items-center justify-center mb-6">
@@ -225,7 +217,7 @@
                         Sistem keamanan berlapis dengan enkripsi data untuk melindungi informasi pribadi dan keuangan.
                     </p>
                 </div>
-                
+
                 <!-- Feature 5 -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
                     <div class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mb-6">
@@ -238,7 +230,7 @@
                         Terima notifikasi otomatis untuk pengingat pembayaran dan konfirmasi transaksi yang berhasil.
                     </p>
                 </div>
-                
+
                 <!-- Feature 6 -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
                     <div class="w-16 h-16 bg-navy-100 rounded-2xl flex items-center justify-center mb-6">
@@ -277,7 +269,7 @@
                                 <p class="text-gray-600">Hemat waktu dengan proses pembayaran yang cepat dan otomatis tanpa perlu antri.</p>
                             </div>
                         </div>
-                        
+
                         <div class="flex items-start">
                             <div class="flex-shrink-0">
                                 <div class="w-8 h-8 bg-navy-100 rounded-full flex items-center justify-center">
@@ -291,7 +283,7 @@
                                 <p class="text-gray-600">Lihat riwayat pembayaran dan status tagihan dengan jelas dan transparan.</p>
                             </div>
                         </div>
-                        
+
                         <div class="flex items-start">
                             <div class="flex-shrink-0">
                                 <div class="w-8 h-8 bg-navy-100 rounded-full flex items-center justify-center">
@@ -307,7 +299,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="relative">
                     <div class="bg-gradient-to-r from-navy-800 to-navy-600 rounded-2xl p-8 text-white">
                         <div class="text-center">
@@ -342,7 +334,7 @@
                     Manfaat yang didapatkan dengan menggunakan sistem pembayaran SPP digital
                 </p>
             </div>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div class="text-center">
                     <div class="text-4xl md:text-5xl font-bold text-white mb-2">24/7</div>
@@ -396,7 +388,7 @@
                         </a>
                     </div>
                 </div>
-                
+
                 <div>
                     <h4 class="text-lg font-semibold text-white mb-4">Produk</h4>
                     <ul class="space-y-2">
@@ -406,7 +398,7 @@
                         <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Notifikasi</a></li>
                     </ul>
                 </div>
-                
+
                 <div>
                     <h4 class="text-lg font-semibold text-white mb-4">Dukungan</h4>
                     <ul class="space-y-2">
@@ -416,7 +408,7 @@
                         <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">FAQ</a></li>
                     </ul>
                 </div>
-                
+
                 <div>
                     <h4 class="text-lg font-semibold text-white mb-4">Perusahaan</h4>
                     <ul class="space-y-2">
@@ -427,7 +419,7 @@
                     </ul>
                 </div>
             </div>
-            
+
             <div class="border-t border-gray-700 mt-8 pt-8 text-center">
                 <p class="text-gray-300">
                     &copy; {{ date('Y') }} SPP Sekolah. Semua hak dilindungi.

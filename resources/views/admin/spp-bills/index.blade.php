@@ -131,10 +131,6 @@
                                 <i class="fas fa-undo me-1"></i>
                                 Reset
                             </button>
-                            <button class="btn btn-success" onclick="exportData()">
-                                <i class="fas fa-download me-1"></i>
-                                Export
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -216,7 +212,11 @@
                         <tbody>
                             @forelse ($bills as $bill)
                                 <tr
-                                    class="bill-row {{ $bill->is_overdue && $bill->status !== 'paid' ? 'table-warning' : '' }}">
+                                    class="bill-row {{ $bill->is_overdue && $bill->status !== 'paid' ? 'table-warning' : '' }}"
+                                    data-status="{{ $bill->status }}"
+                                    data-month="{{ (['Januari'=>1,'Februari'=>2,'Maret'=>3,'April'=>4,'Mei'=>5,'Juni'=>6,'Juli'=>7,'Agustus'=>8,'September'=>9,'Oktober'=>10,'November'=>11,'Desember'=>12,'January'=>1,'February'=>2,'March'=>3,'April'=>4,'May'=>5,'June'=>6,'July'=>7,'August'=>8,'September'=>9,'October'=>10,'November'=>11,'December'=>12][$bill->month] ?? (is_numeric($bill->month) ? intval($bill->month) : '')) }}"
+                                    data-year="{{ $bill->year }}"
+                                    data-overdue="{{ $bill->is_overdue && $bill->status !== 'paid' ? '1' : '0' }}">
                                     <td class="align-middle">
                                         <div class="form-check">
                                             <input class="form-check-input bill-checkbox" type="checkbox"
@@ -291,22 +291,27 @@
                                                 <i class="fas fa-check-circle me-1"></i>
                                                 Lunas
                                             </span>
-                                        @elseif($bill->status === 'pending')
+                                        @elseif ($bill->status === 'pending')
                                             <span class="badge bg-info bg-opacity-10 text-info border border-info">
                                                 <i class="fas fa-clock me-1"></i>
                                                 Pending
                                             </span>
-                                        @elseif($bill->is_overdue)
+                                        @elseif ($bill->status === 'unpaid')
                                             <span
-                                                class="badge bg-danger bg-opacity-10 text-danger border border-danger">
-                                                <i class="fas fa-exclamation-triangle me-1"></i>
-                                                Terlambat
-                                            </span>
-                                        @else
-                                            <span
-                                                class="badge bg-warning bg-opacity-10 text-warning border border-warning">
+                                                class="badge bg-warning bg-opacity-10 text-warning border border-warning me-1">
                                                 <i class="fas fa-hourglass-half me-1"></i>
                                                 Belum Bayar
+                                            </span>
+                                            @if ($bill->is_overdue)
+                                                <span
+                                                    class="badge bg-danger bg-opacity-10 text-danger border border-danger">
+                                                    <i class="fas fa-exclamation-triangle me-1"></i>
+                                                    Terlambat
+                                                </span>
+                                            @endif
+                                        @else
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary">
+                                                {{ ucfirst($bill->status) }}
                                             </span>
                                         @endif
                                     </td>
@@ -403,137 +408,106 @@
 
     @push('scripts')
         <script>
-            // Search functionality
-            document.getElementById('searchInput').addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const rows = document.querySelectorAll('.bill-row');
+            (function () {
+                const searchInput = document.getElementById('searchInput');
+                const statusFilter = document.getElementById('statusFilter');
+                const monthFilter = document.getElementById('monthFilter');
+                const yearFilter = document.getElementById('yearFilter');
 
-                rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    row.style.display = text.includes(searchTerm) ? '' : 'none';
-                });
-            });
+                function applyFilters() {
+                    const searchTerm = (searchInput?.value || '').toLowerCase().trim();
+                    const selectedStatus = statusFilter?.value || '';
+                    const selectedMonth = monthFilter?.value || '';
+                    const selectedYear = yearFilter?.value || '';
 
-            // Status filter
-            document.getElementById('statusFilter').addEventListener('change', function() {
-                const selectedStatus = this.value;
-                const rows = document.querySelectorAll('.bill-row');
+                    document.querySelectorAll('.bill-row').forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        const rowStatus = row.dataset.status || '';
+                        const rowMonth = row.dataset.month || '';
+                        const rowYear = row.dataset.year || '';
+                        const rowOverdue = row.dataset.overdue === '1';
 
-                rows.forEach(row => {
-                    if (!selectedStatus) {
-                        row.style.display = '';
-                    } else {
-                        const statusBadge = row.querySelector('.badge');
-                        const statusText = statusBadge.textContent.toLowerCase().trim();
+                        const matchesSearch = !searchTerm || text.includes(searchTerm);
 
-                        let shouldShow = false;
-                        if (selectedStatus === 'paid' && statusText.includes('lunas')) shouldShow = true;
-                        if (selectedStatus === 'unpaid' && statusText.includes('belum bayar')) shouldShow =
-                            true;
-                        if (selectedStatus === 'pending' && statusText.includes('pending')) shouldShow = true;
-                        if (selectedStatus === 'overdue' && statusText.includes('terlambat')) shouldShow = true;
+                        let matchesStatus = true;
+                        if (selectedStatus) {
+                            matchesStatus = selectedStatus === 'overdue'
+                                ? rowOverdue
+                                : rowStatus === selectedStatus;
+                        }
 
-                        row.style.display = shouldShow ? '' : 'none';
+                        const matchesMonth = !selectedMonth || String(rowMonth) === String(selectedMonth);
+                        const matchesYear = !selectedYear || String(rowYear) === String(selectedYear);
+
+                        row.style.display = (matchesSearch && matchesStatus && matchesMonth && matchesYear) ? '' : 'none';
+                    });
+                }
+
+                if (searchInput) searchInput.addEventListener('input', applyFilters);
+                if (statusFilter) statusFilter.addEventListener('change', applyFilters);
+                if (monthFilter) monthFilter.addEventListener('change', applyFilters);
+                if (yearFilter) yearFilter.addEventListener('change', applyFilters);
+
+                window.resetFilters = function () {
+                    if (searchInput) searchInput.value = '';
+                    if (statusFilter) statusFilter.value = '';
+                    if (monthFilter) monthFilter.value = '';
+                    if (yearFilter) yearFilter.value = '';
+                    applyFilters();
+                };
+
+                // Select all functionality
+                const selectAll = document.getElementById('selectAll');
+                if (selectAll) {
+                    selectAll.addEventListener('change', function () {
+                        const checkboxes = document.querySelectorAll('.bill-checkbox:not(:disabled)');
+                        checkboxes.forEach(checkbox => {
+                            checkbox.checked = this.checked;
+                        });
+                    });
+                }
+
+                // Mark as paid (placeholder)
+                window.markAsPaid = function (billId) {
+                    if (confirm('Tandai tagihan ini sebagai lunas?')) {
+                        alert('Fitur tandai lunas akan segera tersedia!');
                     }
-                });
-            });
+                };
 
-            // Month filter
-            document.getElementById('monthFilter').addEventListener('change', function() {
-                const selectedMonth = this.value;
-                const rows = document.querySelectorAll('.bill-row');
-
-                rows.forEach(row => {
-                    if (!selectedMonth) {
-                        row.style.display = '';
-                    } else {
-                        // This is a simplified filter - in real implementation, you'd need month data attributes
-                        row.style.display = '';
+                // Bulk mark as paid (placeholder)
+                window.bulkMarkPaid = function () {
+                    const checkedBoxes = document.querySelectorAll('.bill-checkbox:checked');
+                    if (checkedBoxes.length === 0) {
+                        alert('Pilih tagihan yang ingin ditandai lunas terlebih dahulu.');
+                        return;
                     }
-                });
-            });
 
-            // Year filter
-            document.getElementById('yearFilter').addEventListener('change', function() {
-                const selectedYear = this.value;
-                const rows = document.querySelectorAll('.bill-row');
-
-                rows.forEach(row => {
-                    if (!selectedYear) {
-                        row.style.display = '';
-                    } else {
-                        // This is a simplified filter - in real implementation, you'd need year data attributes
-                        row.style.display = '';
+                    if (confirm(`Tandai ${checkedBoxes.length} tagihan sebagai lunas?`)) {
+                        alert('Fitur bulk mark paid akan segera tersedia!');
                     }
-                });
-            });
+                };
 
-            // Reset filters
-            function resetFilters() {
-                document.getElementById('searchInput').value = '';
-                document.getElementById('statusFilter').value = '';
-                document.getElementById('monthFilter').value = '';
-                document.getElementById('yearFilter').value = '';
+                // Bulk delete (placeholder)
+                window.bulkDelete = function () {
+                    const checkedBoxes = document.querySelectorAll('.bill-checkbox:checked');
+                    if (checkedBoxes.length === 0) {
+                        alert('Pilih tagihan yang ingin dihapus terlebih dahulu.');
+                        return;
+                    }
 
-                document.querySelectorAll('.bill-row').forEach(row => {
-                    row.style.display = '';
-                });
-            }
+                    if (confirm(`Yakin ingin menghapus ${checkedBoxes.length} tagihan?`)) {
+                        alert('Fitur bulk delete akan segera tersedia!');
+                    }
+                };
 
-            // Select all functionality
-            document.getElementById('selectAll').addEventListener('change', function() {
-                const checkboxes = document.querySelectorAll('.bill-checkbox:not(:disabled)');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = this.checked;
-                });
-            });
+                // Auto-refresh every 30 seconds for real-time updates
+                setInterval(function () {
+                    console.log('Auto-refresh triggered');
+                }, 30000);
 
-            // Mark as paid
-            function markAsPaid(billId) {
-                if (confirm('Tandai tagihan ini sebagai lunas?')) {
-                    // In real implementation, this would make an AJAX call
-                    alert('Fitur tandai lunas akan segera tersedia!');
-                }
-            }
-
-            // Bulk mark as paid
-            function bulkMarkPaid() {
-                const checkedBoxes = document.querySelectorAll('.bill-checkbox:checked');
-                if (checkedBoxes.length === 0) {
-                    alert('Pilih tagihan yang ingin ditandai lunas terlebih dahulu.');
-                    return;
-                }
-
-                if (confirm(`Tandai ${checkedBoxes.length} tagihan sebagai lunas?`)) {
-                    // In real implementation, this would make an AJAX call
-                    alert('Fitur bulk mark paid akan segera tersedia!');
-                }
-            }
-
-            // Bulk delete
-            function bulkDelete() {
-                const checkedBoxes = document.querySelectorAll('.bill-checkbox:checked');
-                if (checkedBoxes.length === 0) {
-                    alert('Pilih tagihan yang ingin dihapus terlebih dahulu.');
-                    return;
-                }
-
-                if (confirm(`Yakin ingin menghapus ${checkedBoxes.length} tagihan?`)) {
-                    // In real implementation, this would make an AJAX call
-                    alert('Fitur bulk delete akan segera tersedia!');
-                }
-            }
-
-            // Export functionality
-            function exportData() {
-                alert('Fitur export akan segera tersedia!');
-            }
-
-            // Auto-refresh every 30 seconds for real-time updates
-            setInterval(function() {
-                // In real implementation, this would refresh the data
-                console.log('Auto-refresh triggered');
-            }, 30000);
+                // Initial apply
+                applyFilters();
+            })();
         </script>
     @endpush
 </x-admin-layout>

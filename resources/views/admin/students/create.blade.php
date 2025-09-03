@@ -5,10 +5,6 @@
                 <h2 class="h4 mb-1 fw-bold text-dark">Tambah Siswa Baru</h2>
                 <p class="text-muted mb-0">Lengkapi form di bawah untuk menambahkan siswa baru</p>
             </div>
-            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
-                 style="width: 50px; height: 50px;">
-                <i class="fas fa-user-plus fa-lg"></i>
-            </div>
         </div>
     </x-slot>
 

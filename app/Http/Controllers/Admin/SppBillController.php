@@ -9,11 +9,31 @@ use Illuminate\Http\Request;
 
 class SppBillController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $bills = SppBill::with('student')->paginate(15);
-        return view('admin.spp-bills.index', compact('bills'));
+        $query = SppBill::with('student');
+
+        // Filter bulan
+        if ($request->filled('month')) {
+            $query->where('month', $request->month);
+        }
+
+        // Filter tahun
+        if ($request->filled('year')) {
+            $query->where('year', $request->year);
+        }
+
+        $bills = $query->orderBy('year', 'desc')
+            ->orderBy('month', 'asc')
+            ->paginate(15);
+
+        // Ambil daftar tahun & bulan unik buat dropdown filter
+        $years = SppBill::select('year')->distinct()->orderBy('year', 'desc')->pluck('year');
+        $months = SppBill::select('month')->distinct()->orderBy('month', 'asc')->pluck('month');
+
+        return view('admin.spp-bills.index', compact('bills', 'years', 'months'));
     }
+
 
     public function create()
     {

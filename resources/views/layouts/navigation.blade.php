@@ -15,14 +15,14 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('user.dashboard') ? 'active' : '' }}" 
+                    <a class="nav-link {{ request()->routeIs('user.dashboard') ? 'active' : '' }}"
                        href="{{ route('user.dashboard') }}">
                         <i class="fas fa-tachometer-alt me-1"></i>
                         Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}" 
+                    <a class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}"
                        href="{{ route('profile.edit') }}">
                         <i class="fas fa-user me-1"></i>
                         Profile
@@ -32,10 +32,19 @@
 
             <!-- User Dropdown -->
             <ul class="navbar-nav">
+                <!-- Mobile-only Logout button -->
+                <li class="nav-item d-lg-none">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-danger w-100">
+                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                        </button>
+                    </form>
+                </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" 
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
                        data-bs-toggle="dropdown">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" 
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
                              style="width: 32px; height: 32px; font-size: 12px;">
                             {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
                         </div>
@@ -59,14 +68,21 @@
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <a class="dropdown-item text-danger" href="#" 
-                                   onclick="event.preventDefault(); this.closest('form').submit();">
-                                    <i class="fas fa-sign-out-alt me-2"></i>
-                                    Logout
-                                </a>
+                                <button type="submit" class="dropdown-item text-danger d-flex align-items-center">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                </button>
                             </form>
                         </li>
                     </ul>
+                </li>
+                <!-- Desktop Logout button -->
+                <li class="nav-item d-none d-lg-flex align-items-center ms-2">
+                    <form method="POST" action="{{ route('logout') }}" class="mb-0">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-sign-out-alt me-1"></i> Logout
+                        </button>
+                    </form>
                 </li>
             </ul>
         </div>

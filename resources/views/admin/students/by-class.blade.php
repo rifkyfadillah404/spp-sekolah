@@ -62,7 +62,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-rounded table-row-gray-300 table-hover by-class-table">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -83,15 +83,20 @@
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
-                                                     style="width: 32px; height: 32px; font-size: 12px;">
-                                                    {{ strtoupper(substr($student->name, 0, 2)) }}
+                                                <div class="symbol symbol-35px symbol-circle me-3">
+                                                    <div class="symbol-label bg-light-primary text-primary">
+                                                        {{ strtoupper(substr($student->name, 0, 2)) }}
+                                                    </div>
                                                 </div>
-                                                <strong>{{ $student->name }}</strong>
+                                                <div class="text-gray-800 fw-bold fs-6">{{ $student->name }}</div>
                                             </div>
                                         </td>
-                                        <td>{{ $student->user->email }}</td>
-                                        <td>{{ $student->phone ?? '-' }}</td>
+                                        <td>
+                                            <div class="text-gray-800 fw-semibold fs-6">{{ $student->user->email }}</div>
+                                        </td>
+                                        <td>
+                                            <div class="text-gray-600 fs-6">{{ $student->phone ?? '-' }}</div>
+                                        </td>
                                         <td>
                                             @php
                                                 $unpaidCount = $student->sppBills->where('status', 'unpaid')->count();
@@ -100,29 +105,29 @@
                                             @endphp
 
                                             @if($totalCount == 0)
-                                                <span class="badge bg-secondary">Belum ada tagihan</span>
+                                                <span class="badge badge-light-primary">Belum ada tagihan</span>
                                             @elseif($unpaidCount == 0)
-                                                <span class="badge bg-success">
-                                                    <i class="fas fa-check"></i> Semua lunas ({{ $paidCount }})
+                                                <span class="badge badge-light-success">
+                                                    <i class="fas fa-check me-1"></i> Semua lunas ({{ $paidCount }})
                                                 </span>
                                             @else
-                                                <span class="badge bg-warning">
-                                                    <i class="fas fa-exclamation-triangle"></i> {{ $unpaidCount }} belum bayar
+                                                <span class="badge badge-light-warning">
+                                                    <i class="fas fa-exclamation-triangle me-1"></i> {{ $unpaidCount }} belum bayar
                                                 </span>
                                             @endif
                                         </td>
                                         <td>
-                                            <div class="btn-group" role="group">
+                                            <div class="d-flex gap-1">
                                                 <a href="{{ route('admin.students.show', $student) }}"
-                                                   class="btn btn-sm btn-info" title="Lihat Detail">
+                                                   class="btn btn-sm btn-light-primary btn-icon" title="Lihat Detail">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                                 <a href="{{ route('admin.students.edit', $student) }}"
-                                                   class="btn btn-sm btn-warning" title="Edit">
+                                                   class="btn btn-sm btn-light-warning btn-icon" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 <a href="{{ route('admin.spp-bills.create') }}?student_id={{ $student->id }}"
-                                                   class="btn btn-sm btn-success" title="Buat Tagihan">
+                                                   class="btn btn-sm btn-light-success btn-icon" title="Buat Tagihan">
                                                     <i class="fas fa-plus"></i>
                                                 </a>
                                             </div>

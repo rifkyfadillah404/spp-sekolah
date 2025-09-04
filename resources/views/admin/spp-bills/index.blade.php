@@ -165,8 +165,8 @@
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover mb-0" id="billsTable">
-                        <thead class="table-light">
+                    <table class="table table-rounded table-row-gray-300 table-hover mb-0" id="billsTable">
+                        <thead>
                             <tr>
                                 <th class="border-0" style="width: 50px;">
                                     <div class="form-check">
@@ -226,21 +226,22 @@
                                     </td>
                                     <td class="align-middle">
                                         <div class="d-flex align-items-center">
-                                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
-                                                style="width: 40px; height: 40px; font-size: 14px;">
-                                                {{ strtoupper(substr($bill->student->name, 0, 2)) }}
+                                            <div class="symbol symbol-40px symbol-circle me-3">
+                                                <div class="symbol-label bg-light-primary text-primary">
+                                                    {{ strtoupper(substr($bill->student->name, 0, 2)) }}
+                                                </div>
                                             </div>
-                                            <div>
-                                                <div class="fw-bold">{{ $bill->student->name }}</div>
-                                                <small class="text-muted">
+                                            <div class="d-flex flex-column">
+                                                <div class="text-gray-800 fw-bold fs-6">{{ $bill->student->name }}</div>
+                                                <div class="text-muted fs-7">
                                                     {{ $bill->student->nis }} • {{ $bill->student->class }}
-                                                </small>
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="align-middle">
-                                        <div>
-                                            <div class="fw-bold">
+                                        <div class="d-flex flex-column">
+                                            <div class="text-gray-800 fw-bold fs-6">
                                                 @php
                                                     $monthNames = [
                                                         'Januari' => 'January',
@@ -259,65 +260,63 @@
                                                 @endphp
                                                 {{ $monthNames[$bill->month] ?? $bill->month }}
                                             </div>
-                                            <small class="text-muted">{{ $bill->year }}</small>
+                                            <div class="text-muted fs-7">{{ $bill->year }}</div>
                                         </div>
                                     </td>
                                     <td class="align-middle">
-                                        <div class="fw-bold text-success">{{ $bill->formatted_amount }}</div>
+                                        <div class="text-success fw-bold fs-6">{{ $bill->formatted_amount }}</div>
                                     </td>
                                     <td class="align-middle">
-                                        <div>
+                                        <div class="d-flex flex-column">
                                             @if ($bill->due_date)
-                                                <div class="fw-bold">{{ $bill->due_date->format('d M Y') }}</div>
+                                                <div class="text-gray-800 fw-bold fs-6">{{ $bill->due_date->format('d M Y') }}</div>
                                                 @if ($bill->is_overdue && $bill->status !== 'paid')
-                                                    <small class="text-danger">
+                                                    <div class="text-danger fs-7">
                                                         <i class="fas fa-exclamation-triangle me-1"></i>
                                                         {{ $bill->due_date->diffForHumans() }}
-                                                    </small>
+                                                    </div>
                                                 @else
-                                                    <small
-                                                        class="text-muted">{{ $bill->due_date->diffForHumans() }}</small>
+                                                    <div class="text-muted fs-7">{{ $bill->due_date->diffForHumans() }}</div>
                                                 @endif
                                             @else
-                                                <div class="fw-bold text-muted">Belum diset</div>
-                                                <small class="text-muted">Tanggal jatuh tempo belum diatur</small>
+                                                <div class="text-muted fw-bold fs-6">Belum diset</div>
+                                                <div class="text-muted fs-7">Tanggal jatuh tempo belum diatur</div>
                                             @endif
                                         </div>
                                     </td>
                                     <td class="align-middle">
                                         @if ($bill->status === 'paid')
-                                            <span
-                                                class="badge bg-success bg-opacity-10 text-success border border-success">
+                                            <span class="badge badge-light-success">
                                                 <i class="fas fa-check-circle me-1"></i>
                                                 Lunas
                                             </span>
                                         @elseif ($bill->status === 'pending')
-                                            <span class="badge bg-info bg-opacity-10 text-info border border-info">
+                                            <span class="badge badge-light-info">
                                                 <i class="fas fa-clock me-1"></i>
                                                 Pending
                                             </span>
                                         @elseif ($bill->status === 'unpaid')
-                                            <span
-                                                class="badge bg-warning bg-opacity-10 text-warning border border-warning me-1">
-                                                <i class="fas fa-hourglass-half me-1"></i>
-                                                Belum Bayar
-                                            </span>
-                                            @if ($bill->is_overdue)
-                                                <span
-                                                    class="badge bg-danger bg-opacity-10 text-danger border border-danger">
-                                                    <i class="fas fa-exclamation-triangle me-1"></i>
-                                                    Terlambat
+                                            <div class="d-flex flex-wrap gap-1">
+                                                <span class="badge badge-light-warning">
+                                                    <i class="fas fa-hourglass-half me-1"></i>
+                                                    Belum Bayar
                                                 </span>
-                                            @endif
+                                                @if ($bill->is_overdue)
+                                                    <span class="badge badge-light-danger">
+                                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                                        Terlambat
+                                                    </span>
+                                                @endif
+                                            </div>
                                         @else
-                                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary">
+                                            <span class="badge badge-light-primary">
                                                 {{ ucfirst($bill->status) }}
                                             </span>
                                         @endif
                                     </td>
                                     <td class="align-middle text-center">
                                         <div class="dropdown">
-                                            <button class="btn btn-sm btn-outline-primary dropdown-toggle"
+                                            <button class="btn btn-sm btn-light btn-icon dropdown-toggle"
                                                 type="button" data-bs-toggle="dropdown">
                                                 <i class="fas fa-ellipsis-v"></i>
                                             </button>

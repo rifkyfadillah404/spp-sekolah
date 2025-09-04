@@ -46,6 +46,15 @@
                                         <i class="fas fa-check-circle me-1"></i> Semua tagihan sudah lunas
                                     </div>
                                 @endif
+
+                                <!-- Prominent Logout button on user dashboard header -->
+                                <form method="POST" action="{{ route('logout') }}" class="w-100">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline-light w-100">
+                                        <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                    </button>
+                                </form>
+
                                 <div class="d-flex gap-2 w-100">
                                     <div class="stat-chip flex-fill">
                                         <div class="stat-label">Total</div>

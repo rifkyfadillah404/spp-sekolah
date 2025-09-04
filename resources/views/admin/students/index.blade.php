@@ -82,8 +82,8 @@
             <div class="card-body p-0">
                 <!-- Table View -->
                 <div id="tableView" class="table-responsive">
-                    <table class="table table-hover mb-0" id="studentsTable">
-                        <thead class="table-light">
+                    <table class="table table-rounded table-row-gray-300 table-hover mb-0" id="studentsTable">
+                        <thead>
                             <tr>
                                 <th class="border-0 fw-bold text-uppercase" style="font-size: 12px;">
                                     <div class="d-flex align-items-center">
@@ -129,46 +129,47 @@
                                     </td>
                                     <td class="align-middle">
                                         <div class="d-flex align-items-center">
-                                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
-                                                 style="width: 40px; height: 40px; font-size: 14px;">
-                                                {{ strtoupper(substr($student->name, 0, 2)) }}
+                                            <div class="symbol symbol-40px symbol-circle me-3">
+                                                <div class="symbol-label bg-light-primary text-primary">
+                                                    {{ strtoupper(substr($student->name, 0, 2)) }}
+                                                </div>
                                             </div>
-                                            <div>
-                                                <div class="fw-bold">{{ $student->name }}</div>
-                                                <small class="text-muted">ID: {{ $student->id }}</small>
+                                            <div class="d-flex flex-column">
+                                                <div class="text-gray-800 fw-bold fs-6">{{ $student->name }}</div>
+                                                <div class="text-muted fs-7">ID: {{ $student->id }}</div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="align-middle">
-                                        <span class="badge bg-info bg-opacity-10 text-info border border-info">
+                                        <span class="badge badge-light-info">
                                             {{ $student->class }}
                                         </span>
                                     </td>
                                     <td class="align-middle">
-                                        <div>
-                                            <div>{{ $student->user->email }}</div>
-                                            <small class="text-muted">
-                                                <i class="fas fa-circle text-success" style="font-size: 8px;"></i>
+                                        <div class="d-flex flex-column">
+                                            <div class="text-gray-800 fw-semibold fs-6">{{ $student->user->email }}</div>
+                                            <div class="text-success fs-7">
+                                                <i class="fas fa-circle me-1" style="font-size: 8px;"></i>
                                                 Aktif
-                                            </small>
+                                            </div>
                                         </div>
                                     </td>
                                     <td class="align-middle">
                                         @if($student->phone)
-                                            <div>
-                                                <i class="fas fa-phone me-1 text-muted"></i>
+                                            <div class="text-gray-800 fw-semibold fs-6">
+                                                <i class="fas fa-phone me-2 text-muted"></i>
                                                 {{ $student->phone }}
                                             </div>
                                         @else
-                                            <span class="text-muted">
-                                                <i class="fas fa-minus"></i>
+                                            <div class="text-muted fs-6">
+                                                <i class="fas fa-minus me-2"></i>
                                                 Belum diisi
-                                            </span>
+                                            </div>
                                         @endif
                                     </td>
                                     <td class="align-middle text-center">
                                         <div class="dropdown">
-                                            <button class="btn btn-sm btn-outline-primary dropdown-toggle"
+                                            <button class="btn btn-sm btn-light btn-icon dropdown-toggle"
                                                     type="button" data-bs-toggle="dropdown">
                                                 <i class="fas fa-ellipsis-v"></i>
                                             </button>

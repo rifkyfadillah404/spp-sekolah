@@ -667,6 +667,9 @@
     </div>
 
     @push('scripts')
+        <!-- Midtrans Snap.js -->
+        <script src="{{ config('services.midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+
         <script>
             function formatIDR(number) {
                 try {
@@ -698,6 +701,51 @@
                 if (bar) bar.classList.toggle('hidden', checkboxes.length === 0);
             }
 
+            async function requestSnap(billIds) {
+                try {
+                    const res = await fetch('{{ route('payment.create') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ spp_bill_ids: billIds })
+                    });
+
+                    if (!res.ok) {
+                        const err = await res.json().catch(() => ({}));
+                        throw new Error(err.error || 'Gagal membuat transaksi');
+                    }
+
+                    const data = await res.json();
+                    const snapToken = data.snap_token;
+
+                    if (!window.snap || !snapToken) {
+                        throw new Error('Snap.js belum siap atau token tidak valid.');
+                    }
+
+                    window.snap.pay(snapToken, {
+                        onSuccess: function (result) {
+                            // Redirect ke halaman selesai pembayaran
+                            window.location.href = '{{ route('payment.finish') }}' + '?order_id=' + encodeURIComponent(result.order_id || data.order_id);
+                        },
+                        onPending: function () {
+                            alert('Transaksi dalam proses. Anda dapat mengecek status di riwayat pembayaran.');
+                            window.location.reload();
+                        },
+                        onError: function (err) {
+                            console.error(err);
+                            alert('Terjadi kesalahan saat memproses pembayaran.');
+                        },
+                        onClose: function () {
+                            // User menutup popup tanpa menyelesaikan pembayaran
+                        }
+                    });
+                } catch (e) {
+                    alert(e.message || 'Gagal memulai pembayaran.');
+                }
+            }
+
             function paySelected() {
                 const checkboxes = document.querySelectorAll('.bill-checkbox:checked');
                 const billIds = Array.from(checkboxes).map(cb => cb.value);
@@ -707,23 +755,11 @@
                     return;
                 }
 
-                const orderId = 'ORDER-' + Date.now();
-                showDemoPaymentModal(orderId, billIds);
+                requestSnap(billIds);
             }
 
             function payBill(billId) {
-                const orderId = 'ORDER-' + Date.now();
-                showDemoPaymentModal(orderId, [billId]);
-            }
-
-            function showDemoPaymentModal(orderId, billIds) {
-                window.currentOrderId = orderId;
-                window.currentBillIds = billIds;
-
-                const modalEl = document.getElementById('demoPaymentModal');
-                if (!modalEl) return;
-                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-                modal.show();
+                requestSnap([billId]);
             }
 
             document.addEventListener('DOMContentLoaded', function () {
@@ -766,40 +802,6 @@
                                 card.style.display = (status === 'unpaid') ? '' : 'none';
                             }
                         });
-                    });
-                });
-
-                // Payment method selection (DEMO)
-                const methods = document.querySelectorAll('.payment-method');
-                methods.forEach(method => {
-                    method.addEventListener('click', function () {
-                        const selectedMethod = this.getAttribute('data-method');
-                        const methodName = this.querySelector('h6')?.textContent?.trim() || selectedMethod;
-
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('demoPaymentModal'));
-                        if (modal) modal.hide();
-
-                        if (confirm(`Konfirmasi pembayaran dengan ${methodName}?\n\nMode Demo: Pembayaran akan berhasil secara otomatis.`)) {
-                            fetch('{{ route('payment.notification') }}', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                                },
-                                body: JSON.stringify({
-                                    order_id: window.currentOrderId,
-                                    transaction_status: 'settlement',
-                                    status_code: '200',
-                                    gross_amount: '{{ (int) $unpaidTotal }}',
-                                    payment_type: selectedMethod
-                                })
-                            }).then(() => {
-                                alert(`DEMO: Pembayaran berhasil dengan ${methodName}!`);
-                                window.location.reload();
-                            }).catch(() => {
-                                alert('Terjadi kesalahan saat simulasi pembayaran.');
-                            });
-                        }
                     });
                 });
             });

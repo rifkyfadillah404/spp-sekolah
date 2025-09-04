@@ -12,7 +12,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Generate monthly SPP bills automatically (idempotent)
+        // Runs daily at configured time; command will skip if bills already exist for the month
+        $schedule->command('spp:generate-bills')
+            ->dailyAt(env('SPP_GENERATE_TIME', '01:00'));
     }
 
     /**

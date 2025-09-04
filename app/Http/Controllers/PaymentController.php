@@ -118,53 +118,65 @@ class PaymentController extends Controller
 
     public function handleNotification(Request $request)
     {
+        // Verify Midtrans signature to ensure authenticity
+        $serverKey = config('services.midtrans.server_key');
+        $expectedSignature = hash('sha512', ($request->order_id ?? '') . ($request->status_code ?? '') . ($request->gross_amount ?? '') . $serverKey);
+
+        if (!isset($request->signature_key) || $request->signature_key !== $expectedSignature) {
+            return response()->json(['message' => 'Invalid signature'], 403);
+        }
+
         $orderId = $request->order_id;
         $grossAmount = $request->gross_amount;
 
+        // Payment record must exist (created at /payment/create)
         $payment = Payment::where('order_id', $orderId)->first();
-
         if (!$payment) {
-            $user = auth()->user() ?? User::first();
-            $transactionStatus = $request->transaction_status ?? 'settlement';
-
-            $payment = Payment::create([
-                'user_id' => $user->id,
-                'order_id' => $orderId,
-                'amount' => $grossAmount ?? 500000,
-                'transaction_status' => $transactionStatus,
-                'transaction_id' => 'DEMO-' . time(),
-                'payment_type' => $request->payment_type ?? 'demo',
-            ]);
-
-            if ($user->student && $transactionStatus === 'settlement') {
-                $user->student->sppBills()
-                    ->where('status', 'unpaid')
-                    ->take(1)
-                    ->update(['status' => 'paid']);
-            }
-
-            return response()->json(['status' => 'success']);
+            return response()->json(['message' => 'Payment not found'], 404);
         }
 
-        // status dalam bentuk array
-        $status = $this->midtransService->getTransactionStatus($orderId);
+        // Confirm current transaction status from Midtrans
+        $statusRaw = $this->midtransService->getTransactionStatus($orderId);
+        $status = json_decode(json_encode($statusRaw), true); // normalize to array
 
+        // Extract fields safely
+        $transactionStatus = $status['transaction_status'] ?? $request->transaction_status ?? 'pending';
+        $paymentType       = $status['payment_type'] ?? $request->payment_type ?? null;
+        $fraudStatus       = $status['fraud_status'] ?? null;
+        $transactionId     = $status['transaction_id'] ?? null;
+        $transactionTime   = $status['transaction_time'] ?? now();
+
+        // Handle credit card "capture" with fraud status
+        $isPaid = false;
+        if ($transactionStatus === 'settlement') {
+            $isPaid = true;
+        } elseif ($transactionStatus === 'capture') {
+            // For credit card, settlement-like if fraud_status is accept
+            $isPaid = ($fraudStatus === 'accept');
+        }
+
+        // Update payment row
         $payment->update([
-            'transaction_status' => $status['transaction_status'],
-            'transaction_id'     => $status['transaction_id'],
-            'payment_type'       => $status['payment_type'],
-            'fraud_status'       => $status['fraud_status'] ?? null,
-            'transaction_time'   => $status['transaction_time'],
-            'midtrans_response'  => $status
+            'amount'             => $payment->amount ?: $grossAmount, // keep original amount if set
+            'transaction_status' => $transactionStatus,
+            'transaction_id'     => $transactionId,
+            'payment_type'       => $paymentType,
+            'fraud_status'       => $fraudStatus,
+            'transaction_time'   => $transactionTime,
+            'midtrans_response'  => $status,
         ]);
 
-        if ($status['transaction_status'] === 'settlement') {
+        // Sync related bills based on status
+        if ($isPaid) {
             $payment->sppBills()->update(['status' => 'paid']);
-        } elseif (in_array($status['transaction_status'], ['cancel', 'deny', 'expire'])) {
+        } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire', 'failure'])) {
             $payment->sppBills()->update(['status' => 'unpaid', 'payment_id' => null]);
+        } else {
+            // keep pending for 'pending' or 'capture' with 'challenge'
+            $payment->sppBills()->update(['status' => 'pending']);
         }
 
-        return response()->json(['status' => 'success']);
+        return response()->json(['status' => 'ok']);
     }
 
     public function paymentFinish(Request $request)

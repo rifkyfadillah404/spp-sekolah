@@ -95,7 +95,8 @@
             position: relative;
             border-radius: 24px;
             overflow: hidden;
-            min-height: 180px;
+            min-height: 200px;
+            margin-bottom: 2rem;
         }
         .hero-bg {
             position: absolute;
@@ -105,26 +106,68 @@
                         linear-gradient(135deg, var(--brand-1) 0%, var(--brand-2) 100%);
             filter: saturate(120%);
         }
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite reverse;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
         .hero-overlay {
             position: relative;
-            padding: 28px;
+            padding: 2rem;
             color: #fff;
         }
         .hero-content { position: relative; z-index: 2; }
 
         .avatar-xl {
-            width: 76px;
-            height: 76px;
+            width: 80px;
+            height: 80px;
             border-radius: 20px;
             background: rgba(255,255,255,0.16);
             border: 2px solid rgba(255,255,255,0.25);
             display: grid;
             place-items: center;
             font-weight: 800;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             letter-spacing: 0.5px;
             user-select: none;
             box-shadow: inset 0 0 0 2px rgba(255,255,255,0.07);
+            position: relative;
+            overflow: hidden;
+        }
+        .avatar-xl::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
         .hero-title {
             margin: 0;
@@ -296,11 +339,125 @@
         .section-title { font-weight: 800; letter-spacing: -0.2px; }
         .feature-card {
             display: flex; align-items: center; gap: 1rem;
-            padding: 1rem; border-radius: 16px; border: 1px solid rgba(2,8,20,.06);
+            padding: 1.25rem; border-radius: 16px; border: 1px solid rgba(2,8,20,.06);
             background: #fff; box-shadow: var(--soft-shadow);
             transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102,126,234,0.05), transparent);
+            transition: left 0.5s ease;
+        }
+        .feature-card:hover::before {
+            left: 100%;
         }
         .feature-card:hover { transform: translateY(-3px); box-shadow: var(--soft-shadow-lg); border-color: rgba(102,126,234,.35); }
+
+        /* Enhanced quick actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        @media (max-width: 992px) {
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Welcome section enhancements */
+        .welcome-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: rgba(102,126,234,0.1);
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-subtitle {
+            color: #718096;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Enhanced sidebar cards */
+        .sidebar-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 1px solid rgba(2,8,20,0.06);
+            border-radius: 18px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--soft-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--soft-shadow-lg);
+        }
+
+        .sidebar-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(2,8,20,0.06);
+        }
+
+        .sidebar-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .sidebar-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+            color: #1a202c;
+        }
     </style>
 
     <div class="container-fluid px-0">

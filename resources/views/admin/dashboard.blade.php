@@ -8,15 +8,6 @@
                     <span class="badge badge-light-primary fs-8">{{ now()->format('d M Y') }}</span>
                 </div>
             </div>
-            <div class="d-flex align-items-center gap-3">
-                <div class="text-end d-none d-sm-block">
-                    <div class="text-gray-600 fs-8">Terakhir diperbarui</div>
-                    <div class="text-gray-900 fw-semibold fs-7">{{ now()->format('H:i') }}</div>
-                </div>
-                <button type="button" class="btn btn-light-primary btn-sm" id="btnRefresh">
-                   <i class="fas fa-rotate-right me-1"></i>Refresh
-                </button>
-            </div>
         </div>
     </x-slot>
 

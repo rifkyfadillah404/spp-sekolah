@@ -6,10 +6,6 @@
                 <p class="text-muted mb-0">Daftar semua siswa yang terdaftar dalam sistem</p>
             </div>
             <div class="d-flex align-items-center">
-                <span class="badge bg-primary me-3">
-                    <i class="fas fa-users me-1"></i>
-                    {{ $students->total() }} siswa
-                </span>
                 <a href="{{ route('admin.students.create') }}" class="btn btn-primary">
                     <i class="fas fa-plus me-1"></i>
                     Tambah Siswa
@@ -19,11 +15,75 @@
     </x-slot>
 
     <div class="container-fluid">
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-1">Total Siswa</h6>
+                                <h3 class="mb-0 fw-bold text-primary">{{ $students->total() }}</h3>
+                            </div>
+                            <div class="bg-primary bg-opacity-10 rounded p-3">
+                                <i class="fas fa-users fa-2x text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-1">Kelas Aktif</h6>
+                                <h3 class="mb-0 fw-bold text-success">{{ count($classes) }}</h3>
+                            </div>
+                            <div class="bg-success bg-opacity-10 rounded p-3">
+                                <i class="fas fa-graduation-cap fa-2x text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-1">Akun Aktif</h6>
+                                <h3 class="mb-0 fw-bold text-info">{{ $students->total() }}</h3>
+                            </div>
+                            <div class="bg-info bg-opacity-10 rounded p-3">
+                                <i class="fas fa-user-check fa-2x text-info"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-1">Siswa Baru</h6>
+                                <h3 class="mb-0 fw-bold text-warning">{{ $students->filter(function($student) { return $student->created_at >= now()->subDays(30); })->count() }}</h3>
+                            </div>
+                            <div class="bg-warning bg-opacity-10 rounded p-3">
+                                <i class="fas fa-user-plus fa-2x text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Search and Filter Section -->
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body">
                 <div class="row align-items-center">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="input-group">
                             <span class="input-group-text bg-light border-end-0">
                                 <i class="fas fa-search text-muted"></i>
@@ -33,7 +93,7 @@
                                    id="searchInput">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <select class="form-select" id="classFilter">
                             <option value="">Semua Kelas</option>
                             @foreach($classes as $class)
@@ -43,7 +103,22 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
+                        <select class="form-select" id="statusFilter">
+                            <option value="">Semua Status</option>
+                            <option value="active">Aktif</option>
+                            <option value="inactive">Tidak Aktif</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="sortFilter">
+                            <option value="name">Urutkan Nama</option>
+                            <option value="nis">Urutkan NIS</option>
+                            <option value="class">Urutkan Kelas</option>
+                            <option value="created">Terbaru</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
                         <div class="d-flex">
                             <button class="btn btn-outline-secondary me-2" onclick="resetFilters()">
                                 <i class="fas fa-undo me-1"></i>
@@ -69,11 +144,13 @@
                             dari {{ $students->total() }} siswa
                         </small>
                         <div class="btn-group btn-group-sm" role="group">
-                            <button type="button" class="btn btn-outline-secondary active" onclick="toggleView('table')">
-                                <i class="fas fa-table"></i>
+                            <button type="button" class="btn btn-outline-primary" onclick="bulkExport()">
+                                <i class="fas fa-download me-1"></i>
+                                Export
                             </button>
-                            <button type="button" class="btn btn-outline-secondary" onclick="toggleView('grid')">
-                                <i class="fas fa-th"></i>
+                            <button type="button" class="btn btn-outline-danger" onclick="bulkDelete()">
+                                <i class="fas fa-trash me-1"></i>
+                                Hapus Terpilih
                             </button>
                         </div>
                     </div>
@@ -85,6 +162,11 @@
                     <table class="table table-rounded table-row-gray-300 table-hover mb-0" id="studentsTable">
                         <thead>
                             <tr>
+                                <th class="border-0" style="width: 50px;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="selectAll">
+                                    </div>
+                                </th>
                                 <th class="border-0 fw-bold text-uppercase" style="font-size: 12px;">
                                     <div class="d-flex align-items-center">
                                         <i class="fas fa-id-card me-2 text-primary"></i>
@@ -115,6 +197,12 @@
                                         Telepon
                                     </div>
                                 </th>
+                                <th class="border-0 fw-bold text-uppercase" style="font-size: 12px;">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-calendar me-2 text-primary"></i>
+                                        Terdaftar
+                                    </div>
+                                </th>
                                 <th class="border-0 fw-bold text-uppercase text-center" style="font-size: 12px;">
                                     <i class="fas fa-cogs text-primary"></i>
                                     Aksi
@@ -123,7 +211,18 @@
                         </thead>
                         <tbody>
                             @forelse ($students as $student)
-                                <tr class="student-row">
+                                <tr class="student-row"
+                                    data-class="{{ $student->class }}"
+                                    data-status="active"
+                                    data-name="{{ strtolower($student->name) }}"
+                                    data-nis="{{ strtolower($student->nis) }}"
+                                    data-email="{{ strtolower($student->user->email) }}">
+                                    <td class="align-middle">
+                                        <div class="form-check">
+                                            <input class="form-check-input student-checkbox" type="checkbox"
+                                                value="{{ $student->id }}">
+                                        </div>
+                                    </td>
                                     <td class="align-middle">
                                         <span class="fw-bold text-primary">{{ $student->nis }}</span>
                                     </td>
@@ -142,6 +241,7 @@
                                     </td>
                                     <td class="align-middle">
                                         <span class="badge badge-light-info">
+                                            <i class="fas fa-graduation-cap me-1"></i>
                                             {{ $student->class }}
                                         </span>
                                     </td>
@@ -166,6 +266,12 @@
                                                 Belum diisi
                                             </div>
                                         @endif
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="d-flex flex-column">
+                                            <div class="text-gray-800 fw-bold fs-6">{{ $student->created_at->format('d M Y') }}</div>
+                                            <div class="text-muted fs-7">{{ $student->created_at->diffForHumans() }}</div>
+                                        </div>
                                     </td>
                                     <td class="align-middle text-center">
                                         <div class="dropdown">
@@ -211,7 +317,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-5">
+                                    <td colspan="7" class="text-center py-5">
                                         <div class="text-muted">
                                             <i class="fas fa-users fa-3x mb-3"></i>
                                             <h5>Belum Ada Siswa</h5>
@@ -226,52 +332,6 @@
                             @endforelse
                         </tbody>
                     </table>
-                </div>
-
-                <!-- Grid View (Hidden by default) -->
-                <div id="gridView" class="d-none p-4">
-                    <div class="row" id="studentsGrid">
-                        @foreach ($students as $student)
-                            <div class="col-lg-4 col-md-6 mb-4 student-card">
-                                <div class="card h-100 border-0 shadow-sm">
-                                    <div class="card-body text-center">
-                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
-                                             style="width: 60px; height: 60px; font-size: 24px;">
-                                            {{ strtoupper(substr($student->name, 0, 2)) }}
-                                        </div>
-                                        <h6 class="fw-bold">{{ $student->name }}</h6>
-                                        <p class="text-muted mb-2">{{ $student->nis }}</p>
-                                        <span class="badge bg-info">{{ $student->class }}</span>
-                                        <div class="mt-3">
-                                            <small class="text-muted d-block">{{ $student->user->email }}</small>
-                                            <small class="text-muted">{{ $student->phone ?? 'No phone' }}</small>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer bg-transparent border-top-0">
-                                        <div class="d-flex justify-content-center">
-                                            <a href="{{ route('admin.students.show', $student) }}"
-                                               class="btn btn-sm btn-outline-info me-1">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ route('admin.students.edit', $student) }}"
-                                               class="btn btn-sm btn-outline-warning me-1">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <form action="{{ route('admin.students.destroy', $student) }}"
-                                                  method="POST" class="d-inline"
-                                                  onsubmit="return confirm('Yakin ingin menghapus siswa {{ $student->name }}?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
                 </div>
             </div>
 
@@ -292,61 +352,153 @@
 
     @push('scripts')
     <script>
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const rows = document.querySelectorAll('.student-row');
-            const cards = document.querySelectorAll('.student-card');
+        (function () {
+            const searchInput = document.getElementById('searchInput');
+            const classFilter = document.getElementById('classFilter');
+            const statusFilter = document.getElementById('statusFilter');
+            const sortFilter = document.getElementById('sortFilter');
 
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(searchTerm) ? '' : 'none';
-            });
+            function applyFilters() {
+                const searchTerm = (searchInput?.value || '').toLowerCase().trim();
+                const selectedClass = classFilter?.value || '';
+                const selectedStatus = statusFilter?.value || '';
 
-            cards.forEach(card => {
-                const text = card.textContent.toLowerCase();
-                card.style.display = text.includes(searchTerm) ? '' : 'none';
-            });
-        });
+                document.querySelectorAll('.student-row').forEach(row => {
+                    const rowName = row.dataset.name || '';
+                    const rowNis = row.dataset.nis || '';
+                    const rowEmail = row.dataset.email || '';
+                    const rowClass = row.dataset.class || '';
+                    const rowStatus = row.dataset.status || '';
 
-        document.getElementById('classFilter').addEventListener('change', function() {
-            const selectedClass = this.value;
-            const currentUrl = new URL(window.location.href);
-            if (selectedClass) {
-                currentUrl.searchParams.set('class', selectedClass);
-            } else {
-                currentUrl.searchParams.delete('class');
+                    // Search across multiple fields
+                    const matchesSearch = !searchTerm ||
+                        rowName.includes(searchTerm) ||
+                        rowNis.includes(searchTerm) ||
+                        rowEmail.includes(searchTerm);
+
+                    const matchesClass = !selectedClass || rowClass === selectedClass;
+                    const matchesStatus = !selectedStatus || rowStatus === selectedStatus;
+
+                    row.style.display = (matchesSearch && matchesClass && matchesStatus) ? '' : 'none';
+                });
             }
-            window.location.href = currentUrl.toString();
-        });
 
-        // Reset filters
-        function resetFilters() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('classFilter').value = '';
+            if (searchInput) searchInput.addEventListener('input', applyFilters);
+            if (classFilter) classFilter.addEventListener('change', applyFilters);
+            if (statusFilter) statusFilter.addEventListener('change', applyFilters);
 
-            document.querySelectorAll('.student-row, .student-card').forEach(element => {
-                element.style.display = '';
-            });
-        }
+            window.resetFilters = function () {
+                if (searchInput) searchInput.value = '';
+                if (classFilter) classFilter.value = '';
+                if (statusFilter) statusFilter.value = '';
+                if (sortFilter) sortFilter.value = 'name';
+                applyFilters();
+            };
 
-        // Toggle view
-        function toggleView(view) {
-            const tableView = document.getElementById('tableView');
-            const gridView = document.getElementById('gridView');
-            const buttons = document.querySelectorAll('[onclick^="toggleView"]');
-
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.closest('button').classList.add('active');
-
-            if (view === 'table') {
-                tableView.classList.remove('d-none');
-                gridView.classList.add('d-none');
-            } else {
-                tableView.classList.add('d-none');
-                gridView.classList.remove('d-none');
+            // Select all functionality
+            const selectAll = document.getElementById('selectAll');
+            if (selectAll) {
+                selectAll.addEventListener('change', function () {
+                    const checkboxes = document.querySelectorAll('.student-checkbox');
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = this.checked;
+                    });
+                });
             }
-        }
+
+            // Bulk export functionality
+            window.bulkExport = function () {
+                const checkedBoxes = document.querySelectorAll('.student-checkbox:checked');
+                if (checkedBoxes.length === 0) {
+                    alert('Pilih siswa yang ingin diexport terlebih dahulu.');
+                    return;
+                }
+
+                const studentIds = Array.from(checkedBoxes).map(cb => cb.value);
+
+                // Create form and submit for export
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route("admin.students.export") }}';
+
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+
+                const idsInput = document.createElement('input');
+                idsInput.type = 'hidden';
+                idsInput.name = 'student_ids';
+                idsInput.value = JSON.stringify(studentIds);
+
+                form.appendChild(csrfToken);
+                form.appendChild(idsInput);
+                document.body.appendChild(form);
+                form.submit();
+                document.body.removeChild(form);
+            };
+
+            // Bulk delete functionality
+            window.bulkDelete = function () {
+                const checkedBoxes = document.querySelectorAll('.student-checkbox:checked');
+                if (checkedBoxes.length === 0) {
+                    alert('Pilih siswa yang ingin dihapus terlebih dahulu.');
+                    return;
+                }
+
+                if (confirm(`Yakin ingin menghapus ${checkedBoxes.length} siswa? Tindakan ini tidak dapat dibatalkan.`)) {
+                    const studentIds = Array.from(checkedBoxes).map(cb => cb.value);
+
+                    // Create form and submit for bulk delete
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{{ route("admin.students.bulk-delete") }}';
+
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+
+                    const methodInput = document.createElement('input');
+                    methodInput.type = 'hidden';
+                    methodInput.name = '_method';
+                    methodInput.value = 'DELETE';
+
+                    const idsInput = document.createElement('input');
+                    idsInput.type = 'hidden';
+                    idsInput.name = 'student_ids';
+                    idsInput.value = JSON.stringify(studentIds);
+
+                    form.appendChild(csrfToken);
+                    form.appendChild(methodInput);
+                    form.appendChild(idsInput);
+                    document.body.appendChild(form);
+                    form.submit();
+                    document.body.removeChild(form);
+                }
+            };
+
+            // Toggle view
+            window.toggleView = function (view) {
+                const tableView = document.getElementById('tableView');
+                const gridView = document.getElementById('gridView');
+                const buttons = document.querySelectorAll('[onclick^="toggleView"]');
+
+                buttons.forEach(btn => btn.classList.remove('active'));
+                event.target.closest('button').classList.add('active');
+
+                if (view === 'table') {
+                    tableView.classList.remove('d-none');
+                    gridView.classList.add('d-none');
+                } else {
+                    tableView.classList.add('d-none');
+                    gridView.classList.remove('d-none');
+                }
+            };
+
+            // Initial apply
+            applyFilters();
+        })();
     </script>
     @endpush
 </x-admin-layout>

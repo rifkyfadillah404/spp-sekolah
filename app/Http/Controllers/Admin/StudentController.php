@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Exports\StudentsExport;
 
 class StudentController extends Controller
 {
@@ -136,5 +137,66 @@ class StudentController extends Controller
         }
 
         return view('admin.students.by-class', compact('studentsByClass', 'classStats'));
+    }
+
+    public function export(Request $request)
+    {
+        $studentIds = json_decode($request->input('student_ids', '[]'), true);
+
+        if (empty($studentIds)) {
+            return redirect()->back()->with('error', 'Tidak ada siswa yang dipilih untuk diexport.');
+        }
+
+        // For now, return a simple CSV response
+        $students = Student::with('user')->whereIn('id', $studentIds)->get();
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="students-' . date('Y-m-d') . '.csv"',
+        ];
+
+        $callback = function() use ($students) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['NIS', 'Nama', 'Kelas', 'Email', 'Telepon', 'Alamat', 'Tanggal Daftar']);
+
+            foreach ($students as $student) {
+                fputcsv($file, [
+                    $student->nis,
+                    $student->name,
+                    $student->class,
+                    $student->user->email,
+                    $student->phone ?? '-',
+                    $student->address ?? '-',
+                    $student->created_at->format('d/m/Y')
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $studentIds = json_decode($request->input('student_ids', '[]'), true);
+
+        if (empty($studentIds)) {
+            return redirect()->back()->with('error', 'Tidak ada siswa yang dipilih untuk dihapus.');
+        }
+
+        try {
+            // Get users associated with these students
+            $userIds = Student::whereIn('id', $studentIds)->pluck('user_id');
+
+            // Delete students first (this will handle any relationships)
+            Student::whereIn('id', $studentIds)->delete();
+
+            // Delete associated users
+            User::whereIn('id', $userIds)->delete();
+
+            return redirect()->back()->with('success', 'Berhasil menghapus ' . count($studentIds) . ' siswa.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menghapus siswa: ' . $e->getMessage());
+        }
     }
 }

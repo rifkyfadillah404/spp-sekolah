@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\StudentController;
-use App\Http\Controllers\Admin\SppBillController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\Admin\ReportController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\Admin\SppBillController;
+use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\DashboardController;
 
 
 /*
@@ -55,13 +56,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
-    Route::get('/reports/students/pdf', [ReportController::class, 'studentsPdf'])->name('admin.reports.students.pdf');
-    Route::get('/reports/students/excel', [ReportController::class, 'studentsExcel'])->name('admin.reports.students.excel');
+    Route::get('students/export/pdf', [ReportController::class, 'exportStudentsPdf'])->name('admin.reports.students.pdf');
+    Route::get('students/export/excel', [ReportController::class, 'exportStudentsExcel'])->name('admin.reports.students.excel');
     Route::get('/reports/spp/pdf', [ReportController::class, 'sppPdf'])->name('admin.reports.spp.pdf');
     Route::get('/reports/spp/excel', [ReportController::class, 'sppExcel'])->name('admin.reports.spp.excel');
 });
 
 // Midtrans notification (no auth required)
 Route::post('/payment/notification', [PaymentController::class, 'handleNotification'])->name('payment.notification');
+
 
 require __DIR__ . '/auth.php';

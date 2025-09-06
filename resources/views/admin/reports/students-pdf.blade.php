@@ -16,6 +16,7 @@
                 <th>NIS</th>
                 <th>Nama</th>
                 <th>Kelas</th>
+                <th>Email</th>
                 <th>Telepon</th>
             </tr>
         </thead>
@@ -25,6 +26,7 @@
                 <td>{{ $s->nis }}</td>
                 <td>{{ $s->name }}</td>
                 <td>{{ $s->class }}</td>
+                <td>{{ $s->user->email ?? '-' }}</td>
                 <td>{{ $s->phone }}</td>
             </tr>
             @endforeach

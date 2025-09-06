@@ -127,14 +127,21 @@
                     </div>
                     <div class="col-md-2">
                         <div class="d-flex">
-                            <button class="btn btn-outline-secondary me-2" onclick="resetFilters()">
+                            <!-- <button class="btn btn-outline-secondary me-2" onclick="resetFilters()">
                                 <i class="fas fa-undo me-1"></i>
                                 Reset
+                            </button> -->
+                            <div class="d-flex">
+                            <button class="btn btn-danger me-2" onclick="exportPDF()">
+                                <i class="fas fa-file-pdf me-1"></i>
+                                PDF
                             </button>
-                            <button class="btn btn-success" onclick="exportData()">
-                                <i class="fas fa-download me-1"></i>
-                                Export
+
+                            <button class="btn btn-success" onclick="exportExcel()">
+                                <i class="fas fa-file-excel me-1"></i>
+                                Excel
                             </button>
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -534,6 +541,41 @@
                 // In real implementation, this would refresh the data
                 console.log('Auto-refresh triggered');
             }, 30000);
+
+            function exportPDF() {
+                const status = document.getElementById('statusFilter').value;
+                const month = document.getElementById('monthFilter').value;
+                const year = document.getElementById('yearFilter').value;
+
+                let url = "{{ route('admin.reports.spp.pdf') }}";
+                const params = new URLSearchParams();
+
+                if (status) params.append('status', status);
+                if (month) params.append('month', month);
+                if (year) params.append('year', year);
+
+                if ([...params].length) url += '?' + params.toString();
+
+                window.location.href = url;
+            }
+
+            function exportExcel() {
+                const status = document.getElementById('statusFilter').value;
+                const month = document.getElementById('monthFilter').value;
+                const year = document.getElementById('yearFilter').value;
+
+                let url = "{{ route('admin.reports.spp.excel') }}";
+                const params = new URLSearchParams();
+
+                if (status) params.append('status', status);
+                if (month) params.append('month', month);
+                if (year) params.append('year', year);
+
+                if ([...params].length) url += '?' + params.toString();
+
+                window.location.href = url;
+            }
+
         </script>
     @endpush
 </x-admin-layout>

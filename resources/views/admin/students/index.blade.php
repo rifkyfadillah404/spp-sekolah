@@ -44,13 +44,25 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <div class="d-flex">
-                            <button class="btn btn-outline-secondary me-2" onclick="resetFilters()">
-                                <i class="fas fa-undo me-1"></i>
-                                Reset
-                            </button>
-                        </div>
+                    <div class="d-flex">
+                        <button class="btn btn-outline-secondary me-2" onclick="resetFilters()">
+                            <i class="fas fa-undo me-1"></i>
+                            Reset
+                        </button>
+
+                        <a href="{{ route('admin.reports.students.pdf', ['class' => request('class')]) }}" 
+                        class="btn btn-danger me-2">
+                            <i class="fas fa-file-pdf me-1"></i> PDF
+                        </a>
+
+                        <a href="{{ route('admin.reports.students.excel', ['class' => request('class')]) }}" 
+                        class="btn btn-success">
+                            <i class="fas fa-file-excel me-1"></i> Excel
+                        </a>
+
                     </div>
+                </div>
+
                 </div>
             </div>
         </div>

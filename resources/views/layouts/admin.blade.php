@@ -1137,6 +1137,8 @@
     <!-- Metronic (CDN) -->
     <script src="https://preview.keenthemes.com/metronic8/demo1/assets/plugins/global/plugins.bundle.js"></script>
     <script src="https://preview.keenthemes.com/metronic8/demo1/assets/js/scripts.bundle.js"></script>
+    <!-- html2pdf (bundle includes html2canvas + jsPDF) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuI5DmaZz+J2T4mP0iVg5E6Ww0fWr5f7xQ4P2zZ0+T0QXW8Vd8vYGLg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
         // Sidebar toggle functionality

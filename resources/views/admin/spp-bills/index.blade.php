@@ -136,10 +136,6 @@
                         Daftar Tagihan SPP
                     </h5>
                     <div class="d-flex align-items-center">
-                        <small class="text-muted me-3">
-                            Menampilkan {{ $bills->firstItem() ?? 0 }} - {{ $bills->lastItem() ?? 0 }}
-                            dari {{ $bills->total() }} tagihan
-                        </small>
                         <div class="btn-group btn-group-sm" role="group">
                             <button type="button" class="btn btn-outline-success" onclick="bulkExport()">
                                 <i class="fas fa-download me-1"></i>

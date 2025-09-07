@@ -133,14 +133,10 @@
                         Daftar Siswa
                     </h5>
                     <div class="d-flex align-items-center">
-                        <small class="text-muted me-3">
-                            Menampilkan {{ $students->firstItem() ?? 0 }} - {{ $students->lastItem() ?? 0 }}
-                            dari {{ $students->total() }} siswa
-                        </small>
                         <div class="btn-group btn-group-sm" role="group">
                             <button type="button" class="btn btn-outline-primary" onclick="bulkExport()">
-                                <i class="fas fa-download me-1"></i>
-                                Export
+                                <i class="fas fa-file-excel me-1"></i>
+                                Export Excel
                             </button>
                             <button type="button" class="btn btn-outline-danger" onclick="bulkDelete()">
                                 <i class="fas fa-trash me-1"></i>
@@ -431,7 +427,7 @@
                 form.submit();
                 document.body.removeChild(form);
             };
-
+            
             // Bulk delete functionality
             window.bulkDelete = function () {
                 const checkedBoxes = document.querySelectorAll('.student-checkbox:checked');

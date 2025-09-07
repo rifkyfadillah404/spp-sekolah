@@ -5,16 +5,6 @@
                 <h2 class="h4 mb-1 fw-bold text-dark">Siswa Per Kelas</h2>
                 <p class="text-muted mb-0">Lihat dan kelola siswa berdasarkan kelas masing-masing</p>
             </div>
-            <div class="d-flex align-items-center">
-                <span class="badge bg-primary me-3">
-                    <i class="fas fa-layer-group me-1"></i>
-                    {{ count($classStats) }} kelas
-                </span>
-                <a href="{{ route('admin.students.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus me-1"></i>
-                    Tambah Siswa
-                </a>
-            </div>
         </div>
     </x-slot>
 
@@ -30,7 +20,6 @@
                                     <i class="fas fa-graduation-cap me-2 text-primary"></i>
                                     Kelas {{ $className }}
                                 </h5>
-                                <span class="badge bg-primary">{{ $stats['total_students'] }} siswa</span>
                             </div>
                         </div>
                         <div class="card-body">

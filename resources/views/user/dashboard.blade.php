@@ -7,67 +7,53 @@
     @endphp
 
     <x-slot name="header">
-        <div class="hero-header">
-            <div class="hero-bg"></div>
-            <div class="hero-overlay">
-                <div class="hero-content container-fluid px-0">
-                    <div class="row align-items-center g-4">
+        <div class="hero-section">
+            <div class="hero-background">
+                <div class="hero-gradient"></div>
+                <div class="hero-particles"></div>
+            </div>
+            <div class="hero-content">
+                <div class="container">
+                    <div class="row align-items-center">
                         <div class="col-lg-8">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="avatar-xl">
-                                    <span>{{ strtoupper(substr($student->name, 0, 2)) }}</span>
+                            <div class="d-flex align-items-center gap-4">
+                                <div class="user-avatar">
+                                    <div class="avatar-ring"></div>
+                                    <span class="avatar-text">{{ strtoupper(substr($student->name, 0, 2)) }}</span>
                                 </div>
-                                <div>
-                                    <h1 class="hero-title">Beranda Kamu, {{ $student->name }} 👋</h1>
-                                    <p class="hero-subtitle mb-2">Kelola dan bayar SPP dengan cepat, aman, dan terpantau realtime.</p>
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <span class="chip">
-                                            <i class="fas fa-id-card me-1"></i> NIS: <strong>{{ $student->nis }}</strong>
+                                <div class="user-info">
+                                    <h1 class="hero-title">Selamat Datang, {{ $student->name }}! 👋</h1>
+                                    <p class="hero-subtitle">Kelola pembayaran SPP dengan mudah dan aman</p>
+                                    <div class="user-meta">
+                                        <span class="meta-chip">
+                                            <i class="fas fa-id-card me-2"></i>
+                                            <strong>NIS:</strong> {{ $student->nis }}
                                         </span>
-                                        <span class="chip">
-                                            <i class="fas fa-school me-1"></i> Kelas: <strong>{{ $student->class }}</strong>
+                                        <span class="meta-chip">
+                                            <i class="fas fa-school me-2"></i>
+                                            <strong>Kelas:</strong> {{ $student->class }}
                                         </span>
-                                        <span class="chip">
-                                            <i class="fas fa-envelope me-1"></i> {{ $student->user->email }}
+                                        <span class="meta-chip">
+                                            <i class="fas fa-envelope me-2"></i>
+                                            {{ $student->user->email }}
                                         </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                         <div class="col-lg-4">
-                            <div class="d-flex flex-lg-column gap-2 justify-content-lg-end justify-content-start">
-                                @if ($unpaidCount > 0)
-                                    <button class="btn cta-btn w-100" onclick="scrollToPayment()">
-                                        <i class="fas fa-credit-card me-2"></i> Bayar Tagihan Sekarang
-                                    </button>
-                                @else
-                                    <div class="badge-success-cta w-100 text-center">
-                                        <i class="fas fa-check-circle me-1"></i> Semua tagihan sudah lunas
-                                    </div>
-                                @endif
-
-                                <!-- Prominent Logout button on user dashboard header -->
-                                <form method="POST" action="{{ route('logout') }}" class="w-100">
-                                    @csrf
-                                    <button type="submit" class="btn btn-outline-light w-100">
-                                        <i class="fas fa-sign-out-alt me-2"></i> Logout
-                                    </button>
-                                </form>
-
-                                <div class="d-flex gap-2 w-100">
-                                    <div class="stat-chip flex-fill">
-                                        <div class="stat-label">Total</div>
-                                        <div class="stat-value">{{ $totalBills }}</div>
-                                    </div>
-                                    <div class="stat-chip flex-fill">
-                                        <div class="stat-label">Lunas</div>
-                                        <div class="stat-value text-success">{{ $paidCount }}</div>
-                                    </div>
-                                    <div class="stat-chip flex-fill">
-                                        <div class="stat-label">Belum Bayar</div>
-                                        <div class="stat-value text-warning">{{ $unpaidCount }}</div>
-                                    </div>
+                            <div class="hero-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">{{ $totalBills }}</div>
+                                    <div class="stat-label">Total Tagihan</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value text-success">{{ $paidCount }}</div>
+                                    <div class="stat-label">Sudah Lunas</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value text-warning">{{ $unpaidCount }}</div>
+                                    <div class="stat-label">Belum Bayar</div>
                                 </div>
                             </div>
                         </div>
@@ -79,896 +65,902 @@
 
     <style>
         :root {
-            --brand-1: #667eea;
-            --brand-2: #764ba2;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --muted: #64748b;
-            --text: #1f2937;
-            --card-bg: #ffffff;
-            --soft-shadow: 0 10px 30px rgba(2, 8, 20, 0.08);
-            --soft-shadow-lg: 0 20px 60px rgba(2, 8, 20, 0.12);
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            --warning-gradient: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            --danger-gradient: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+            --dark-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 30px 60px rgba(0, 0, 0, 0.15);
+            --border-radius: 16px;
+            --border-radius-lg: 24px;
         }
 
-        .hero-header {
+        /* Hero Section */
+        .hero-section {
             position: relative;
-            border-radius: 24px;
+            border-radius: var(--border-radius-lg);
             overflow: hidden;
-            min-height: 200px;
             margin-bottom: 2rem;
+            min-height: 280px;
+            background: var(--primary-gradient);
         }
-        .hero-bg {
+
+        .hero-background {
             position: absolute;
             inset: 0;
-            background: radial-gradient(1200px 400px at -5% -50%, rgba(255,255,255,0.16), transparent),
-                        radial-gradient(800px 300px at 110% 10%, rgba(255,255,255,0.12), transparent),
-                        linear-gradient(135deg, var(--brand-1) 0%, var(--brand-2) 100%);
-            filter: saturate(120%);
-        }
-        .hero-bg::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 300px;
-            height: 300px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 50%;
-            animation: float 8s ease-in-out infinite;
-        }
-        .hero-bg::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 200px;
-            height: 200px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite reverse;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-        .hero-overlay {
-            position: relative;
-            padding: 2rem;
-            color: #fff;
-        }
-        .hero-content { position: relative; z-index: 2; }
-
-        .avatar-xl {
-            width: 80px;
-            height: 80px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.16);
-            border: 2px solid rgba(255,255,255,0.25);
-            display: grid;
-            place-items: center;
-            font-weight: 800;
-            font-size: 1.6rem;
-            letter-spacing: 0.5px;
-            user-select: none;
-            box-shadow: inset 0 0 0 2px rgba(255,255,255,0.07);
-            position: relative;
             overflow: hidden;
         }
-        .avatar-xl::before {
-            content: '';
+
+        .hero-gradient {
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            animation: shimmer 3s infinite;
-        }
-        @keyframes shimmer {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-        }
-        .hero-title {
-            margin: 0;
-            font-weight: 800;
-            letter-spacing: -0.3px;
-        }
-        .hero-subtitle {
+            inset: 0;
+            background: var(--primary-gradient);
             opacity: 0.9;
-            margin: 0;
         }
-        .chip {
+
+        .hero-particles {
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 3rem 2rem;
+            color: white;
+        }
+
+        .user-avatar {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 3px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+            backdrop-filter: blur(10px);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .avatar-ring {
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .avatar-text {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 0 0 0.5rem 0;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin: 0 0 1.5rem 0;
+        }
+
+        .user-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .meta-chip {
             display: inline-flex;
             align-items: center;
-            gap: .35rem;
-            padding: .5rem .75rem;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
             border-radius: 999px;
-            background: rgba(255,255,255,0.14);
-            border: 1px solid rgba(255,255,255,0.25);
-            font-size: .85rem;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
-        .cta-btn {
-            background: #fff;
-            color: #111827;
-            font-weight: 700;
-            padding: .9rem 1.25rem;
-            border-radius: 14px;
-            border: none;
-            box-shadow: var(--soft-shadow);
-            transition: transform .15s ease, box-shadow .2s ease;
+
+        .meta-chip:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
         }
-        .cta-btn:hover { transform: translateY(-2px); box-shadow: var(--soft-shadow-lg); }
-        .badge-success-cta {
-            background: rgba(255,255,255,0.18);
-            border: 1px solid rgba(255,255,255,0.28);
-            padding: .8rem 1rem;
-            border-radius: 14px;
-            font-weight: 600;
+
+        .hero-stats {
+            display: flex;
+            justify-content: space-around;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
         }
-        .stat-chip {
-            background: rgba(255,255,255,0.14);
-            border: 1px solid rgba(255,255,255,0.25);
-            border-radius: 14px;
-            padding: .6rem .9rem;
+
+        .stat-item {
             text-align: center;
         }
-        .stat-label { font-size: .8rem; opacity: .85; }
-        .stat-value { font-size: 1.25rem; font-weight: 800; }
 
-        /* Cards */
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Modern Cards */
         .modern-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(2, 8, 20, 0.06);
-            border-radius: 18px;
-            box-shadow: var(--soft-shadow);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
             overflow: hidden;
         }
-        .modern-card .card-header {
-            background: linear-gradient(180deg, rgba(2,8,20,0.02), rgba(2,8,20,0));
-            border-bottom: 1px solid rgba(2, 8, 20, 0.06);
+
+        .modern-card:hover {
+            box-shadow: var(--shadow-xl);
+            transform: translateY(-5px);
         }
 
-        /* Filters */
-        .filter-pills {
-            background: #f8fafc;
-            border-radius: 999px;
-            padding: .35rem;
-            display: inline-flex;
-            gap: .35rem;
-            border: 1px solid #e5e7eb;
-        }
-        .filter-pill {
-            padding: .5rem .85rem;
-            border-radius: 999px;
-            font-weight: 600;
-            color: var(--muted);
-            background: transparent;
-            border: none;
-        }
-        .filter-pill.active {
-            background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
-            color: #fff;
-        }
-
-        /* Bill list */
-        #payment-section { scroll-margin-top: 100px; }
-        .bill-card {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 1rem;
-            padding: 1rem 1.125rem;
-            border: 1px solid rgba(2, 8, 20, 0.06);
-            border-radius: 16px;
-            transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease;
-            background: #fff;
-        }
-        .bill-card:hover { transform: translateY(-2px); box-shadow: var(--soft-shadow-lg); border-color: rgba(102,126,234,.35); }
-        .bill-title { font-weight: 800; margin: 0; }
-        .bill-meta { color: var(--muted); font-size: .9rem; }
-        .amount-lg {
-            font-size: 1.35rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .badge-modern {
-            padding: .4rem .7rem;
-            border-radius: 999px;
+        .card-header-modern {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 1.5rem 2rem;
             font-weight: 700;
-            font-size: .75rem;
-        }
-        .badge-paid { background: rgba(16,185,129,.12); color: #059669; border: 1px solid rgba(16,185,129,.25); }
-        .badge-unpaid { background: rgba(245,158,11,.12); color: #b45309; border: 1px solid rgba(245,158,11,.25); }
-        .badge-late { background: rgba(239,68,68,.12); color: #b91c1c; border: 1px solid rgba(239,68,68,.25); }
-
-        /* Quick actions */
-        .quick-actions { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1rem; }
-        @media (max-width: 992px) { .quick-actions { grid-template-columns: 1fr; } }
-        .quick-action-card {
-            display: flex; align-items: center; gap: 1rem;
-            padding: 1rem; border-radius: 16px; border: 1px solid rgba(2,8,20,.06);
-            background: #fff; box-shadow: var(--soft-shadow);
-            transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-            text-decoration: none; color: inherit;
-        }
-        .quick-action-card:hover { transform: translateY(-3px); box-shadow: var(--soft-shadow-lg); border-color: rgba(102,126,234,.35); }
-        .qa-icon { width: 56px; height: 56px; border-radius: 14px; display: grid; place-items: center; color: #fff; }
-        .qa-primary { background: linear-gradient(135deg, var(--brand-1), var(--brand-2)); }
-        .qa-success { background: linear-gradient(135deg, #10b981, #059669); }
-        .qa-warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
-
-        /* Sticky pay bar */
-        .sticky-paybar {
-            position: sticky; bottom: 0; z-index: 30;
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(8px);
-            border-top: 1px solid rgba(2,8,20,.06);
-            padding: .9rem 1rem;
-            box-shadow: 0 -10px 30px rgba(2,8,20,.05);
-        }
-        .sticky-paybar.hidden { display: none; }
-
-        .btn-modern {
-            border-radius: 12px; padding: .7rem 1rem; font-weight: 700; position: relative; overflow: hidden;
-        }
-        .btn-modern.btn-primary {
-            background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
-            border: none;
-        }
-        .btn-modern.btn-outline {
-            background: transparent;
-            border: 1px solid rgba(2,8,20,.12);
-            color: var(--text);
-        }
-        .btn-modern:hover { transform: translateY(-1px); box-shadow: var(--soft-shadow); }
-
-        .soft { color: var(--muted); }
-
-        .alert-soft {
-            background: #fff8e6;
-            border: 1px solid #fde68a;
-            color: #92400e;
-            border-radius: 12px;
-            padding: .9rem 1rem;
+            color: #1e293b;
+            font-size: 1.1rem;
         }
 
-        /* Homepage additions */
-        .section-title { font-weight: 800; letter-spacing: -0.2px; }
-        .feature-card {
-            display: flex; align-items: center; gap: 1rem;
-            padding: 1.25rem; border-radius: 16px; border: 1px solid rgba(2,8,20,.06);
-            background: #fff; box-shadow: var(--soft-shadow);
-            transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
             position: relative;
             overflow: hidden;
         }
-        .feature-card::before {
+
+        .action-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(102,126,234,0.05), transparent);
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
             transition: left 0.5s ease;
         }
-        .feature-card:hover::before {
+
+        .action-card:hover::before {
             left: 100%;
         }
-        .feature-card:hover { transform: translateY(-3px); box-shadow: var(--soft-shadow-lg); border-color: rgba(102,126,234,.35); }
 
-        /* Enhanced quick actions */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-        @media (max-width: 992px) {
-            .quick-actions {
-                grid-template-columns: 1fr;
-            }
+        .action-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
         }
 
-        /* Welcome section enhancements */
-        .welcome-section {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .welcome-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 200px;
-            height: 200px;
-            background: rgba(102,126,234,0.1);
+        .action-icon {
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            animation: pulse 4s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.1); opacity: 0.4; }
-        }
-
-        .welcome-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: white;
             position: relative;
             z-index: 2;
         }
 
-        .welcome-title {
+        .action-icon.primary { background: var(--primary-gradient); }
+        .action-icon.success { background: var(--success-gradient); }
+        .action-icon.warning { background: var(--warning-gradient); }
+
+        .action-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #1e293b;
+        }
+
+        .action-description {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+
+        .action-button {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 999px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Bill Cards */
+        .bill-card-modern {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bill-card-modern:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .bill-card-modern.unpaid {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .bill-card-modern.paid {
+            border-left: 4px solid #10b981;
+        }
+
+        .bill-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .bill-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .bill-amount {
             font-size: 1.5rem;
             font-weight: 800;
-            color: #1a202c;
-            margin-bottom: 0.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
-        .welcome-subtitle {
-            color: #718096;
-            margin-bottom: 1.5rem;
+        .bill-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: #64748b;
+            font-size: 0.9rem;
         }
 
-        /* Enhanced sidebar cards */
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.paid {
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .status-badge.unpaid {
+            background: rgba(245, 158, 11, 0.1);
+            color: #b45309;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .status-badge.pending {
+            background: rgba(59, 130, 246, 0.1);
+            color: #1d4ed8;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .status-badge.late {
+            background: rgba(239, 68, 68, 0.1);
+            color: #b91c1c;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        /* Sidebar Cards */
         .sidebar-card {
-            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-            border: 1px solid rgba(2,8,20,0.06);
-            border-radius: 18px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            box-shadow: var(--soft-shadow);
+            box-shadow: var(--shadow-sm);
             transition: all 0.3s ease;
         }
 
         .sidebar-card:hover {
+            box-shadow: var(--shadow-md);
             transform: translateY(-2px);
-            box-shadow: var(--soft-shadow-lg);
         }
 
-        .sidebar-card-header {
+        .sidebar-header {
             display: flex;
             align-items: center;
             gap: 0.75rem;
             margin-bottom: 1rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid rgba(2,8,20,0.06);
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
         }
 
-        .sidebar-card-icon {
+        .sidebar-icon {
             width: 40px;
             height: 40px;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
             color: white;
+            font-size: 1rem;
         }
 
-        .sidebar-card-title {
+        .sidebar-title {
             font-size: 1.1rem;
             font-weight: 700;
             margin: 0;
-            color: #1a202c;
+            color: #1e293b;
+        }
+
+        /* Floating Action Button */
+        .fab-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .fab-main {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .fab-main:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .user-meta {
+                flex-direction: column;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .fab-container {
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slide-up {
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        /* Loading Animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 
     <div class="container-fluid px-0">
+        <!-- Demo Mode Banner -->
+        @if (config('services.midtrans.server_key') === 'SB-Mid-server-CtVCUiLZBY6ivDfRtGAyBHNt')
+            <div class="alert alert-info alert-dismissible fade show mb-4" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Mode Demo Aktif:</strong> Pembayaran akan disimulasikan tanpa transaksi nyata.
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
         <div class="row g-4">
-
-            <!-- Left Column -->
+            <!-- Main Content -->
             <div class="col-lg-8">
-
-                <!-- Demo Mode Banner -->
-                @if (config('services.midtrans.server_key') === 'SB-Mid-server-CtVCUiLZBY6ivDfRtGAyBHNt')
-                    <div class="alert-soft mb-2">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        Mode Demo aktif. Pembayaran akan disimulasikan tanpa transaksi nyata.
-                    </div>
-                @endif
-
                 <!-- Quick Actions -->
-                <div class="modern-card p-3 mb-4">
-                    <div class="d-flex justify-content-between align-items-center px-2">
-                        <h5 class="mb-0 fw-bold"><i class="fas fa-bolt me-2"></i> Akses Cepat</h5>
+                <div class="modern-card mb-4 animate-slide-up">
+                    <div class="card-header-modern">
+                        <i class="fas fa-bolt me-2"></i>
+                        Akses Cepat
                     </div>
-                    <div class="quick-actions mt-3">
-                        <a class="quick-action-card" href="#payment-section" onclick="scrollToPayment()">
-                            <div class="qa-icon qa-primary"><i class="fas fa-credit-card"></i></div>
-                            <div>
-                                <div class="fw-bold">Bayar Tagihan</div>
-                                <small class="soft">Lunasi tagihan yang belum dibayar</small>
+                    <div class="p-4">
+                        <div class="quick-actions">
+                            <div class="action-card" onclick="scrollToPayment()">
+                                <div class="action-icon primary">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                                <h4 class="action-title">Bayar Tagihan</h4>
+                                <p class="action-description">Lunasi tagihan SPP yang belum dibayar</p>
+                                @if($unpaidCount > 0)
+                                    <span class="badge bg-warning position-absolute top-0 end-0 m-3">
+                                        {{ $unpaidCount }} belum bayar
+                                    </span>
+                                @endif
                             </div>
-                            <div class="ms-auto">
-                                <span class="badge bg-primary">{{ $unpaidCount }}</span>
-                            </div>
-                        </a>
-                        <a class="quick-action-card" href="{{ route('user.bills') }}">
-                            <div class="qa-icon qa-success"><i class="fas fa-file-invoice"></i></div>
-                            <div>
-                                <div class="fw-bold">Semua Tagihan</div>
-                                <small class="soft">Lihat riwayat dan detail tagihan</small>
-                            </div>
-                            <div class="ms-auto">
-                                <i class="fas fa-arrow-right text-success"></i>
-                            </div>
-                        </a>
-                        <a class="quick-action-card" href="{{ route('profile.edit') }}">
-                            <div class="qa-icon qa-warning"><i class="fas fa-user-cog"></i></div>
-                            <div>
-                                <div class="fw-bold">Pengaturan Profil</div>
-                                <small class="soft">Perbarui data akun Anda</small>
-                            </div>
-                            <div class="ms-auto">
-                                <i class="fas fa-arrow-right text-warning"></i>
-                            </div>
-                        </a>
-                    </div>
-                </div>
 
-                <!-- Highlights / Features -->
-                <div class="modern-card p-3 mb-4">
-                    <div class="d-flex justify-content-between align-items-center px-2">
-                        <h5 class="mb-0 fw-bold"><i class="fas fa-stars me-2"></i> Sorotan</h5>
-                    </div>
-                    <div class="row g-2 mt-2">
-                        <div class="col-md-4">
-                            <div class="feature-card">
-                                <div class="qa-icon qa-primary"><i class="fas fa-shield-alt"></i></div>
-                                <div>
-                                    <div class="fw-bold">Aman & Terpercaya</div>
-                                    <small class="soft">Transaksi terenkripsi</small>
+                            <a href="{{ route('user.bills') }}" class="action-card">
+                                <div class="action-icon success">
+                                    <i class="fas fa-file-invoice"></i>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="feature-card">
-                                <div class="qa-icon qa-success"><i class="fas fa-bolt"></i></div>
-                                <div>
-                                    <div class="fw-bold">Cepat & Praktis</div>
-                                    <small class="soft">Bayar dalam hitungan detik</small>
+                                <h4 class="action-title">Riwayat Tagihan</h4>
+                                <p class="action-description">Lihat semua tagihan dan pembayaran</p>
+                            </a>
+
+                            <a href="{{ route('profile.edit') }}" class="action-card">
+                                <div class="action-icon warning">
+                                    <i class="fas fa-user-cog"></i>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="feature-card">
-                                <div class="qa-icon qa-warning"><i class="fas fa-bell"></i></div>
-                                <div>
-                                    <div class="fw-bold">Notifikasi Otomatis</div>
-                                    <small class="soft">Pengingat jatuh tempo</small>
-                                </div>
-                            </div>
+                                <h4 class="action-title">Pengaturan Akun</h4>
+                                <p class="action-description">Kelola informasi akun Anda</p>
+                            </a>
                         </div>
                     </div>
                 </div>
 
                 <!-- Bills Section -->
-                <div id="payment-section" class="modern-card">
-                    <div class="card-header p-3">
-                        <div class="d-flex flex-wrap justify-content-between align-items-center">
-                            <div class="d-flex align-items-center gap-2">
-                                <h5 class="mb-0 fw-bold"><i class="fas fa-wallet me-2"></i> Tagihan SPP</h5>
-                                @if ($unpaidCount > 0)
-                                    <span class="badge bg-warning text-dark ms-1">Belum Bayar: {{ $unpaidCount }}</span>
-                                @endif
+                <div id="payment-section" class="modern-card animate-slide-up">
+                    <div class="card-header-modern">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-wallet me-2"></i>
+                                Tagihan SPP
                             </div>
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="filter-pills">
-                                    <button class="filter-pill active" data-filter="all" type="button">Semua</button>
-                                    <button class="filter-pill" data-filter="unpaid" type="button">Belum Bayar</button>
-                                    <button class="filter-pill" data-filter="paid" type="button">Lunas</button>
-                                </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-primary active" data-filter="all">
+                                    Semua
+                                </button>
+                                <button class="btn btn-sm btn-outline-warning" data-filter="unpaid">
+                                    Belum Bayar
+                                </button>
+                                <button class="btn btn-sm btn-outline-success" data-filter="paid">
+                                    Lunas
+                                </button>
                             </div>
                         </div>
                     </div>
-
-                    <div class="p-3">
-                        @if ($totalBills > 0)
-                            @if ($unpaidCount > 0)
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="selectAllCards">
-                                        <label class="form-check-label" for="selectAllCards">Pilih Semua yang Belum Bayar</label>
-                                    </div>
-                                    <div class="text-end">
-                                        <div class="soft small">Total yang harus dibayar</div>
-                                        <div class="h5 mb-0 text-danger">
-                                            Rp {{ number_format($unpaidTotal, 0, ',', '.') }}
+                    <div class="p-4">
+                        @if($bills->count() > 0)
+                            @if($unpaidCount > 0)
+                                <div class="alert alert-warning alert-modern mb-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            <strong>{{ $unpaidCount }} tagihan</strong> belum dibayar
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="small text-muted">Total yang harus dibayar</div>
+                                            <div class="h5 mb-0 text-danger">
+                                                Rp {{ number_format($unpaidTotal, 0, ',', '.') }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             @endif
 
-                            <div class="vstack gap-2" id="billCardsContainer">
-                                @foreach ($bills as $bill)
-                                    <div class="bill-card" data-status="{{ $bill->status }}">
-                                        <div class="d-flex align-items-center gap-3">
-                                            @if ($bill->status === 'unpaid')
-                                                <div class="form-check mt-1">
-                                                    <input type="checkbox"
-                                                           class="form-check-input bill-checkbox"
-                                                           value="{{ $bill->id }}"
-                                                           data-amount="{{ (int) $bill->amount }}"
-                                                           onchange="updateSelections()">
-                                                </div>
-                                            @else
-                                                <div style="width: 18px;"></div>
-                                            @endif
-
-                                            <div class="flex-grow-1">
-                                                <div class="d-flex flex-wrap align-items-center gap-2">
-                                                    <h6 class="bill-title mb-0">{{ $bill->month }} {{ $bill->year }}</h6>
-                                                    @if ($bill->status === 'paid')
-                                                        <span class="badge-modern badge-paid"><i class="fas fa-check me-1"></i> Lunas</span>
-                                                    @else
-                                                        <span class="badge-modern badge-unpaid"><i class="fas fa-clock me-1"></i> Belum Bayar</span>
+                            <div class="vstack gap-3" id="bills-container">
+                                @foreach($bills->take(5) as $bill)
+                                    <div class="bill-card-modern {{ $bill->status }}" data-status="{{ $bill->status }}">
+                                        <div class="bill-header">
+                                            <div>
+                                                <h5 class="bill-title">{{ $bill->month }} {{ $bill->year }}</h5>
+                                                <div class="bill-meta">
+                                                    <span><i class="fas fa-calendar me-1"></i>Jatuh tempo: {{ $bill->due_date->format('d M Y') }}</span>
+                                                    @if($bill->status === 'unpaid' && $bill->due_date->isPast())
+                                                        <span class="text-danger">
+                                                            <i class="fas fa-exclamation-circle me-1"></i>Terlambat
+                                                        </span>
                                                     @endif
-                                                    @if ($bill->status === 'unpaid' && $bill->due_date->isPast())
-                                                        <span class="badge-modern badge-late"><i class="fas fa-exclamation-circle me-1"></i> Terlambat</span>
-                                                    @endif
-                                                </div>
-                                                <div class="d-flex flex-wrap gap-3 mt-1">
-                                                    <div class="amount-lg">
-                                                        Rp {{ number_format($bill->amount, 0, ',', '.') }}
-                                                    </div>
-                                                    <div class="bill-meta">
-                                                        <i class="far fa-calendar-alt me-1"></i>
-                                                        Jatuh Tempo: {{ $bill->due_date->format('d M Y') }}
-                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div class="d-flex align-items-center gap-2">
-                                            @if ($bill->status === 'unpaid')
-                                                <button class="btn btn-modern btn-primary btn-sm" onclick="payBill({{ $bill->id }})">
-                                                    <i class="fas fa-credit-card me-1"></i> Bayar
-                                                </button>
-                                            @else
-                                                <span class="soft">
-                                                    <i class="fas fa-check-circle text-success me-1"></i> Sudah Dibayar
+                                            <div class="text-end">
+                                                <div class="bill-amount">Rp {{ number_format($bill->amount, 0, ',', '.') }}</div>
+                                                <span class="status-badge {{ $bill->status }}">
+                                                    @if($bill->status === 'paid')
+                                                        LUNAS
+                                                    @elseif($bill->status === 'pending')
+                                                        MENUNGGU
+                                                    @else
+                                                        BELUM BAYAR
+                                                    @endif
                                                 </span>
-                                            @endif
+                                            </div>
                                         </div>
+                                        @if($bill->status === 'unpaid')
+                                            <button class="btn btn-primary w-100" onclick="payBill({{ $bill->id }})">
+                                                <i class="fas fa-credit-card me-2"></i>
+                                                Bayar Sekarang
+                                            </button>
+                                        @elseif($bill->status === 'paid')
+                                            <div class="text-center text-success">
+                                                <i class="fas fa-check-circle me-2"></i>
+                                                Pembayaran berhasil
+                                            </div>
+                                        @elseif($bill->status === 'pending')
+                                            <div class="text-center text-warning">
+                                                <i class="fas fa-clock me-2"></i>
+                                                Menunggu konfirmasi pembayaran
+                                            </div>
+                                        @endif
                                     </div>
                                 @endforeach
                             </div>
+
+                            @if($bills->count() > 5)
+                                <div class="text-center mt-4">
+                                    <a href="{{ route('user.bills') }}" class="btn btn-outline-primary">
+                                        Lihat Semua Tagihan
+                                        <i class="fas fa-arrow-right ms-2"></i>
+                                    </a>
+                                </div>
+                            @endif
                         @else
                             <div class="text-center py-5">
-                                <i class="fas fa-file-invoice fa-4x soft mb-3"></i>
+                                <i class="fas fa-file-invoice fa-4x text-muted mb-3"></i>
                                 <h5 class="text-muted">Belum Ada Tagihan</h5>
-                                <p class="soft">Belum ada tagihan SPP yang tersedia.</p>
+                                <p class="text-muted">Belum ada tagihan SPP yang tersedia untuk Anda.</p>
                             </div>
                         @endif
-                    </div>
-
-                    <!-- Sticky Paybar -->
-                    <div id="stickyPaybar" class="sticky-paybar hidden">
-                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="soft">
-                                    <i class="fas fa-list-check me-1"></i>
-                                    <span id="selectedCount">0</span> tagihan dipilih
-                                </div>
-                                <div class="soft d-none d-md-inline">•</div>
-                                <div>
-                                    <small class="soft d-block">Total Bayar</small>
-                                    <span class="h5 mb-0" id="selectedTotal">Rp 0</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center gap-2">
-                                <button class="btn btn-modern btn-outline" id="clearSelectionBtn" type="button">Bersihkan</button>
-                                <button class="btn btn-modern btn-primary" id="paySelectedBtn" onclick="paySelected()" disabled>
-                                    <i class="fas fa-credit-card me-2"></i> Bayar Terpilih
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column -->
+            <!-- Sidebar -->
             <div class="col-lg-4">
-
-                <!-- Ringkasan -->
-                <div class="modern-card mb-4">
-                    <div class="card-header p-3">
-                        <h5 class="mb-0 fw-bold"><i class="fas fa-chart-pie me-2"></i> Ringkasan</h5>
+                <!-- Summary Card -->
+                <div class="sidebar-card animate-slide-up">
+                    <div class="sidebar-header">
+                        <div class="sidebar-icon" style="background: var(--primary-gradient);">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <h5 class="sidebar-title">Ringkasan Pembayaran</h5>
                     </div>
-                    <div class="p-3">
-                        <div class="row g-3">
-                            <div class="col-6">
-                                <div class="p-3 rounded-3" style="background: #f0f5ff; border: 1px solid #dbeafe;">
-                                    <div class="soft small">Total Tagihan</div>
-                                    <div class="h4 mb-0 fw-bold">{{ $totalBills }}</div>
-                                </div>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="text-center p-3 bg-light rounded-3">
+                                <div class="h3 fw-bold text-primary mb-1">{{ $totalBills }}</div>
+                                <div class="small text-muted">Total Tagihan</div>
                             </div>
-                            <div class="col-6">
-                                <div class="p-3 rounded-3" style="background: #ecfdf5; border: 1px solid #d1fae5;">
-                                    <div class="soft small">Sudah Lunas</div>
-                                    <div class="h4 mb-0 fw-bold text-success">{{ $paidCount }}</div>
-                                </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center p-3 bg-light rounded-3">
+                                <div class="h3 fw-bold text-success mb-1">{{ $paidCount }}</div>
+                                <div class="small text-muted">Sudah Lunas</div>
                             </div>
-                            <div class="col-12">
-                                <div class="p-3 rounded-3" style="background: #fff7ed; border: 1px solid #fed7aa;">
-                                    <div class="soft small">Belum Bayar</div>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="h5 mb-0 fw-bold text-warning">{{ $unpaidCount }} Tagihan</div>
-                                        <div class="fw-bold text-danger">
+                        </div>
+                        <div class="col-12">
+                            <div class="p-3 bg-warning bg-opacity-10 border border-warning border-opacity-25 rounded-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="small text-muted">Belum Bayar</div>
+                                        <div class="h5 fw-bold text-warning mb-0">{{ $unpaidCount }} Tagihan</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="h5 fw-bold text-danger mb-0">
                                             Rp {{ number_format($unpaidTotal, 0, ',', '.') }}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        @if ($unpaidCount > 0)
-                            <button class="btn btn-modern btn-primary w-100 mt-3" onclick="scrollToPayment()">
-                                <i class="fas fa-credit-card me-2"></i> Bayar Semua Tagihan Belum Lunas
-                            </button>
-                        @else
-                            <div class="text-center soft mt-3">
-                                <i class="fas fa-check-circle text-success me-1"></i> Tidak ada tagihan tertunda
-                            </div>
-                        @endif
                     </div>
+                    @if($unpaidCount > 0)
+                        <button class="btn btn-primary w-100 mt-3" onclick="scrollToPayment()">
+                            <i class="fas fa-credit-card me-2"></i>
+                            Bayar Semua Tagihan
+                        </button>
+                    @endif
                 </div>
 
                 <!-- Recent Payments -->
-                <div class="modern-card mb-4">
-                    <div class="card-header p-3">
-                        <h5 class="mb-0 fw-bold"><i class="fas fa-receipt me-2"></i> Pembayaran Terbaru</h5>
+                <div class="sidebar-card animate-slide-up">
+                    <div class="sidebar-header">
+                        <div class="sidebar-icon" style="background: var(--success-gradient);">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <h5 class="sidebar-title">Pembayaran Terbaru</h5>
                     </div>
-                    <div class="p-3">
-                        @if ($recentPayments->count())
-                            <div class="vstack gap-2">
-                                @foreach ($recentPayments as $p)
-                                    <div class="d-flex justify-content-between align-items-center p-2 border rounded-3">
-                                        <div>
-                                            <div class="fw-semibold">#{{ $p->order_id }}</div>
-                                            <small class="soft">{{ optional($p->created_at)->format('d M Y H:i') }} • {{ strtoupper($p->payment_type ?? '-') }}</small>
-                                        </div>
-                                        <div class="text-end">
-                                            <div class="fw-bold">Rp {{ number_format($p->amount, 0, ',', '.') }}</div>
-                                            @php
-                                                $st = $p->transaction_status ?? 'settlement';
-                                            @endphp
-                                            <span class="badge-modern {{ $st === 'settlement' ? 'badge-paid' : ($st === 'pending' ? 'badge-unpaid' : 'badge-late') }}">
-                                                {{ $st === 'settlement' ? 'Lunas' : ($st === 'pending' ? 'Menunggu' : ucfirst($st)) }}
-                                            </span>
-                                        </div>
+                    @if($recentPayments->count() > 0)
+                        <div class="vstack gap-3">
+                            @foreach($recentPayments as $payment)
+                                <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded-3">
+                                    <div>
+                                        <div class="fw-semibold">#{{ $payment->order_id }}</div>
+                                        <small class="text-muted">
+                                            {{ $payment->created_at->format('d M Y H:i') }}
+                                        </small>
                                     </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="soft">Belum ada pembayaran terbaru.</div>
-                        @endif
-                    </div>
+                                    <div class="text-end">
+                                        <div class="fw-bold">Rp {{ number_format($payment->amount, 0, ',', '.') }}</div>
+                                        <span class="badge bg-success">Berhasil</span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="text-center py-4 text-muted">
+                            <i class="fas fa-receipt fa-2x mb-3 opacity-50"></i>
+                            <p>Belum ada pembayaran</p>
+                        </div>
+                    @endif
                 </div>
 
+                <!-- Help & Support -->
+                <div class="sidebar-card animate-slide-up">
+                    <div class="sidebar-header">
+                        <div class="sidebar-icon" style="background: var(--secondary-gradient);">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h5 class="sidebar-title">Butuh Bantuan?</h5>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-question-circle fa-3x text-primary mb-3"></i>
+                        <p class="text-muted mb-3">Jika mengalami masalah dengan pembayaran, silakan hubungi admin sekolah.</p>
+                        <button class="btn btn-outline-primary w-100">
+                            <i class="fas fa-phone me-2"></i>
+                            Hubungi Admin
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Payment Method Modal (Demo) -->
-    <div class="modal fade" id="demoPaymentModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-credit-card me-2"></i>
-                        Pilih Metode Pembayaran
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="soft mb-4">Pilih metode pembayaran yang Anda inginkan:</p>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="card payment-method h-100" data-method="credit_card" style="cursor: pointer;">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-credit-card fa-3x text-primary mb-3"></i>
-                                    <h6 class="fw-bold">Kartu Kredit/Debit</h6>
-                                    <small class="text-muted">Visa, Mastercard, JCB</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="card payment-method h-100" data-method="bank_transfer" style="cursor: pointer;">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-university fa-3x text-success mb-3"></i>
-                                    <h6 class="fw-bold">Transfer Bank</h6>
-                                    <small class="text-muted">BCA, BNI, BRI, Mandiri</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="card payment-method h-100" data-method="gopay" style="cursor: pointer;">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-mobile-alt fa-3x text-info mb-3"></i>
-                                    <h6 class="fw-bold">GoPay</h6>
-                                    <small class="text-muted">Pembayaran digital</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="card payment-method h-100" data-method="ovo" style="cursor: pointer;">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-wallet fa-3x text-warning mb-3"></i>
-                                    <h6 class="fw-bold">OVO</h6>
-                                    <small class="text-muted">E-wallet</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="card payment-method h-100" data-method="dana" style="cursor: pointer;">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-coins fa-3x text-primary mb-3"></i>
-                                    <h6 class="fw-bold">DANA</h6>
-                                    <small class="text-muted">Digital wallet</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="card payment-method h-100" data-method="indomaret" style="cursor: pointer;">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-store fa-3x text-danger mb-3"></i>
-                                    <h6 class="fw-bold">Indomaret</h6>
-                                    <small class="text-muted">Bayar di toko</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Floating Action Button -->
+    <div class="fab-container">
+        <button class="fab-main" onclick="scrollToPayment()" title="Bayar Tagihan">
+            <i class="fas fa-credit-card"></i>
+        </button>
     </div>
 
     @push('scripts')
-        <!-- Midtrans Snap.js -->
-        <script src="{{ config('services.midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+        <script src="{{ config('services.midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}"
+                data-client-key="{{ config('services.midtrans.client_key') }}"></script>
 
         <script>
             function formatIDR(number) {
                 try {
-                    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
+                    return new Intl.NumberFormat('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                        maximumFractionDigits: 0
+                    }).format(number);
                 } catch (_) {
                     return 'Rp ' + (number || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
                 }
             }
 
             function scrollToPayment() {
-                const el = document.getElementById('payment-section');
-                if (!el) return;
-                el.scrollIntoView({ behavior: 'smooth' });
-            }
-
-            function updateSelections() {
-                const checkboxes = document.querySelectorAll('.bill-checkbox:checked');
-                const selectedCount = document.getElementById('selectedCount');
-                const selectedTotal = document.getElementById('selectedTotal');
-                const payBtn = document.getElementById('paySelectedBtn');
-                const bar = document.getElementById('stickyPaybar');
-
-                let total = 0;
-                checkboxes.forEach(cb => total += parseInt(cb.getAttribute('data-amount') || '0', 10));
-
-                if (selectedCount) selectedCount.textContent = checkboxes.length;
-                if (selectedTotal) selectedTotal.textContent = formatIDR(total);
-                if (payBtn) payBtn.disabled = checkboxes.length === 0;
-                if (bar) bar.classList.toggle('hidden', checkboxes.length === 0);
-            }
-
-            async function requestSnap(billIds) {
-                try {
-                    const res = await fetch('{{ route('payment.create') }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({ spp_bill_ids: billIds })
+                const element = document.getElementById('payment-section');
+                if (element) {
+                    element.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
                     });
 
-                    if (!res.ok) {
-                        const err = await res.json().catch(() => ({}));
-                        throw new Error(err.error || 'Gagal membuat transaksi');
-                    }
-
-                    const data = await res.json();
-                    const snapToken = data.snap_token;
-
-                    if (!window.snap || !snapToken) {
-                        throw new Error('Snap.js belum siap atau token tidak valid.');
-                    }
-
-                    window.snap.pay(snapToken, {
-                        onSuccess: function (result) {
-                            // Redirect ke halaman selesai pembayaran
-                            window.location.href = '{{ route('payment.finish') }}' + '?order_id=' + encodeURIComponent(result.order_id || data.order_id);
-                        },
-                        onPending: function () {
-                            alert('Transaksi dalam proses. Anda dapat mengecek status di riwayat pembayaran.');
-                            window.location.reload();
-                        },
-                        onError: function (err) {
-                            console.error(err);
-                            alert('Terjadi kesalahan saat memproses pembayaran.');
-                        },
-                        onClose: function () {
-                            // User menutup popup tanpa menyelesaikan pembayaran
-                        }
-                    });
-                } catch (e) {
-                    alert(e.message || 'Gagal memulai pembayaran.');
+                    // Add highlight effect
+                    element.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.3)';
+                    setTimeout(() => {
+                        element.style.boxShadow = '';
+                    }, 2000);
                 }
-            }
-
-            function paySelected() {
-                const checkboxes = document.querySelectorAll('.bill-checkbox:checked');
-                const billIds = Array.from(checkboxes).map(cb => cb.value);
-
-                if (billIds.length === 0) {
-                    alert('Pilih tagihan yang ingin dibayar terlebih dahulu.');
-                    return;
-                }
-
-                requestSnap(billIds);
             }
 
             function payBill(billId) {
-                requestSnap([billId]);
+                // Show loading state
+                const button = event.target;
+                const originalText = button.innerHTML;
+                button.innerHTML = '<span class="loading-spinner"></span> Memproses...';
+                button.disabled = true;
+
+                // Simulate payment processing
+                setTimeout(() => {
+                    requestSnap([billId]);
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }, 1000);
             }
 
-            document.addEventListener('DOMContentLoaded', function () {
-                // Select All handler
-                const selectAll = document.getElementById('selectAllCards');
-                if (selectAll) {
-                    selectAll.addEventListener('change', function () {
-                        const checkboxes = document.querySelectorAll('.bill-checkbox');
-                        checkboxes.forEach(cb => cb.checked = selectAll.checked);
-                        updateSelections();
-                    });
-                }
+            function requestSnap(billIds) {
+                fetch('{{ route('payment.create') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ spp_bill_ids: billIds })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.snap_token) {
+                        window.snap.pay(data.snap_token, {
+                            onSuccess: function(result) {
+                                window.location.href = '{{ route('payment.finish') }}' + '?order_id=' + encodeURIComponent(result.order_id || data.order_id);
+                            },
+                            onPending: function() {
+                                alert('Transaksi dalam proses. Anda dapat mengecek status di riwayat pembayaran.');
+                                window.location.reload();
+                            },
+                            onError: function(err) {
+                                console.error(err);
+                                alert('Terjadi kesalahan saat memproses pembayaran.');
+                            },
+                            onClose: function() {
+                                // User closed the popup
+                            }
+                        });
+                    } else {
+                        alert('Gagal membuat transaksi: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Gagal memproses pembayaran. Silakan coba lagi.');
+                });
+            }
 
-                // Clear selection
-                const clearBtn = document.getElementById('clearSelectionBtn');
-                if (clearBtn) {
-                    clearBtn.addEventListener('click', function () {
-                        const checkboxes = document.querySelectorAll('.bill-checkbox:checked');
-                        checkboxes.forEach(cb => cb.checked = false);
-                        if (selectAll) selectAll.checked = false;
-                        updateSelections();
-                    });
-                }
+            // Filter functionality
+            document.addEventListener('DOMContentLoaded', function() {
+                const filterButtons = document.querySelectorAll('[data-filter]');
+                const billCards = document.querySelectorAll('.bill-card-modern');
 
-                // Filter pills
-                const pills = document.querySelectorAll('.filter-pill');
-                const cards = document.querySelectorAll('.bill-card');
-                pills.forEach(p => {
-                    p.addEventListener('click', function () {
-                        pills.forEach(x => x.classList.remove('active'));
-                        this.classList.add('active');
+                filterButtons.forEach(button => {
+                    button.addEventListener('click', function() {
                         const filter = this.getAttribute('data-filter');
-                        cards.forEach(card => {
+
+                        // Update active button
+                        filterButtons.forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
+
+                        // Filter cards
+                        billCards.forEach(card => {
                             const status = card.getAttribute('data-status');
-                            if (filter === 'all') {
-                                card.style.display = '';
-                            } else if (filter === 'paid') {
-                                card.style.display = (status === 'paid') ? '' : 'none';
-                            } else if (filter === 'unpaid') {
-                                card.style.display = (status === 'unpaid') ? '' : 'none';
+                            if (filter === 'all' || status === filter) {
+                                card.style.display = 'block';
+                                card.classList.add('animate-slide-up');
+                            } else {
+                                card.style.display = 'none';
                             }
                         });
                     });
+                });
+
+                // Add smooth scroll for all internal links
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const target = document.querySelector(this.getAttribute('href'));
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    });
+                });
+
+                // Add entrance animations
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                };
+
+                const observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('animate-slide-up');
+                        }
+                    });
+                }, observerOptions);
+
+                document.querySelectorAll('.modern-card, .sidebar-card').forEach(card => {
+                    observer.observe(card);
                 });
             });
         </script>

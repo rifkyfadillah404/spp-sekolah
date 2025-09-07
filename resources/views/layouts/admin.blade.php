@@ -1071,41 +1071,6 @@
             </ul>
         </div>
 
-          <!-- Reports -->
-    <div class="nav-section">
-        <div class="nav-section-title">Laporan</div>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.reports.students.pdf') }}">
-                    <i class="fas fa-file-pdf"></i>
-                    <span>Daftar Siswa (PDF)</span>
-
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.reports.students.excel') }}">
-                    <i class="fas fa-file-excel"></i>
-                    <span>Daftar Siswa (Excel)</span>
-
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.reports.spp.pdf') }}">
-                    <i class="fas fa-file-pdf"></i>
-                    <span>Tagihan SPP (PDF)</span>
-
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.reports.spp.excel') }}">
-                    <i class="fas fa-file-excel"></i>
-                    <span>Tagihan SPP (Excel)</span>
-
-                </a>
-            </li>
-        </ul>
-    </div>
-
         <!-- Account Section -->
         <div class="nav-section" style="margin-top: auto; padding-top: 20px;">
             <ul class="nav flex-column">

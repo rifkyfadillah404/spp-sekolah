@@ -338,7 +338,7 @@
                                 Jumlah Tagihan <span class="required">*</span>
                             </label>
                             <input type="number" class="form-control @error('amount') is-invalid @enderror"
-                                   id="amount" name="amount" value="{{ old('amount', 500000) }}"
+                                   id="amount" name="amount" value="{{ old('amount', 600000) }}"
                                    min="0" step="1000" required>
                             @error('amount')
                                 <div class="invalid-feedback">{{ $message }}</div>

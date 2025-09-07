@@ -5,12 +5,6 @@
                 <h2 class="h4 mb-1 fw-bold text-dark">Kelola Siswa</h2>
                 <p class="text-muted mb-0">Daftar semua siswa yang terdaftar dalam sistem</p>
             </div>
-            <div class="d-flex align-items-center">
-                <a href="{{ route('admin.students.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus me-1"></i>
-                    Tambah Siswa
-                </a>
-            </div>
         </div>
     </x-slot>
 

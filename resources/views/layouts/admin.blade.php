@@ -1072,7 +1072,8 @@
         </div>
 
         <!-- Account Section -->
-        <div class="nav-section" style="margin-top: auto; padding-top: 20px;">
+        <div class="nav-section" style="margin-top: auto; ">
+            <div class="nav-section-title">Manajemen Account</div>
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <form method="POST" action="{{ route('logout') }}" class="d-inline" id="logout-form">

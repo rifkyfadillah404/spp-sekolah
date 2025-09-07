@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SppBill;
 use App\Models\Student;
+use App\Exports\SppBillsExport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SppBillController extends Controller
 {
@@ -123,5 +125,20 @@ class SppBillController extends Controller
         $request->validate(['class' => 'required|string']);
         $students = Student::where('class', $request->class)->get(['id', 'name', 'nis']);
         return response()->json($students);
+    }
+
+    public function bulkExport(Request $request)
+    {
+        $request->validate([
+            'bill_ids' => 'required|array',
+            'bill_ids.*' => 'exists:spp_bills,id'
+        ]);
+
+        $bills = SppBill::with('student')->whereIn('id', $request->bill_ids)->get();
+
+        // Use unified export class for both "selected" and "all" exports
+        $export = new SppBillsExport($bills);
+
+        return Excel::download($export, 'tagihan-spp-terpilih-' . date('Y-m-d') . '.xlsx');
     }
 }

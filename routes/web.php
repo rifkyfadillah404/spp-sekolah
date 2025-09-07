@@ -51,6 +51,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/students/bulk-delete', [StudentController::class, 'bulkDelete'])->name('students.bulk-delete');
         Route::resource('students', StudentController::class);
         Route::get('spp-bills/get-students-by-class', [SppBillController::class, 'getStudentsByClass'])->name('spp-bills.getStudentsByClass');
+        Route::post('spp-bills/bulk-export', [SppBillController::class, 'bulkExport'])->name('spp-bills.bulk-export');
         Route::resource('spp-bills', SppBillController::class);
     });
 });

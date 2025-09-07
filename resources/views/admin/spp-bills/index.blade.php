@@ -5,16 +5,6 @@
                 <h2 class="h4 mb-1 fw-bold text-dark">Kelola Tagihan SPP</h2>
                 <p class="text-muted mb-0">Pantau dan kelola semua tagihan SPP siswa</p>
             </div>
-            <div class="d-flex align-items-center">
-                <span class="badge bg-primary me-3">
-                    <i class="fas fa-file-invoice me-1"></i>
-                    {{ $bills->total() }} tagihan
-                </span>
-                <a href="{{ route('admin.spp-bills.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus me-1"></i>
-                    Buat Tagihan
-                </a>
-            </div>
         </div>
     </x-slot>
 
@@ -151,10 +141,14 @@
                             dari {{ $bills->total() }} tagihan
                         </small>
                         <div class="btn-group btn-group-sm" role="group">
-                            <button type="button" class="btn btn-outline-primary" onclick="bulkMarkPaid()">
-                                <i class="fas fa-check me-1"></i>
-                                Tandai Lunas
+                            <button type="button" class="btn btn-outline-success" onclick="bulkExport()">
+                                <i class="fas fa-download me-1"></i>
+                                Export Terpilih
                             </button>
+                            <a href="{{ route('admin.reports.spp.excel') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-file-excel me-1"></i>
+                                Export Semua
+                            </a>
                             <button type="button" class="btn btn-outline-danger" onclick="bulkDelete()">
                                 <i class="fas fa-trash me-1"></i>
                                 Hapus Terpilih
@@ -338,9 +332,9 @@
                                                     </li>
                                                     <li>
                                                         <button class="dropdown-item"
-                                                            onclick="markAsPaid({{ $bill->id }})">
-                                                            <i class="fas fa-check me-2 text-success"></i>
-                                                            Tandai Lunas
+                                                            onclick="exportSingle({{ $bill->id }})">
+                                                            <i class="fas fa-download me-2 text-success"></i>
+                                                            Export Tagihan
                                                         </button>
                                                     </li>
                                                     <li>
@@ -442,10 +436,30 @@
                     });
                 }
 
-                if (searchInput) searchInput.addEventListener('input', applyFilters);
-                if (statusFilter) statusFilter.addEventListener('change', applyFilters);
-                if (monthFilter) monthFilter.addEventListener('change', applyFilters);
-                if (yearFilter) yearFilter.addEventListener('change', applyFilters);
+                if (searchInput) {
+                    searchInput.addEventListener('input', function() {
+                        applyFilters();
+                        updateSelectAllAfterFilter();
+                    });
+                }
+                if (statusFilter) {
+                    statusFilter.addEventListener('change', function() {
+                        applyFilters();
+                        updateSelectAllAfterFilter();
+                    });
+                }
+                if (monthFilter) {
+                    monthFilter.addEventListener('change', function() {
+                        applyFilters();
+                        updateSelectAllAfterFilter();
+                    });
+                }
+                if (yearFilter) {
+                    yearFilter.addEventListener('change', function() {
+                        applyFilters();
+                        updateSelectAllAfterFilter();
+                    });
+                }
 
                 window.resetFilters = function () {
                     if (searchInput) searchInput.value = '';
@@ -453,42 +467,127 @@
                     if (monthFilter) monthFilter.value = '';
                     if (yearFilter) yearFilter.value = '';
                     applyFilters();
+                    updateSelectAllAfterFilter();
                 };
 
                 // Select all functionality
                 const selectAll = document.getElementById('selectAll');
+
+                function getVisibleCheckboxes() {
+                    return document.querySelectorAll('.bill-row:not([style*="display: none"]) .bill-checkbox');
+                }
+
+                function getCheckedVisibleCheckboxes() {
+                    return document.querySelectorAll('.bill-row:not([style*="display: none"]) .bill-checkbox:checked');
+                }
+
+                function updateSelectAllState() {
+                    if (!selectAll) return;
+
+                    const visibleCheckboxes = getVisibleCheckboxes();
+                    const enabledCheckboxes = document.querySelectorAll('.bill-row:not([style*="display: none"]) .bill-checkbox:not(:disabled)');
+                    const checkedBoxes = getCheckedVisibleCheckboxes();
+
+                    if (visibleCheckboxes.length === 0) {
+                        selectAll.checked = false;
+                        selectAll.indeterminate = false;
+                    } else if (checkedBoxes.length === enabledCheckboxes.length && enabledCheckboxes.length > 0) {
+                        selectAll.checked = true;
+                        selectAll.indeterminate = false;
+                    } else if (checkedBoxes.length > 0) {
+                        selectAll.checked = false;
+                        selectAll.indeterminate = true;
+                    } else {
+                        selectAll.checked = false;
+                        selectAll.indeterminate = false;
+                    }
+                }
+
+                // Select all checkbox event
                 if (selectAll) {
                     selectAll.addEventListener('change', function () {
-                        const checkboxes = document.querySelectorAll('.bill-checkbox:not(:disabled)');
-                        checkboxes.forEach(checkbox => {
+                        const enabledCheckboxes = document.querySelectorAll('.bill-row:not([style*="display: none"]) .bill-checkbox:not(:disabled)');
+                        enabledCheckboxes.forEach(checkbox => {
                             checkbox.checked = this.checked;
                         });
                     });
                 }
 
-                // Mark as paid (placeholder)
-                window.markAsPaid = function (billId) {
-                    if (confirm('Tandai tagihan ini sebagai lunas?')) {
-                        alert('Fitur tandai lunas akan segera tersedia!');
+                // Individual checkbox change event
+                document.addEventListener('change', function(e) {
+                    if (e.target.classList.contains('bill-checkbox')) {
+                        updateSelectAllState();
+                    }
+                });
+
+                // Update select all state when filters change
+                function updateSelectAllAfterFilter() {
+                    setTimeout(() => {
+                        updateSelectAllState();
+                    }, 50);
+                }
+
+                // Export single bill
+                window.exportSingle = function (billId) {
+                    if (confirm('Export tagihan ini ke Excel?')) {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = '{{ route("admin.spp-bills.bulk-export") }}';
+
+                        const csrfToken = document.createElement('input');
+                        csrfToken.type = 'hidden';
+                        csrfToken.name = '_token';
+                        csrfToken.value = '{{ csrf_token() }}';
+                        form.appendChild(csrfToken);
+
+                        const billIdInput = document.createElement('input');
+                        billIdInput.type = 'hidden';
+                        billIdInput.name = 'bill_ids[]';
+                        billIdInput.value = billId;
+                        form.appendChild(billIdInput);
+
+                        document.body.appendChild(form);
+                        form.submit();
+                        document.body.removeChild(form);
                     }
                 };
 
-                // Bulk mark as paid (placeholder)
-                window.bulkMarkPaid = function () {
-                    const checkedBoxes = document.querySelectorAll('.bill-checkbox:checked');
+                // Bulk export
+                window.bulkExport = function () {
+                    const checkedBoxes = document.querySelectorAll('.bill-checkbox:checked:not(:disabled)');
                     if (checkedBoxes.length === 0) {
-                        alert('Pilih tagihan yang ingin ditandai lunas terlebih dahulu.');
+                        alert('Pilih tagihan yang ingin di-export terlebih dahulu.');
                         return;
                     }
 
-                    if (confirm(`Tandai ${checkedBoxes.length} tagihan sebagai lunas?`)) {
-                        alert('Fitur bulk mark paid akan segera tersedia!');
+                    if (confirm(`Export ${checkedBoxes.length} tagihan ke Excel?`)) {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = '{{ route("admin.spp-bills.bulk-export") }}';
+
+                        const csrfToken = document.createElement('input');
+                        csrfToken.type = 'hidden';
+                        csrfToken.name = '_token';
+                        csrfToken.value = '{{ csrf_token() }}';
+                        form.appendChild(csrfToken);
+
+                        checkedBoxes.forEach(checkbox => {
+                            const billIdInput = document.createElement('input');
+                            billIdInput.type = 'hidden';
+                            billIdInput.name = 'bill_ids[]';
+                            billIdInput.value = checkbox.value;
+                            form.appendChild(billIdInput);
+                        });
+
+                        document.body.appendChild(form);
+                        form.submit();
+                        document.body.removeChild(form);
                     }
                 };
 
                 // Bulk delete (placeholder)
                 window.bulkDelete = function () {
-                    const checkedBoxes = document.querySelectorAll('.bill-checkbox:checked');
+                    const checkedBoxes = document.querySelectorAll('.bill-checkbox:checked:not(:disabled)');
                     if (checkedBoxes.length === 0) {
                         alert('Pilih tagihan yang ingin dihapus terlebih dahulu.');
                         return;
@@ -506,6 +605,7 @@
 
                 // Initial apply
                 applyFilters();
+                updateSelectAllState();
             })();
         </script>
     @endpush

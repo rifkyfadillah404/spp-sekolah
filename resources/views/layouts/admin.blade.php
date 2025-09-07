@@ -1219,6 +1219,15 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', initializeSidebar);
     </script>
+    
+        <script>
+            function confirmLogout(event) {
+                event.preventDefault();
+                if (confirm("Apakah Anda yakin ingin logout?")) {
+                    document.getElementById('logout-form').submit();
+                }
+            }
+        </script>
 
         <script>
             function confirmLogout(event) {

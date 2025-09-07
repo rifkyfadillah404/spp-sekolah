@@ -50,7 +50,7 @@
                                                         <span class="badge bg-danger ms-2">Terlambat</span>
                                                     @endif
                                                 @else
-                                                    <span class="text-muted">Belum diset</span>
+                        riset                            <span class="text-muted">Belum diset</span>
                                                 @endif
                                             </td>
                                         </tr>

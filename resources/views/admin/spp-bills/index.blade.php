@@ -117,10 +117,16 @@
                     </div>
                     <div class="col-md-2">
                         <div class="d-flex">
-                            <button class="btn btn-outline-secondary me-2" onclick="resetFilters()">
+                            <!-- <button class="btn btn-outline-secondary me-2" onclick="resetFilters()">
                                 <i class="fas fa-undo me-1"></i>
                                 Reset
+                            </button> -->
+                            <div class="d-flex">
+                            <button class="btn btn-danger me-2" onclick="exportPDF()">
+                                <i class="fas fa-file-pdf me-1"></i>
+                                PDF
                             </button>
+                        </div>
                         </div>
                     </div>
                 </div>

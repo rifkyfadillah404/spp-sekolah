@@ -121,6 +121,8 @@
                         </div>
                     </div>
                 </div>
+
+                </div>
             </div>
         </div>
 
@@ -427,7 +429,7 @@
                 form.submit();
                 document.body.removeChild(form);
             };
-            
+
             // Bulk delete functionality
             window.bulkDelete = function () {
                 const checkedBoxes = document.querySelectorAll('.student-checkbox:checked');

@@ -17,15 +17,22 @@
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('user.dashboard') ? 'active' : '' }}"
                        href="{{ route('user.dashboard') }}">
-                        <i class="fas fa-tachometer-alt me-1"></i>
-                        Dashboard
+                        <i class="fas fa-home me-1"></i>
+                        Beranda
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('user.bills') ? 'active' : '' }}"
+                       href="{{ route('user.bills') }}">
+                        <i class="fas fa-file-invoice me-1"></i>
+                        Tagihan Saya
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}"
                        href="{{ route('profile.edit') }}">
                         <i class="fas fa-user me-1"></i>
-                        Profile
+                        Akun Saya
                     </a>
                 </li>
             </ul>
@@ -37,7 +44,7 @@
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="btn btn-danger w-100">
-                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                            <i class="fas fa-sign-out-alt me-2"></i> Keluar
                         </button>
                     </form>
                 </li>
@@ -61,7 +68,7 @@
                         <li>
                             <a class="dropdown-item" href="{{ route('profile.edit') }}">
                                 <i class="fas fa-user me-2"></i>
-                                Profile
+                                Akun Saya
                             </a>
                         </li>
                         <li><hr class="dropdown-divider"></li>
@@ -69,7 +76,7 @@
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="dropdown-item text-danger d-flex align-items-center">
-                                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                    <i class="fas fa-sign-out-alt me-2"></i> Keluar
                                 </button>
                             </form>
                         </li>
@@ -80,7 +87,7 @@
                     <form method="POST" action="{{ route('logout') }}" class="mb-0">
                         @csrf
                         <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-sign-out-alt me-1"></i> Logout
+                            <i class="fas fa-sign-out-alt me-1"></i> Keluar
                         </button>
                     </form>
                 </li>

@@ -7,140 +7,149 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="text-center mb-4">
+            <!-- Status Card -->
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div class="p-8">
+                    <!-- Status Header -->
+                    <div class="text-center mb-8">
                         @if($payment->transaction_status === 'settlement')
-                            <div class="mb-4">
-                                <i class="fas fa-check-circle fa-5x text-success"></i>
+                            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-check-circle text-4xl text-green-600"></i>
                             </div>
-                            <h3 class="text-success">Pembayaran Berhasil!</h3>
-                            <p class="text-muted">Terima kasih, pembayaran SPP Anda telah berhasil diproses.</p>
+                            <h2 class="text-2xl font-bold text-green-600 mb-2">Pembayaran Berhasil!</h2>
+                            <p class="text-gray-600">Terima kasih, pembayaran SPP Anda telah berhasil diproses.</p>
                         @elseif($payment->transaction_status === 'pending')
-                            <div class="mb-4">
-                                <i class="fas fa-clock fa-5x text-warning"></i>
+                            <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-clock text-4xl text-yellow-600"></i>
                             </div>
-                            <h3 class="text-warning">Pembayaran Pending</h3>
-                            <p class="text-muted">Pembayaran Anda sedang diproses. Mohon tunggu konfirmasi.</p>
+                            <h2 class="text-2xl font-bold text-yellow-600 mb-2">Pembayaran Pending</h2>
+                            <p class="text-gray-600">Pembayaran Anda sedang diproses. Mohon tunggu konfirmasi.</p>
                         @elseif(in_array($payment->transaction_status, ['cancel', 'deny', 'expire']))
-                            <div class="mb-4">
-                                <i class="fas fa-times-circle fa-5x text-danger"></i>
+                            <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-times-circle text-4xl text-red-600"></i>
                             </div>
-                            <h3 class="text-danger">Pembayaran Gagal</h3>
-                            <p class="text-muted">Pembayaran tidak dapat diproses. Silakan coba lagi.</p>
+                            <h2 class="text-2xl font-bold text-red-600 mb-2">Pembayaran Gagal</h2>
+                            <p class="text-gray-600">Pembayaran tidak dapat diproses. Silakan coba lagi.</p>
                         @else
-                            <div class="mb-4">
-                                <i class="fas fa-info-circle fa-5x text-info"></i>
+                            <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-info-circle text-4xl text-blue-600"></i>
                             </div>
-                            <h3 class="text-info">Status Pembayaran</h3>
-                            <p class="text-muted">Status: {{ ucfirst($payment->transaction_status) }}</p>
+                            <h2 class="text-2xl font-bold text-blue-600 mb-2">Status Pembayaran</h2>
+                            <p class="text-gray-600">Status: {{ ucfirst($payment->transaction_status) }}</p>
                         @endif
                     </div>
 
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">Detail Pembayaran</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <table class="table table-borderless">
-                                        <tr>
-                                            <td width="150"><strong>Order ID:</strong></td>
-                                            <td>{{ $payment->order_id }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Transaction ID:</strong></td>
-                                            <td>{{ $payment->transaction_id ?? '-' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Jumlah:</strong></td>
-                                            <td class="fs-5 fw-bold text-primary">{{ $payment->formatted_amount }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Metode Bayar:</strong></td>
-                                            <td>{{ $payment->payment_type ? ucfirst($payment->payment_type) : '-' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Status:</strong></td>
-                                            <td>
-                                                <span class="badge bg-{{ $payment->status_badge }} fs-6">
-                                                    {{ ucfirst($payment->transaction_status) }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Waktu Bayar:</strong></td>
-                                            <td>
-                                                {{ $payment->transaction_time ? $payment->transaction_time->format('d F Y H:i:s') : '-' }}
-                                            </td>
-                                        </tr>
-                                    </table>
+                    <!-- Payment Details -->
+                    <div class="bg-gray-50 rounded-lg p-6 mb-6">
+                        <h3 class="text-lg font-semibold mb-4">Detail Pembayaran</h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">Order ID:</span>
+                                        <span class="font-medium">{{ $payment->order_id }}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">Transaction ID:</span>
+                                        <span class="font-medium">{{ $payment->transaction_id ?? '-' }}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">Jumlah:</span>
+                                        <span class="font-bold text-lg text-blue-600">{{ $payment->formatted_amount }}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">Metode Bayar:</span>
+                                        <span class="font-medium">{{ $payment->payment_type ? ucfirst($payment->payment_type) : '-' }}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">Status:</span>
+                                        <span class="px-2 py-1 rounded-full text-xs font-medium
+                                            @if($payment->transaction_status === 'settlement') bg-green-100 text-green-800
+                                            @elseif($payment->transaction_status === 'pending') bg-yellow-100 text-yellow-800
+                                            @else bg-red-100 text-red-800
+                                            @endif">
+                                            {{ ucfirst($payment->transaction_status) }}
+                                        </span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">Waktu Bayar:</span>
+                                        <span class="font-medium">
+                                            {{ $payment->transaction_time ? $payment->transaction_time->format('d F Y H:i:s') : '-' }}
+                                        </span>
+                                    </div>
                                 </div>
-                                
-                                <div class="col-md-6">
-                                    <h6 class="fw-bold mb-3">Tagihan yang Dibayar:</h6>
-                                    @if($payment->sppBills->count() > 0)
-                                        <div class="list-group">
-                                            @foreach($payment->sppBills as $bill)
-                                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <div>
-                                                        <strong>{{ $bill->month }} {{ $bill->year }}</strong>
-                                                        <br>
-                                                        <small class="text-muted">{{ $bill->student->name }}</small>
-                                                    </div>
-                                                    <span class="badge bg-primary rounded-pill">
-                                                        {{ $bill->formatted_amount }}
-                                                    </span>
+                            </div>
+
+                            <div>
+                                <h4 class="font-semibold mb-3">Tagihan yang Dibayar:</h4>
+                                @if($payment->sppBills->count() > 0)
+                                    <div class="space-y-2">
+                                        @foreach($payment->sppBills as $bill)
+                                            <div class="flex items-center justify-between p-3 bg-white rounded-lg border">
+                                                <div>
+                                                    <div class="font-medium">{{ $bill->month }} {{ $bill->year }}</div>
+                                                    <div class="text-sm text-gray-600">{{ $bill->student->name }}</div>
                                                 </div>
-                                            @endforeach
-                                        </div>
-                                    @else
-                                        <p class="text-muted">Tidak ada tagihan terkait.</p>
-                                    @endif
-                                </div>
+                                                <div class="text-right">
+                                                    <div class="font-semibold text-blue-600">{{ $bill->formatted_amount }}</div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <p class="text-gray-500 text-center py-4">Tidak ada tagihan terkait.</p>
+                                @endif
                             </div>
                         </div>
                     </div>
 
+                    <!-- Status Messages -->
                     @if($payment->transaction_status === 'settlement')
-                        <div class="alert alert-success mt-4">
-                            <h5 class="alert-heading">
-                                <i class="fas fa-check-circle"></i> Pembayaran Berhasil!
-                            </h5>
-                            <p class="mb-0">
-                                Pembayaran SPP Anda telah berhasil diproses dan tagihan telah lunas. 
-                                Anda dapat melihat riwayat pembayaran di dashboard atau halaman tagihan.
-                            </p>
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-600 mr-3"></i>
+                                <div>
+                                    <h4 class="font-semibold text-green-800">Pembayaran Berhasil!</h4>
+                                    <p class="text-green-700 text-sm">
+                                        Pembayaran SPP Anda telah berhasil diproses dan tagihan telah lunas.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     @elseif($payment->transaction_status === 'pending')
-                        <div class="alert alert-warning mt-4">
-                            <h5 class="alert-heading">
-                                <i class="fas fa-clock"></i> Pembayaran Sedang Diproses
-                            </h5>
-                            <p class="mb-0">
-                                Pembayaran Anda sedang dalam proses verifikasi. Status akan diperbarui secara otomatis 
-                                setelah pembayaran dikonfirmasi. Anda akan menerima notifikasi melalui email.
-                            </p>
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-clock text-yellow-600 mr-3"></i>
+                                <div>
+                                    <h4 class="font-semibold text-yellow-800">Pembayaran Sedang Diproses</h4>
+                                    <p class="text-yellow-700 text-sm">
+                                        Pembayaran Anda sedang dalam proses verifikasi. Status akan diperbarui secara otomatis.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     @elseif(in_array($payment->transaction_status, ['cancel', 'deny', 'expire']))
-                        <div class="alert alert-danger mt-4">
-                            <h5 class="alert-heading">
-                                <i class="fas fa-times-circle"></i> Pembayaran Tidak Berhasil
-                            </h5>
-                            <p class="mb-0">
-                                Pembayaran tidak dapat diproses. Silakan coba lagi atau hubungi admin jika masalah berlanjut.
-                                Tagihan masih dalam status belum dibayar.
-                            </p>
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-times-circle text-red-600 mr-3"></i>
+                                <div>
+                                    <h4 class="font-semibold text-red-800">Pembayaran Tidak Berhasil</h4>
+                                    <p class="text-red-700 text-sm">
+                                        Pembayaran tidak dapat diproses. Silakan coba lagi atau hubungi admin jika masalah berlanjut.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     @endif
 
-                    <div class="text-center mt-4">
-                        <a href="{{ route('user.dashboard') }}" class="btn btn-primary me-2">
-                            <i class="fas fa-home"></i> Kembali ke Dashboard
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                        <a href="{{ route('user.dashboard') }}" class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                            <i class="fas fa-home mr-2"></i> Kembali ke Beranda
                         </a>
-                        <a href="{{ route('user.bills') }}" class="btn btn-outline-primary">
-                            <i class="fas fa-file-invoice"></i> Lihat Semua Tagihan
+                        <a href="{{ route('user.bills') }}" class="inline-flex items-center justify-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">
+                            <i class="fas fa-file-invoice mr-2"></i> Lihat Semua Tagihan
                         </a>
                     </div>
                 </div>

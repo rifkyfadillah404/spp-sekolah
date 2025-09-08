@@ -30,9 +30,12 @@ class PaymentController extends Controller
 
         $bills = $student->sppBills()->orderBy('year', 'desc')->orderBy('month', 'desc')->get();
         $unpaidBills = $student->unpaidBills()->orderBy('due_date')->get();
+        $paidBills = $student->sppBills()->where('status', 'paid')->orderBy('year', 'desc')->orderBy('month', 'desc')->get();
+        $totalBills = $bills->count();
+        $recentBills = $student->sppBills()->orderBy('year', 'desc')->orderBy('month', 'desc')->take(5)->get();
         $recentPayments = Payment::where('user_id', $user->id)->latest()->take(5)->get();
 
-        return view('user.dashboard', compact('student', 'bills', 'unpaidBills', 'recentPayments'));
+        return view('user.dashboard', compact('student', 'bills', 'unpaidBills', 'paidBills', 'totalBills', 'recentBills', 'recentPayments'));
     }
 
     public function userBills()

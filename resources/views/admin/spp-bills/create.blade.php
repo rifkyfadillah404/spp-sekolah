@@ -13,68 +13,78 @@
 
     <style>
         .modern-form-container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .page-header {
+            background: linear-gradient(120deg, #e0f7fa, #bbdefb);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
         .form-section {
             background: white;
             border-radius: 16px;
-            padding: 2rem;
+            padding: 1.75rem;
             margin-bottom: 1.5rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            border: 1px solid rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .form-section:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
         }
 
         .section-header {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.25rem;
             margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #f8fafc;
+            padding-bottom: 1.25rem;
+            border-bottom: 2px solid #f1f5f9;
         }
 
         .section-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .section-icon.student {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-
-        .section-icon.billing {
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-        }
-
-        .section-icon.schedule {
             background: linear-gradient(135deg, #4facfe, #00f2fe);
         }
 
+        .section-icon.billing {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .section-icon.schedule {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
         .section-title {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: 700;
             margin: 0;
-            color: #1a202c;
+            color: #0f172a;
         }
 
         .section-subtitle {
-            color: #718096;
-            margin: 0.25rem 0 0 0;
-            font-size: 0.9rem;
+            color: #64748b;
+            margin: 0.3rem 0 0 0;
+            font-size: 0.95rem;
         }
 
         .form-group {
@@ -84,25 +94,26 @@
         .form-label {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
             font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 0.5rem;
+            color: #1e293b;
+            margin-bottom: 0.6rem;
             font-size: 0.95rem;
         }
 
         .form-control, .form-select {
             border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 0.75rem 1rem;
-            font-size: 1rem;
+            border-radius: 12px;
+            padding: 0.85rem 1.1rem;
+            font-size: 1.05rem;
             transition: all 0.3s ease;
             background: #fafafa;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
 
         .form-control:focus, .form-select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
             background: white;
             outline: none;
         }
@@ -114,83 +125,91 @@
         }
 
         .form-control.is-invalid, .form-select.is-invalid {
-            border-color: #e53e3e;
-            background: #fed7d7;
+            border-color: #ef4444;
+            background: #fee2e2;
         }
 
         .invalid-feedback {
-            color: #e53e3e;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
+            color: #ef4444;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }
 
         .alert-modern {
-            background: linear-gradient(135deg, #e6f3ff, #cce7ff);
-            border: 1px solid #99d6ff;
-            color: #0066cc;
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
+            background: linear-gradient(120deg, #dbeafe, #d1fae5);
+            border: 1px solid #93c5fd;
+            color: #1e40af;
+            border-radius: 14px;
+            padding: 1.25rem 1.5rem;
             margin-bottom: 1.5rem;
             display: flex;
-            align-items: center;
-            gap: 0.75rem;
+            align-items: flex-start;
+            gap: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
         }
 
         .alert-icon {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            background: rgba(0, 102, 204, 0.2);
+            background: rgba(30, 64, 175, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            margin-top: 0.1rem;
         }
 
         .action-buttons {
             background: white;
             border-radius: 16px;
-            padding: 1.5rem 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            border: 1px solid rgba(0,0,0,0.05);
+            padding: 1.75rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.03);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 1rem;
+            gap: 1.5rem;
+            margin-top: 1rem;
         }
 
         .btn-modern {
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
+            padding: 0.85rem 1.75rem;
+            border-radius: 12px;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 1rem;
             border: none;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
             text-decoration: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         .btn-back {
-            background: #f7fafc;
-            color: #4a5568;
+            background: #f8fafc;
+            color: #475569;
             border: 2px solid #e2e8f0;
         }
 
         .btn-back:hover {
-            background: #edf2f7;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: #f1f5f9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         .btn-submit {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
             color: white;
             border: none;
             position: relative;
             overflow: hidden;
+            letter-spacing: 0.3px;
         }
 
         .btn-submit::before {
@@ -200,8 +219,8 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
         }
 
         .btn-submit:hover::before {
@@ -209,16 +228,16 @@
         }
 
         .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
         }
 
         .loading-spinner {
             display: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #667eea;
+            width: 22px;
+            height: 22px;
+            border: 3px solid #dbeafe;
+            border-top: 3px solid #3b82f6;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -229,23 +248,80 @@
         }
 
         .required {
-            color: #e53e3e;
+            color: #ef4444;
         }
 
         .form-hint {
-            font-size: 0.85rem;
-            color: #718096;
-            margin-top: 0.25rem;
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-top: 0.35rem;
             display: flex;
             align-items: center;
-            gap: 0.25rem;
+            gap: 0.35rem;
         }
 
-        @media (max-width: 768px) {
+        .card-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 14px;
+            padding: 1.25rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.02);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-title {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        @media (max-width: 992px) {
             .form-section {
                 padding: 1.5rem;
             }
+            
+            .section-header {
+                gap: 1rem;
+            }
+            
+            .section-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 1.1rem;
+            }
+        }
 
+        @media (max-width: 768px) {
             .action-buttons {
                 flex-direction: column;
                 gap: 1rem;
@@ -254,11 +330,64 @@
             .btn-modern {
                 width: 100%;
                 justify-content: center;
+                padding: 1rem;
+            }
+            
+            .card-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .card-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.75rem;
+            }
+            
+            .form-section {
+                padding: 1.25rem;
             }
         }
     </style>
 
     <div class="modern-form-container">
+        <!-- Stats Summary -->
+        <div class="card-stats">
+            <div class="stat-card">
+                <div class="stat-icon bg-blue-100 text-blue-600">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-title">Total Siswa</div>
+                <div class="stat-value">{{ $totalStudents ?? 0 }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-green-100 text-green-600">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="stat-title">Tagihan Bulan Ini</div>
+                <div class="stat-value">{{ $billsThisMonth ?? 0 }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-amber-100 text-amber-600">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="stat-title">Pendapatan</div>
+                <div class="stat-value">Rp{{ number_format($revenueThisMonth ?? 0, 0, ',', '.') }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-rose-100 text-rose-600">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="stat-title">Terlambat</div>
+                <div class="stat-value">{{ $overdueBills ?? 0 }}</div>
+            </div>
+        </div>
+
         <form action="{{ route('admin.spp-bills.store') }}" method="POST" id="billForm">
             @csrf
 
@@ -299,7 +428,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="student_id" class="form-label">
-                                <i class="fas fa-user text-success"></i>
+                                <i class="fas fa-user-graduate text-success"></i>
                                 Siswa <span class="required">*</span>
                             </label>
                             <select class="form-select @error('student_id') is-invalid @enderror"
@@ -307,7 +436,10 @@
                                 <option value="">-- Pilih Siswa --</option>
                             </select>
                             @error('student_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ $message }}
+                                </div>
                             @enderror
                             <div class="form-hint">
                                 <i class="fas fa-user-check"></i>
@@ -341,11 +473,29 @@
                                    id="amount" name="amount" value="{{ old('amount', 600000) }}"
                                    min="0" step="1000" required>
                             @error('amount')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ $message }}
+                                </div>
                             @enderror
                             <div class="form-hint">
                                 <i class="fas fa-calculator"></i>
                                 Masukkan jumlah dalam Rupiah (kelipatan 1000)
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="description" class="form-label">
+                                <i class="fas fa-sticky-note text-info"></i>
+                                Deskripsi (Opsional)
+                            </label>
+                            <input type="text" class="form-control" id="description" name="description" 
+                                   value="{{ old('description') }}" placeholder="Contoh: Tagihan SPP Bulanan">
+                            <div class="form-hint">
+                                <i class="fas fa-pen"></i>
+                                Tambahkan keterangan tambahan untuk tagihan ini
                             </div>
                         </div>
                     </div>
@@ -379,15 +529,19 @@
                                         'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
                                         'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
                                     ];
+                                    $currentMonth = date('n');
                                 @endphp
-                                @foreach($months as $month)
-                                    <option value="{{ $month }}" {{ old('month') == $month ? 'selected' : '' }}>
+                                @foreach($months as $index => $month)
+                                    <option value="{{ $month }}" {{ old('month') == $month || ($index+1) == $currentMonth ? 'selected' : '' }}>
                                         {{ $month }}
                                     </option>
                                 @endforeach
                             </select>
                             @error('month')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
                     </div>
@@ -408,7 +562,10 @@
                                 @endfor
                             </select>
                             @error('year')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
                     </div>
@@ -422,7 +579,10 @@
                             <input type="date" class="form-control @error('due_date') is-invalid @enderror"
                                    id="due_date" name="due_date" value="{{ old('due_date') }}" required>
                             @error('due_date')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ $message }}
+                                </div>
                             @enderror
                             <div class="form-hint">
                                 <i class="fas fa-exclamation-triangle"></i>
@@ -439,7 +599,7 @@
                     <i class="fas fa-info-circle"></i>
                 </div>
                 <div>
-                    <strong>Perhatian:</strong> Pastikan kombinasi siswa, bulan, dan tahun belum pernah dibuat sebelumnya untuk menghindari duplikasi tagihan.
+                    <strong>Perhatian:</strong> Pastikan kombinasi siswa, bulan, dan tahun belum pernah dibuat sebelumnya untuk menghindari duplikasi tagihan. Tagihan yang sudah dibuat tidak dapat dihapus jika sudah dibayar.
                 </div>
             </div>
 
@@ -453,7 +613,7 @@
                 <button type="submit" class="btn-modern btn-submit" id="submitBtn">
                     <div class="loading-spinner" id="loadingSpinner"></div>
                     <i class="fas fa-plus-circle" id="submitIcon"></i>
-                    <span id="submitText">Buat Tagihan</span>
+                    <span id="submitText">Buat Tagihan Baru</span>
                 </button>
             </div>
         </form>
@@ -494,6 +654,11 @@
                 }
             }
 
+            // Auto set due date on page load if month and year are pre-selected
+            if (document.getElementById('month').value && document.getElementById('year').value) {
+                updateDueDate();
+            }
+
             // Handle class selection
             classSelect.addEventListener('change', function() {
                 const selectedClass = this.value;
@@ -526,7 +691,7 @@
                         .catch(error => {
                             console.error('Error fetching students:', error);
                             studentSelect.innerHTML = '<option value="">-- Gagal memuat siswa --</option>';
-                            studentSelect.style.background = '#fed7d7';
+                            studentSelect.style.background = '#fee2e2';
                             studentSelect.style.animation = '';
                         });
                 } else {
@@ -544,13 +709,13 @@
                 submitIcon.style.display = 'none';
                 submitText.textContent = 'Membuat Tagihan...';
 
-                // Re-enable after 5 seconds as fallback
+                // Re-enable after 10 seconds as fallback
                 setTimeout(() => {
                     submitBtn.disabled = false;
                     loadingSpinner.style.display = 'none';
                     submitIcon.style.display = 'block';
-                    submitText.textContent = 'Buat Tagihan';
-                }, 5000);
+                    submitText.textContent = 'Buat Tagihan Baru';
+                }, 10000);
             });
 
             // Trigger change on page load if a class is already selected

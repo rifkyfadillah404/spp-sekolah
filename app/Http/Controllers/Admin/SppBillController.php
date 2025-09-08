@@ -105,6 +105,7 @@ class SppBillController extends Controller
 
         $sppBill->update($request->all());
 
+        
         return redirect()->route('admin.spp-bills.index')
             ->with('success', 'Tagihan SPP berhasil diupdate.');
     }

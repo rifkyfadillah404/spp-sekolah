@@ -2,339 +2,610 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <div>
-                <h2 class="h4 mb-1 fw-bold text-dark">Kelola Siswa</h2>
+                <h2 class="h4 mb-1 fw-bold text-dark">
+                    <i class="fas fa-users me-2 text-primary"></i>
+                    Kelola Siswa
+                </h2>
                 <p class="text-muted mb-0">Daftar semua siswa yang terdaftar dalam sistem</p>
             </div>
+            <a href="{{ route('admin.students.create') }}" class="btn btn-primary btn-lg rounded-pill px-4 py-2">
+                <i class="fas fa-plus-circle me-2"></i>
+                Tambah Siswa
+            </a>
         </div>
     </x-slot>
 
+    <style>
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .stat-title {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .filter-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.03);
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.03);
+            overflow: hidden;
+        }
+
+        .table-header {
+            background: #f8fafc;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 0.6rem 1.1rem;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .students-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .students-table th {
+            background: #f1f5f9;
+            padding: 1rem 1.25rem;
+            font-weight: 600;
+            color: #475569;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .students-table td {
+            padding: 1.1rem 1.25rem;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        .students-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .students-table tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .student-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        }
+
+        .student-details h6 {
+            margin: 0 0 0.25rem 0;
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 1rem;
+        }
+
+        .student-details p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .badge-class {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-status {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .badge-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .dropdown-toggle {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dropdown-toggle:hover {
+            background: #e2e8f0;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .pagination-info {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .pagination-links {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .pagination-link {
+            padding: 0.5rem 0.9rem;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            text-decoration: none;
+            color: #475569;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-link:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .pagination-link.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .form-check-input {
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 6px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #cbd5e1;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state h5 {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.75rem;
+        }
+
+        .empty-state p {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 992px) {
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .filter-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .table-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .students-table th, .students-table td {
+                padding: 0.75rem;
+            }
+            
+            .student-info {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+
     <div class="container-fluid">
         <!-- Statistics Cards -->
-        <div class="row mb-4">
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-muted mb-1">Total Siswa</h6>
-                                <h3 class="mb-0 fw-bold text-primary">{{ $students->total() }}</h3>
-                            </div>
-                            <div class="bg-primary bg-opacity-10 rounded p-3">
-                                <i class="fas fa-users fa-2x text-primary"></i>
-                            </div>
-                        </div>
-                    </div>
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon bg-primary text-white">
+                    <i class="fas fa-users"></i>
                 </div>
+                <div class="stat-title">Total Siswa</div>
+                <div class="stat-value">{{ $students->total() }}</div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-muted mb-1">Kelas Aktif</h6>
-                                <h3 class="mb-0 fw-bold text-success">{{ count($classes) }}</h3>
-                            </div>
-                            <div class="bg-success bg-opacity-10 rounded p-3">
-                                <i class="fas fa-graduation-cap fa-2x text-success"></i>
-                            </div>
-                        </div>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-success text-white">
+                    <i class="fas fa-graduation-cap"></i>
                 </div>
+                <div class="stat-title">Kelas Aktif</div>
+                <div class="stat-value">{{ count($classes) }}</div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-muted mb-1">Akun Aktif</h6>
-                                <h3 class="mb-0 fw-bold text-info">{{ $students->total() }}</h3>
-                            </div>
-                            <div class="bg-info bg-opacity-10 rounded p-3">
-                                <i class="fas fa-user-check fa-2x text-info"></i>
-                            </div>
-                        </div>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-info text-white">
+                    <i class="fas fa-user-check"></i>
                 </div>
+                <div class="stat-title">Akun Aktif</div>
+                <div class="stat-value">{{ $students->total() }}</div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-muted mb-1">Siswa Baru</h6>
-                                <h3 class="mb-0 fw-bold text-warning">{{ $students->filter(function($student) { return $student->created_at >= now()->subDays(30); })->count() }}</h3>
-                            </div>
-                            <div class="bg-warning bg-opacity-10 rounded p-3">
-                                <i class="fas fa-user-plus fa-2x text-warning"></i>
-                            </div>
-                        </div>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-warning text-white">
+                    <i class="fas fa-user-plus"></i>
                 </div>
+                <div class="stat-title">Siswa Baru</div>
+                <div class="stat-value">{{ $students->filter(function($student) { return $student->created_at >= now()->subDays(30); })->count() }}</div>
             </div>
         </div>
 
         <!-- Search and Filter Section -->
-        <div class="card border-0 shadow-sm mb-4">
-            <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0">
-                                <i class="fas fa-search text-muted"></i>
-                            </span>
-                            <input type="text" class="form-control border-start-0"
-                                   placeholder="Cari berdasarkan nama, NIS, atau email..."
-                                   id="searchInput">
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <select class="form-select" id="classFilter">
-                            <option value="">Semua Kelas</option>
-                            @foreach($classes as $class)
-                                <option value="{{ $class }}" {{ request('class') == $class ? 'selected' : '' }}>
-                                    {{ $class }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <select class="form-select" id="statusFilter">
-                            <option value="">Semua Status</option>
-                            <option value="active">Aktif</option>
-                            <option value="inactive">Tidak Aktif</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <select class="form-select" id="sortFilter">
-                            <option value="name">Urutkan Nama</option>
-                            <option value="nis">Urutkan NIS</option>
-                            <option value="class">Urutkan Kelas</option>
-                            <option value="created">Terbaru</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="d-flex">
-                            <button class="btn btn-outline-secondary me-2" onclick="resetFilters()">
-                                <i class="fas fa-undo me-1"></i>
-                                Reset
-                            </button>
-                        </div>
+        <div class="filter-card">
+            <h5 class="filter-title">
+                <i class="fas fa-filter text-primary"></i>
+                Filter & Pencarian
+            </h5>
+            <div class="filter-grid">
+                <div>
+                    <label class="form-label fw-600 mb-2 fs-6">Cari Siswa</label>
+                    <div class="input-group" style="height: 50px;">
+                        <span class="input-group-text bg-light border-end-0 fs-5" style="height: 100%;">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0 fs-6" 
+                            placeholder="Masukkan nama, NIS, atau email..." id="searchInput" style="height: 100%; padding: 1rem;">
                     </div>
                 </div>
-
+                <div>
+                    <label class="form-label fw-600 mb-2 fs-6">Kelas</label>
+                    <select class="form-select fs-6" id="classFilter" style="height: 50px; padding: 0.75rem 1rem;">
+                        <option value="">Semua Kelas</option>
+                        @foreach($classes as $class)
+                            <option value="{{ $class }}" {{ request('class') == $class ? 'selected' : '' }}>
+                                {{ $class }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label fw-600 mb-2 fs-6">Status</label>
+                    <select class="form-select fs-6" id="statusFilter" style="height: 50px; padding: 0.75rem 1rem;">
+                        <option value="">Semua Status</option>
+                        <option value="active">Aktif</option>
+                        <option value="inactive">Tidak Aktif</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label fw-600 mb-2 fs-6">Urutkan</label>
+                    <select class="form-select fs-6" id="sortFilter" style="height: 50px; padding: 0.75rem 1rem;">
+                        <option value="name">Urutkan Nama</option>
+                        <option value="nis">Urutkan NIS</option>
+                        <option value="class">Urutkan Kelas</option>
+                        <option value="created">Terbaru</option>
+                    </select>
+                </div>
+                <div class="d-flex align-items-end">
+                    <button class="btn btn-outline-secondary w-100 fs-6" onclick="resetFilters()" style="height: 50px; padding: 0.75rem 1rem;">
+                        <i class="fas fa-undo me-2"></i>
+                        Reset Filter
+                    </button>
                 </div>
             </div>
         </div>
 
         <!-- Students Table -->
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-bottom">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 fw-bold">
-                        <i class="fas fa-table me-2 text-primary"></i>
-                        Daftar Siswa
-                    </h5>
-                    <div class="d-flex align-items-center">
-                        <div class="btn-group btn-group-sm" role="group">
-                            <button type="button" class="btn btn-outline-primary" onclick="bulkExport()">
-                                <i class="fas fa-file-excel me-1"></i>
-                                Export Excel
-                            </button>
-                            <button type="button" class="btn btn-outline-danger" onclick="bulkDelete()">
-                                <i class="fas fa-trash me-1"></i>
-                                Hapus Terpilih
-                            </button>
-                        </div>
-                    </div>
+        <div class="table-card">
+            <div class="table-header d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <h5 class="table-title">
+                    <i class="fas fa-table text-primary"></i>
+                    Daftar Siswa
+                </h5>
+                <div class="action-buttons">
+                    <button type="button" class="btn-action btn-outline-primary" onclick="bulkExport()">
+                        <i class="fas fa-file-excel"></i>
+                        Export Excel
+                    </button>
+                    <button type="button" class="btn-action btn-outline-danger" onclick="bulkDelete()">
+                        <i class="fas fa-trash"></i>
+                        Hapus Terpilih
+                    </button>
                 </div>
             </div>
-            <div class="card-body p-0">
-                <!-- Table View -->
-                <div id="tableView" class="table-responsive">
-                    <table class="table table-rounded table-row-gray-300 table-hover mb-0" id="studentsTable">
-                        <thead>
-                            <tr>
-                                <th class="border-0" style="width: 50px;">
+            <div class="table-responsive">
+                <table class="students-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="selectAll">
+                                </div>
+                            </th>
+                            <th>NIS</th>
+                            <th>Nama Siswa</th>
+                            <th>Kelas</th>
+                            <th>Email</th>
+                            <th>Telepon</th>
+                            <th>Terdaftar</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($students as $student)
+                            <tr class="student-row"
+                                data-class="{{ $student->class }}"
+                                data-status="active"
+                                data-name="{{ strtolower($student->name) }}"
+                                data-nis="{{ strtolower($student->nis) }}"
+                                data-email="{{ strtolower($student->user->email) }}">
+                                <td>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="selectAll">
+                                        <input class="form-check-input student-checkbox" type="checkbox"
+                                            value="{{ $student->id }}">
                                     </div>
-                                </th>
-                                <th class="border-0 fw-bold text-uppercase" style="font-size: 12px;">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-id-card me-2 text-primary"></i>
-                                        NIS
-                                    </div>
-                                </th>
-                                <th class="border-0 fw-bold text-uppercase" style="font-size: 12px;">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-user me-2 text-primary"></i>
-                                        Nama Siswa
-                                    </div>
-                                </th>
-                                <th class="border-0 fw-bold text-uppercase" style="font-size: 12px;">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-graduation-cap me-2 text-primary"></i>
-                                        Kelas
-                                    </div>
-                                </th>
-                                <th class="border-0 fw-bold text-uppercase" style="font-size: 12px;">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-envelope me-2 text-primary"></i>
-                                        Email
-                                    </div>
-                                </th>
-                                <th class="border-0 fw-bold text-uppercase" style="font-size: 12px;">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-phone me-2 text-primary"></i>
-                                        Telepon
-                                    </div>
-                                </th>
-                                <th class="border-0 fw-bold text-uppercase" style="font-size: 12px;">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-calendar me-2 text-primary"></i>
-                                        Terdaftar
-                                    </div>
-                                </th>
-                                <th class="border-0 fw-bold text-uppercase text-center" style="font-size: 12px;">
-                                    <i class="fas fa-cogs text-primary"></i>
-                                    Aksi
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($students as $student)
-                                <tr class="student-row"
-                                    data-class="{{ $student->class }}"
-                                    data-status="active"
-                                    data-name="{{ strtolower($student->name) }}"
-                                    data-nis="{{ strtolower($student->nis) }}"
-                                    data-email="{{ strtolower($student->user->email) }}">
-                                    <td class="align-middle">
-                                        <div class="form-check">
-                                            <input class="form-check-input student-checkbox" type="checkbox"
-                                                value="{{ $student->id }}">
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-primary">{{ $student->nis }}</span>
+                                </td>
+                                <td>
+                                    <div class="student-info">
+                                        <div class="student-avatar bg-primary">
+                                            {{ strtoupper(substr($student->name, 0, 2)) }}
                                         </div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <span class="fw-bold text-primary">{{ $student->nis }}</span>
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="d-flex align-items-center">
-                                            <div class="symbol symbol-40px symbol-circle me-3">
-                                                <div class="symbol-label bg-light-primary text-primary">
-                                                    {{ strtoupper(substr($student->name, 0, 2)) }}
-                                                </div>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <div class="text-gray-800 fw-bold fs-6">{{ $student->name }}</div>
-                                                <div class="text-muted fs-7">ID: {{ $student->id }}</div>
-                                            </div>
+                                        <div class="student-details">
+                                            <h6>{{ $student->name }}</h6>
+                                            <p>ID: {{ $student->id }}</p>
                                         </div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <span class="badge badge-light-info">
-                                            <i class="fas fa-graduation-cap me-1"></i>
-                                            {{ $student->class }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge-class">
+                                        <i class="fas fa-graduation-cap"></i>
+                                        {{ $student->class }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div class="fw-semibold">{{ $student->user->email }}</div>
+                                        <span class="badge-status badge-active">
+                                            <i class="fas fa-circle me-1" style="font-size: 8px;"></i>
+                                            Aktif
                                         </span>
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="d-flex flex-column">
-                                            <div class="text-gray-800 fw-semibold fs-6">{{ $student->user->email }}</div>
-                                            <div class="text-success fs-7">
-                                                <i class="fas fa-circle me-1" style="font-size: 8px;"></i>
-                                                Aktif
-                                            </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if($student->phone)
+                                        <div class="fw-semibold">
+                                            <i class="fas fa-phone me-2 text-muted"></i>
+                                            {{ $student->phone }}
                                         </div>
-                                    </td>
-                                    <td class="align-middle">
-                                        @if($student->phone)
-                                            <div class="text-gray-800 fw-semibold fs-6">
-                                                <i class="fas fa-phone me-2 text-muted"></i>
-                                                {{ $student->phone }}
-                                            </div>
-                                        @else
-                                            <div class="text-muted fs-6">
-                                                <i class="fas fa-minus me-2"></i>
-                                                Belum diisi
-                                            </div>
-                                        @endif
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="d-flex flex-column">
-                                            <div class="text-gray-800 fw-bold fs-6">{{ $student->created_at->format('d M Y') }}</div>
-                                            <div class="text-muted fs-7">{{ $student->created_at->diffForHumans() }}</div>
-                                        </div>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <div class="dropdown">
-                                            <button class="btn btn-sm btn-light btn-icon dropdown-toggle"
-                                                    type="button" data-bs-toggle="dropdown">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a class="dropdown-item" href="{{ route('admin.students.show', $student) }}">
-                                                        <i class="fas fa-eye me-2 text-info"></i>
-                                                        Lihat Detail
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="{{ route('admin.students.edit', $student) }}">
-                                                        <i class="fas fa-edit me-2 text-warning"></i>
-                                                        Edit Data
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="{{ route('admin.spp-bills.create') }}?student_id={{ $student->id }}">
-                                                        <i class="fas fa-plus me-2 text-success"></i>
-                                                        Buat Tagihan
-                                                    </a>
-                                                </li>
-                                                <li><hr class="dropdown-divider"></li>
-                                                <li>
-                                                    <form action="{{ route('admin.students.destroy', $student) }}"
-                                                          method="POST" class="d-inline"
-                                                          onsubmit="return confirm('Yakin ingin menghapus siswa {{ $student->name }}?')">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="dropdown-item text-danger">
-                                                            <i class="fas fa-trash me-2"></i>
-                                                            Hapus Siswa
-                                                        </button>
-                                                    </form>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="text-center py-5">
+                                    @else
                                         <div class="text-muted">
-                                            <i class="fas fa-users fa-3x mb-3"></i>
-                                            <h5>Belum Ada Siswa</h5>
-                                            <p>Belum ada siswa yang terdaftar dalam sistem.</p>
-                                            <a href="{{ route('admin.students.create') }}" class="btn btn-primary">
-                                                <i class="fas fa-plus me-1"></i>
-                                                Tambah Siswa Pertama
-                                            </a>
+                                            <i class="fas fa-minus me-2"></i>
+                                            Belum diisi
                                         </div>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+                                    @endif
+                                </td>
+                                <td>
+                                    <div>
+                                        <div class="fw-bold">{{ $student->created_at->format('d M Y') }}</div>
+                                        <div class="small text-muted">{{ $student->created_at->diffForHumans() }}</div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="dropdown">
+                                        <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('admin.students.show', $student) }}">
+                                                    <i class="fas fa-eye text-info me-2"></i>
+                                                    Lihat Detail
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('admin.students.edit', $student) }}">
+                                                    <i class="fas fa-edit text-warning me-2"></i>
+                                                    Edit Data
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('admin.spp-bills.create') }}?student_id={{ $student->id }}">
+                                                    <i class="fas fa-plus me-2 text-success"></i>
+                                                    Buat Tagihan
+                                                </a>
+                                            </li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <form action="{{ route('admin.students.destroy', $student) }}"
+                                                      method="POST" class="d-inline"
+                                                      onsubmit="return confirm('Yakin ingin menghapus siswa {{ $student->name }}?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item text-danger">
+                                                        <i class="fas fa-trash me-2"></i>
+                                                        Hapus Siswa
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="text-center">
+                                    <div class="empty-state">
+                                        <i class="fas fa-users"></i>
+                                        <h5>Belum Ada Siswa</h5>
+                                        <p>Belum ada siswa yang terdaftar dalam sistem.</p>
+                                        <a href="{{ route('admin.students.create') }}" class="btn btn-primary">
+                                            <i class="fas fa-plus me-1"></i>
+                                            Tambah Siswa Pertama
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
 
             <!-- Pagination -->
             @if($students->hasPages())
-                <div class="card-footer bg-white border-top">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="text-muted">
-                            Menampilkan {{ $students->firstItem() }} - {{ $students->lastItem() }}
-                            dari {{ $students->total() }} siswa
-                        </div>
+                <div class="pagination">
+                    <div class="pagination-info">
+                        Menampilkan {{ $students->firstItem() }} - {{ $students->lastItem() }}
+                        dari {{ $students->total() }} siswa
+                    </div>
+                    <div class="pagination-links">
                         {{ $students->appends(request()->query())->links() }}
                     </div>
                 </div>
@@ -467,24 +738,6 @@
                     document.body.appendChild(form);
                     form.submit();
                     document.body.removeChild(form);
-                }
-            };
-
-            // Toggle view
-            window.toggleView = function (view) {
-                const tableView = document.getElementById('tableView');
-                const gridView = document.getElementById('gridView');
-                const buttons = document.querySelectorAll('[onclick^="toggleView"]');
-
-                buttons.forEach(btn => btn.classList.remove('active'));
-                event.target.closest('button').classList.add('active');
-
-                if (view === 'table') {
-                    tableView.classList.remove('d-none');
-                    gridView.classList.add('d-none');
-                } else {
-                    tableView.classList.add('d-none');
-                    gridView.classList.remove('d-none');
                 }
             };
 

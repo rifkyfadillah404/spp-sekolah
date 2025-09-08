@@ -298,7 +298,7 @@
                 <!-- Payment Methods -->
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Metode Pembayaran</h3>
-                    <div class="space-y-3">
+                    <div class="space-y-3 mb-4">
                         <div class="flex items-center">
                             <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-3">
                                 <i class="fas fa-university text-blue-600 text-xs"></i>
@@ -318,6 +318,7 @@
                             <span class="text-sm text-gray-700">E-Wallet</span>
                         </div>
                     </div>
+
                 </div>
 
                 <!-- Contact Information -->

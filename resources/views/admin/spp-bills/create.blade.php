@@ -309,11 +309,11 @@
             .form-section {
                 padding: 1.5rem;
             }
-            
+
             .section-header {
                 gap: 1rem;
             }
-            
+
             .section-icon {
                 width: 48px;
                 height: 48px;
@@ -332,23 +332,23 @@
                 justify-content: center;
                 padding: 1rem;
             }
-            
+
             .card-stats {
                 grid-template-columns: 1fr 1fr;
             }
         }
-        
+
         @media (max-width: 576px) {
             .card-stats {
                 grid-template-columns: 1fr;
             }
-            
+
             .section-header {
                 flex-direction: column;
                 text-align: center;
                 gap: 0.75rem;
             }
-            
+
             .form-section {
                 padding: 1.25rem;
             }
@@ -356,37 +356,6 @@
     </style>
 
     <div class="modern-form-container">
-        <!-- Stats Summary -->
-        <div class="card-stats">
-            <div class="stat-card">
-                <div class="stat-icon bg-blue-100 text-blue-600">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="stat-title">Total Siswa</div>
-                <div class="stat-value">{{ $totalStudents ?? 0 }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon bg-green-100 text-green-600">
-                    <i class="fas fa-file-invoice"></i>
-                </div>
-                <div class="stat-title">Tagihan Bulan Ini</div>
-                <div class="stat-value">{{ $billsThisMonth ?? 0 }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon bg-amber-100 text-amber-600">
-                    <i class="fas fa-money-bill-wave"></i>
-                </div>
-                <div class="stat-title">Pendapatan</div>
-                <div class="stat-value">Rp{{ number_format($revenueThisMonth ?? 0, 0, ',', '.') }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon bg-rose-100 text-rose-600">
-                    <i class="fas fa-exclamation-circle"></i>
-                </div>
-                <div class="stat-title">Terlambat</div>
-                <div class="stat-value">{{ $overdueBills ?? 0 }}</div>
-            </div>
-        </div>
 
         <form action="{{ route('admin.spp-bills.store') }}" method="POST" id="billForm">
             @csrf
@@ -484,14 +453,14 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="description" class="form-label">
                                 <i class="fas fa-sticky-note text-info"></i>
                                 Deskripsi (Opsional)
                             </label>
-                            <input type="text" class="form-control" id="description" name="description" 
+                            <input type="text" class="form-control" id="description" name="description"
                                    value="{{ old('description') }}" placeholder="Contoh: Tagihan SPP Bulanan">
                             <div class="form-hint">
                                 <i class="fas fa-pen"></i>

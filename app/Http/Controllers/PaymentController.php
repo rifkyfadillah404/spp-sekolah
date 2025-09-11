@@ -172,8 +172,11 @@ class PaymentController extends Controller
         // Sync related bills based on status
         if ($isPaid) {
             $payment->sppBills()->update(['status' => 'paid']);
-        } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire', 'failure'])) {
+        } elseif (in_array($transactionStatus, ['cancel', 'deny', 'failure'])) {
             $payment->sppBills()->update(['status' => 'unpaid', 'payment_id' => null]);
+        } elseif ($transactionStatus === 'expire') {
+            // Keep bills as pending for expired status, allowing retry
+            $payment->sppBills()->update(['status' => 'pending']);
         } else {
             // keep pending for 'pending' or 'capture' with 'challenge'
             $payment->sppBills()->update(['status' => 'pending']);

@@ -9,6 +9,7 @@
                     <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
                         <div class="flex-1 text-center lg:text-left">
                             <div class="inline-flex items-center px-3 py-1 bg-white bg-opacity-20 rounded-full mb-4">
+                                <i class="fas fa-graduation-cap mr-2"></i>
                                 <span class="text-sm font-medium text-blue-100">Sistem Pembayaran SPP</span>
                             </div>
                             <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
@@ -65,7 +66,7 @@
                             <span>Pembayaran Cepat</span>
                         </div>
                         <div class="flex items-center">
-                            <i class="fas fa-history mr-2"></i>
+                            <i class="fas fa-receipt mr-2"></i>
                             <span>Riwayat Transaksi</span>
                         </div>
                     </div>
@@ -99,6 +100,7 @@
                         <div class="mt-4">
                             <a href="{{ route('user.bills') }}"
                                class="text-sm text-red-600 hover:text-red-700 font-medium flex items-center">
+                                <i class="fas fa-eye mr-1"></i>
                                 Lihat detail
                                 <i class="fas fa-arrow-right ml-1 text-xs"></i>
                             </a>
@@ -122,6 +124,7 @@
                     <div class="mt-4">
                         <a href="{{ route('user.bills') }}"
                            class="text-sm text-green-600 hover:text-green-700 font-medium flex items-center">
+                            <i class="fas fa-history mr-1"></i>
                             Riwayat pembayaran
                             <i class="fas fa-arrow-right ml-1 text-xs"></i>
                         </a>
@@ -144,6 +147,7 @@
                     <div class="mt-4">
                         <a href="{{ route('user.bills') }}"
                            class="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center">
+                            <i class="fas fa-list mr-1"></i>
                             Lihat semua
                             <i class="fas fa-arrow-right ml-1 text-xs"></i>
                         </a>
@@ -208,12 +212,12 @@
                         class="group relative bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 hover:from-purple-100 hover:to-purple-200 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg border border-purple-100">
                         <div
                             class="absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
-                            <i class="fas fa-history text-4xl text-purple-600"></i>
+                            <i class="fas fa-receipt text-4xl text-purple-600"></i>
                         </div>
                         <div class="relative">
                             <div
                                 class="w-14 h-14 bg-purple-600 rounded-xl flex items-center justify-center mb-4 group-hover:bg-purple-700 transition-colors duration-300">
-                                <i class="fas fa-history text-white text-xl"></i>
+                                <i class="fas fa-receipt text-white text-xl"></i>
                             </div>
                             <h4 class="text-lg font-bold text-gray-900 mb-2">Riwayat Bayar</h4>
                             <p class="text-sm text-gray-600">Lihat histori semua pembayaran</p>
@@ -230,12 +234,12 @@
                         class="group relative bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 hover:from-orange-100 hover:to-orange-200 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg border border-orange-100">
                         <div
                             class="absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
-                            <i class="fas fa-headset text-4xl text-orange-600"></i>
+                            <i class="fas fa-life-ring text-4xl text-orange-600"></i>
                         </div>
                         <div class="relative">
                             <div
                                 class="w-14 h-14 bg-orange-600 rounded-xl flex items-center justify-center mb-4 group-hover:bg-orange-700 transition-colors duration-300">
-                                <i class="fas fa-headset text-white text-xl"></i>
+                                <i class="fas fa-life-ring text-white text-xl"></i>
                             </div>
                             <h4 class="text-lg font-bold text-gray-900 mb-2">Bantuan</h4>
                             <p class="text-sm text-gray-600">Hubungi tim support untuk bantuan</p>
@@ -255,6 +259,7 @@
                     <h3 class="text-lg font-semibold text-gray-900">Tagihan Terbaru</h3>
                     <a href="{{ route('user.bills') }}"
                         class="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center">
+                        <i class="fas fa-list mr-1"></i>
                         Lihat Semua
                         <i class="fas fa-arrow-right ml-1 text-xs"></i>
                     </a>
@@ -284,9 +289,11 @@
                                             <h4 class="font-semibold text-gray-900">SPP {{ $bill->month }}
                                                 {{ $bill->year }}</h4>
                                             <p class="text-sm text-gray-500 mt-1">
+                                                <i class="far fa-calendar-alt mr-1"></i>
                                                 Jatuh tempo: {{ $bill->due_date->format('d M Y') }}
                                                 @if ($bill->is_overdue && $bill->status === 'unpaid')
                                                     <span class="text-red-500 font-medium ml-2">
+                                                        <i class="fas fa-exclamation-circle mr-1"></i>
                                                         (Terlambat)
                                                     </span>
                                                 @endif
@@ -299,21 +306,25 @@
                                         @if ($bill->status === 'paid')
                                             <span
                                                 class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                <i class="fas fa-check-circle mr-1"></i>
                                                 Lunas
                                             </span>
                                         @elseif($bill->status === 'pending')
                                             <span
                                                 class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                <i class="fas fa-clock mr-1"></i>
                                                 Pending
                                             </span>
                                         @elseif($bill->is_overdue)
                                             <span
                                                 class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                <i class="fas fa-exclamation-triangle mr-1"></i>
                                                 Terlambat
                                             </span>
                                         @else
                                             <span
                                                 class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                <i class="fas fa-hourglass-half mr-1"></i>
                                                 Belum Bayar
                                             </span>
                                         @endif
@@ -325,7 +336,7 @@
                         <div class="mt-6 text-center">
                             <a href="{{ route('user.bills') }}"
                                 class="inline-flex items-center px-6 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors duration-200 shadow-sm">
-                                <i class="fas fa-list mr-2"></i>
+                                <i class="fas fa-file-invoice mr-2"></i>
                                 Lihat Semua Tagihan
                             </a>
                         </div>
